@@ -39,4 +39,4 @@ antlr4 -Dlanguage=Python3 InterlisLexer.g4 InterlisParser.g4
 
 ## References
 
--[antlr4-tools](https://github.com/antlr/antlr4-tools)
+- [antlr4-tools](https://github.com/antlr/antlr4-tools)
