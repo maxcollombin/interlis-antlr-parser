@@ -4,7 +4,7 @@ A parser for the INTERLIS 2.4 language.
 
 ## Package Installation
 
-Run the `start.sh` script to create a virtual environment and install the required packages.
+Run `. start.sh` (or `source ./start.sh`) script to create a virtual environment and install the required packages.
 
 ## Usage
 
@@ -38,7 +38,7 @@ antlr4 -Dlanguage=Python3 InterlisLexer.g4 InterlisParser.g4
 
 ## Optional
 
-To deactivate and remove the virtual environment, run the `clean.sh` script.
+To deactivate and remove the virtual environment, run `. clean.sh` script.
 
 ## Current Status
 
