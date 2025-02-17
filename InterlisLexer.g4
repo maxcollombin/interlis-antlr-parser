@@ -208,10 +208,208 @@ SingleLineComment : '!!' ~[\r\n]*;
 
 BlockComment : '/*' .*? '*/';
 
-// INTERLIS version declaration
-INTERLIS2Def : 'INTERLIS' ' ' Dec Semicolon;
+// Règle principale
+INTERLIS2Def : INTERLIS ' ' Dec Semicolon { ModelDef };
 
-// Main rule
+// Définition du modèle
+
+ModelDef : 'CONTRACTED'? ('TYPE' | 'REFSYSTEM' | 'SYMBOLOGY')? 
+           'MODEL' Name ('(' Name ')')? 
+           'AT' String 
+           'VERSION' String Explanation? 
+           ('TRANSLATION' 'OF' Name '[' String ']')? '=' 
+           ('IMPORTS' 'UNQUALIFIED'? Name (',' 'UNQUALIFIED'? Name)* ';')* 
+           (MetaDataBasketDef 
+           | UnitDef 
+           | FunctionDef 
+           | LineFormTypeDef 
+           | DomainDef 
+           | RunTimeParameterDef 
+           | ClassDef 
+           | StructureDef 
+           | TopicDef)* 
+           'END' Name '.';
+
+// Thèmes           
+
+TopicDef : 'VIEW'? 'TOPIC' Name
+           PropertyKeyword? (ABSTRACT | FINAL)?
+           ('EXTENDS' Name)? '='
+           ('BASKET' 'OID' 'AS' Name ';')?
+           ('OID' 'AS' Name ';')?
+           ('DEPENDS' 'ON' Name (',' Name)* ';')?
+           (MetaDataBasketDef 
+           | UnitDef 
+           | FunctionDef 
+           | LineFormTypeDef 
+           | DomainDef 
+           | RunTimeParameterDef 
+           | ClassDef 
+           | StructureDef 
+           | TopicDef)*
+           'END' Name ';';
+
+Definitions : MetaDataBasketDef
+            | UnitDef
+            | FunctionDef
+            | DomainDef
+            | ClassDef
+            | StructureDef
+            | AssociationDef
+            | ConstraintsDef
+            | ViewDef
+            | GraphicDef;
+
+TopicRef : (Name '.')? Name;
+
+// Classes et structures
+
+ClassDef : 'CLASS' Name
+             PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+               ('EXTENDS' ClassOrStructureRef)? '='
+               (('OID' 'AS' Name | 'NO' 'OID') ';')?
+             ClassOrStructureDef
+           'END' Name ';';
+
+StructureDef : 'STRUCTURE' Name
+                 PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+                   ('EXTENDS' StructureRef)? '='
+                 ClassOrStructureDef
+               'END' Name ';';
+
+
+ClassRef : (Name '.' (Name '.')?)? Name;
+ClassOrStructureDef : ('ATTRIBUTE' AttributeDef+ | ConstraintDef+ | 'PARAMETER' ParameterDef+)+;
+
+StructureRef : (Name '.' (Name '.')?)? Name;
+
+ClassOrStructureRef : ClassRef | StructureRef;
+
+// Attributs
+
+AttributeDef : 'CONTINUOUS'? 'SUBDIVISION'? 
+               Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)? 
+               ':' AttrTypeDef 
+               (':=' Factor (',' Factor)*)? ';';
+
+AttrTypeDef : 'MANDATORY'? AttrType 
+            | ('BAG' | 'LIST') Cardinality? 'OF' RestrictedStructureRef;
+
+AttrType : Type 
+         | DomainRef 
+         | ReferenceAttr 
+         | RestrictedStructureRef;
+
+ReferenceAttr : 'REFERENCE' 'TO' PropertyKeyword? EXTERNAL? RestrictedClassOrAssRef;
+
+RestrictedClassOrAssRef : (ClassOrAssociationRef | 'ANYCLASS') 
+                        ('RESTRICTION' '(' ClassOrAssociationRef (',' ClassOrAssociationRef)* ')')?;
+
+ClassOrAssociationRef : ClassRef | AssociationRef;
+
+RestrictedStructureRef : (StructureRef | 'ANYSTRUCTURE') 
+                       ('RESTRICTION' '(' StructureRef (',' StructureRef)* ')')?;
+
+RestrictedClassOrStructureRef : (ClassOrStructureRef | 'ANYSTRUCTURE') 
+                              ('RESTRICTION' '(' ClassOrStructureRef (',' ClassOrStructureRef)* ')')?;
+
+// Relations vraies / Associations
+
+AssociationDef : 'ASSOCIATION' Name
+                     PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | OID)?
+                     ('EXTENDS' AssociationRef)?
+                     ('DERIVED' 'FROM' Name)? '='
+                     (('OID' 'AS' Name | 'NO' 'OID') ';')?
+                     RoleDef*
+                     ('ATTRIBUTE' AttributeDef*)?
+                     ('CARDINALITY' '=' Cardinality ';')?
+                     ConstraintDef*
+                 'END' Name ';';
+
+AssociationRef : (Name '.' (Name '.')?)? Name;
+
+RoleDef : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
+              ('--' | '-<>' | '-<#>') Cardinality?
+              RestrictedClassOrAssRef ('OR' RestrictedClassOrAssRef)*
+              (':=' Factor)? ';';
+
+Cardinality : '{' ('*' | PosNumber ('..' (PosNumber | '*'))?) '}';
+
+// Domaines de valeurs et constantes
+
+DomainDef : 'DOMAIN' Name PropertyKeyword? (ABSTRACT | FINAL)?
+                ('EXTENDS' DomainRef)? '='
+                ('MANDATORY'? Type | Type) ';';
+
+Type : BaseType | LineType;
+
+DomainRef : (Name '.' (Name '.')?)? Name;
+
+BaseType : TextType
+           | EnumerationType
+           | EnumTreeValueType
+           | AlignmentType
+           | BooleanType
+           | NumericType
+           | FormattedType
+           | CoordinateType
+           | OIDType
+           | BlackboxType
+           | ClassType
+           | AttributeType;
+
+Constant : UNDEFINED
+         | NumericConst
+         | TextConst
+         | FormattedConst
+         | EnumerationConst
+         | ClassConst
+         | AttributeConst;
+
+// Chaînes de caractères
+
+TextType : MTEXT ('*' PosNumber)?
+         | TEXT ('*' PosNumber)?
+         | NAME
+         | URI;
+
+TextConst : String;
+
+// Enumérations
+
+// ...
+
+
+// Placeholders
+
+MetaDataBasketDef : String;
+UnitDef : String;
+FunctionDef: String;
+LineFormTypeDef: String;
+RunTimeParameterDef: String;
+ConstraintsDef: String;
+ViewDef: String;
+GraphicDef: String;
+ConstraintDef: String;
+ParameterDef: String;
+Factor: String;
+LineType: String;
+EnumerationType: String;
+EnumTreeValueType: String;
+AlignmentType: String;
+BooleanType: String;
+NumericType: String;
+FormattedType: String;
+CoordinateType: String;
+OIDType: String;
+BlackboxType: String;
+ClassType: String;
+AttributeType: String;
+NumericConst: String;
+FormattedConst: String;
+EnumerationConst: String;
+ClassConst: String;
+AttributeConst: String;
 
 // Ignore whitespace
 WS : [ \t\r\n]+ -> skip;
