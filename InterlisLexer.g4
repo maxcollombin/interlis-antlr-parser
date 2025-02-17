@@ -364,7 +364,7 @@ Constant : UNDEFINED
          | FormattedConst
          | EnumerationConst
          | ClassConst
-         | AttributeConst;
+         | AttributePathConst;
 
 // Chaînes de caractères
 
@@ -377,39 +377,317 @@ TextConst : String;
 
 // Enumérations
 
-// ...
+EnumerationType : 'ENUM' '{' EnumElement (',' EnumElement)* '}' ('ORDERED' | 'CIRCULAR')?;
 
+EnumTreeValueType : 'ALL' 'OF' DomainRef;
+
+Enumeration : '(' EnumElement (',' EnumElement)* (':' 'FINAL')? ')';
+
+EnumElement : Name ('.' Name)* (SubEnumeration)?;
+
+EnumerationConst : '#' (Name ('.' Name)* ('.' 'OTHERS')? | 'OTHERS');
+
+// Alignement du texte
+
+AlignmentType : ( 'HALIGNMENT' | 'VALIGNMENT' );
+
+// Boolean
+
+BooleanType : BOOLEAN;
+
+// Types de données numériques
+
+NumericType : (MinDec '..' MaxDec | 'NUMERIC') 'CIRCULAR'?
+        ('[' UnitRef ']')?
+        ('CLOCKWISE' | 'COUNTERCLOCKWISE' | RefSys)?;
+
+RefSys : '{' RefSysMetaObjectRef ('[' AxisPosNumber ']')? '}'
+     | '<' CoordDomainRef ('[' AxisPosNumber ']')? '>';
+
+DecConst : Dec | PI | LNBASE;
+
+NumericConst : DecConst ('[' UnitRef ']')?;
+
+// Domaines de valeurs formatés
+
+FormattedType : 'FORMAT' 'BASED' 'ON' StructureRef FormatDef
+        | 'FORMAT' FormattedTypeDomainRef MinString '..' MaxString;
+
+FormatDef : '(' 'INHERITANCE'? NonNumString? (BaseAttrRef NonNumString)* BaseAttrRef NonNumString? ')';
+
+BaseAttrRef : Name ('/' IntPosPosNumber)?
+      | Name '/' FormattedDomainRef;
+
+FormattedConst : String;
+
+// Date et heure
+
+DateTimeType : ( DATE | TIMEOFDAY | DATETIME );
+
+// Coordonnées
+
+CoordinateType : 'COORD' NumericType
+           (',' NumericType (',' NumericType)?
+             (',' RotationDef)?)?;
+
+RotationDef : 'ROTATION' NullAxisPosNumber '->' PiHalfAxisPosNumber;
+
+NullAxisPosNumber : PosNumber;
+PiHalfAxisPosNumber : PosNumber;
+
+ContextDef : 'CONTEXT' Name '=' '{' GenericCoordDefDomainRef '=' ConcreteDomainRef ('OR' ConcreteDomainRef)* ';' '}' ';';
+
+// Domaines de valeurs des identifications d’objet
+
+OIDType : OID ( ANY | NumericType | TextType );
+
+// Boîtes noires
+
+BlackboxType : BLACKBOX ( 'XML' | BINARY );
+
+// Domaines de valeurs de classes et chemins d’attributs
+
+ClassType : CLASS
+        (RESTRICTION '(' ViewableRef (',' ViewableRef)* ')')?
+      | STRUCTURE
+        (RESTRICTION '(' ClassOrStructureRef (',' ClassOrStructureRef)* ')')?;
+
+AttributeType : ATTRIBUTE
+          (OF (ClassType '.' AttributePath | '@' Name))?
+          (RESTRICTION '(' AttrTypeDef (',' AttrTypeDef)* ')')?;
+
+ClassConst : '>' ViewableRef;
+
+AttributePathConst : '>>' (ViewableRef '.')? Name;
+
+// Polylignes
+
+LineType : (DIRECTED POLYLINE | SURFACE | AREA)
+       (WITH '(' LineFormType (',' LineFormType)* ')')?
+       ControlPoints? IntersectionDef? LineAttrDef?;
+
+LineFormType : STRAIGHTS | ARCS | Name '.' Name;
+
+ControlPoints : VERTEX Name;
+
+IntersectionDef : WITHOUT OVERLAPS '>' Dec;
+
+LineFormTypeDef : LINE FORM '{' LineFormType ':' LineStructure ';' '}';
+
+// Unités composées
+
+UnitDef : UNIT Name
+      ('(' ABSTRACT ')')?
+      ('[' Name ']')?
+      (EXTENDS UnitRef)?
+      ('=' (DerivedUnit | ComposedUnit))? ';';
+
+DerivedUnit : (DecConst (('*' | '/') DecConst)*
+        | FUNCTION Explanation) '[' UnitRef ']';
+
+ComposedUnit : '(' UnitRef (('*' | '/') UnitRef)* ')';
+
+UnitRef : (Name '.' (Name '.')?)? Name;
+
+// Traitement des méta-objets
+
+MetaDataBasketDef : SIGN | REFSYSTEM BASKET Name
+           PropertyKeyword? FINAL?
+           ('EXTENDS' MetaDataBasketRef)?
+           '~' TopicRef
+           (OBJECTS OF Name ':' Name (',' Name)*)? ';';
+
+MetaDataBasketRef : (Name '.' (Name '.')?)? Name;
+
+MetaObjectRef : (MetaDataBasketRef '.')? Name;
+
+// Paramètres
+
+ParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+         ':' (AttrTypeDef | METAOBJECT (OF MetaObjectRef)?) ';';
+
+// Paramètres d’exécution
+
+RunTimeParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+            ':' AttrTypeDef ';';
+
+// Conditions de cohérence
+
+ConstraintDef : MandatoryConstraint
+        | PlausibilityConstraint
+        | ExistenceConstraint
+        | UniquenessConstraint
+        | SetConstraint;
+
+MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression ';';
+
+PlausibilityConstraint : CONSTRAINT
+             ( '<=' | '>=' ) PercentageDec '%'
+             LogicalExpression ';';
+
+ExistenceConstraint : EXISTENCE CONSTRAINT
+           AttributePath REQUIRED IN
+           ViewableRef ':' AttributePath
+           ( OR ViewableRef ':' AttributePath )* ';';
+
+UniquenessConstraint : UNIQUE ( WHERE LogicalExpression ':' )?
+            ( GlobalUniqueness | LocalUniqueness ) ';';
+
+GlobalUniqueness : UniqueEl ( ',' UniqueEl )*;
+
+UniqueEl : ObjectOrAttributePath;
+
+LocalUniqueness : '(' LOCAL ')'
+          Name
+          ( '->' Name )* ':'
+          Name ( ',' Name )*;
+
+SetConstraint : SET CONSTRAINT ( WHERE LogicalExpression ':' )?
+        LogicalExpression ';';
+
+ConstraintsDef : CONSTRAINTS OF ClassOrAssociationRef '='
+        ( ConstraintDef )*
+        END ';';
+
+// Expressions
+
+Expression : Term;
+
+Term : Term0 ( '=>' Term0 )?;
+Term0 : Term1 ( ( OR | '+' | '-' ) Term1 )*;
+Term1 : Term2 ( ( AND | '*' | '/' ) Term2 )*;
+Term2 : Predicate ( Relation Predicate )?;
+
+Predicate : ( Factor
+      | ( NOT )? '(' LogicalExpression ')'
+      | DEFINED '(' Factor ')' );
+
+Relation : ( '==' | '!=' | '<>' | '<=' | '>=' | '<' | '>' );
+
+// Fonctions
+
+FunctionDef : FUNCTION Name
+         '(' ArgumentDef (',' ArgumentDef)* ')'
+         ':' ArgumentType Explanation? ';';
+
+ArgumentDef : Name ':' ArgumentType;
+
+ArgumentType : AttrTypeDef
+         | (OBJECT | OBJECTS) OF (RestrictedClassOrAssRef | ViewRef)
+         | ENUMVAL
+         | ENUMTREEVAL;
+
+// Vues
+
+ViewDef : VIEW Name
+      PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+      ( FormationDef | 'EXTENDS' ViewRef )?
+      BaseExtensionDef*
+      Selection*
+      '='
+      ViewAttributes?
+      ConstraintDef*
+      END Name ';';
+
+ViewRef : (Name '.' (Name '.')?)? Name;
+
+FormationDef : Projection 
+       | Join 
+       | Union 
+       | Aggregation
+       | Inspection;
+
+Projection : 'PROJECTION' 'OF' RenamedViewableRef;
+
+Join : 'JOIN' 'OF' RenamedViewableRef
+     (',' RenamedViewableRef ('(' 'OR' 'NULL' ')')?)*;
+
+Union : 'UNION' 'OF' RenamedViewableRef
+    (',' RenamedViewableRef)*;
+
+Aggregation : 'AGGREGATION' 'OF' RenamedViewableRef
+        ('ALL' | 'EQUAL' '(' UniqueEl ')');
+
+Inspection : ('AREA' 'INSPECTION' 'OF' RenamedViewableRef
+        '->' Name
+        ('->' Name)*);
+
+RenamedViewableRef : (Name '~')? ViewableRef;
+
+ViewableRef : (Name '.' (Name '.')?)?
+        (Name
+        | Name
+        | Name
+        | Name);
+
+BaseExtensionDef : 'BASE' Name 'EXTENDED' 'BY'
+           RenamedViewableRef (',' RenamedViewableRef)*;
+
+Selection : 'WHERE' LogicalExpression ';';
+
+ViewAttributes : ATTRIBUTE
+         ( ALL OF Name ';'
+         | AttributeDef
+         | Name
+         | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+         ':=' Expression ';' );
+
+// Représentations graphiques
+
+GraphicDef : GRAPHIC Name PropertyKeyword? (ABSTRACT | FINAL)?
+     (EXTENDS GraphicRef)?
+     ('BASED' ON ViewableRef)? '='
+     (Selection)*
+     (DrawingRule)*
+     END Name ';';
+
+GraphicRef : (Name '.' (Name '.')?)? Name;
+
+DrawingRule : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+  (OF SignClassRef)?
+  ':' CondSignParamAssignment (',' CondSignParamAssignment)* ';';
+
+CondSignParamAssignment : WHERE LogicalExpression
+        '(' SignParamAssignment ( ';' SignParamAssignment )* ')';
+
+SignParamAssignment : Name
+            ':=' ( '{' MetaObjectRef '}'
+               | Factor
+               | ACCORDING EnumAttributePath
+                '(' EnumAssignment 
+          ( ',' EnumAssignment )* ')' );
+
+EnumAssignment : ( '{' MetaObjectRef '}' | Constant ) 
+       WHEN IN EnumRange;
+
+EnumRange : EnumerationConst ('..' EnumerationConst)?;
 
 // Placeholders
 
-MetaDataBasketDef : String;
-UnitDef : String;
-FunctionDef: String;
-LineFormTypeDef: String;
-RunTimeParameterDef: String;
-ConstraintsDef: String;
-ViewDef: String;
-GraphicDef: String;
-ConstraintDef: String;
-ParameterDef: String;
 Factor: String;
-LineType: String;
-EnumerationType: String;
-EnumTreeValueType: String;
-AlignmentType: String;
-BooleanType: String;
-NumericType: String;
-FormattedType: String;
-CoordinateType: String;
-OIDType: String;
-BlackboxType: String;
-ClassType: String;
-AttributeType: String;
-NumericConst: String;
-FormattedConst: String;
-EnumerationConst: String;
-ClassConst: String;
-AttributeConst: String;
+SubEnumeration: String;
+MinDec: String;
+MaxDec: String;
+RefSysMetaObjectRef: String;
+AxisPosNumber: String;
+CoordDomainRef: String;
+FormattedTypeDomainRef: String;
+MinString: String;
+MaxString: String;
+NonNumString: String;
+IntPosPosNumber: String;
+FormattedDomainRef: String;
+GenericCoordDefDomainRef: String;
+ConcreteDomainRef: String;
+AttributePath: String;
+LineAttrDef: String;
+LineStructure: String;
+LogicalExpression: String;
+PercentageDec: String;
+ObjectOrAttributePath: String;
+SignClassRef: String;
+EnumAttributePath: String;
+SignParameterName: String;
 
 // Ignore whitespace
 WS : [ \t\r\n]+ -> skip;
