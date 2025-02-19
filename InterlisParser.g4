@@ -5,8 +5,8 @@ options { tokenVocab=INTERLISLexer; }
 name : Name;
 string : String;
 property : Property;
-properties : LParen property (Comma property)* RParen;
-propertyKeyword : PropertyKeyword LT propertyKeywordElement (Comma propertyKeywordElement)* GT;
+properties : LPAR property (COMMA property)* RPAR;
+propertyKeyword : PropertyKeyword LT propertyKeywordElement (COMMA propertyKeywordElement)* GT;
 propertyKeywordElement : PropertyKeyword;
 
 explanation : Explanation;

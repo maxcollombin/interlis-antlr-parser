@@ -187,6 +187,7 @@ En plus de la réutilisation des token prédéfinis, le dernier token Name ne pe
 
 > [!NOTE]
 > La ressource ili2c fait intervenir la règle [LineAttrDef](https://github.com/claeis/ili2c/blob/2b206f6f0180d9cb2616804e76bbdc803838698b/ili2c-core/src/main/antlr/ch/interlis/ili2c/parser/syntax23.txt#L268C1-L268C12) qui n'est définie nulle part dans le manuel de référence (eCH-0031).
+> La définition de la règle `LineType` n'y est pas non plus correcte.
 
 ### 3.9.3 Unités composées
 
@@ -403,25 +404,67 @@ Dans la définition de la règle Inspection, la seconde référence à `Structur
 
 Modifier les définitions de toutes les règles comportant les tokens suivants car il correspondent tous à la règle Name qu'il n'est pas utile de répéter de multiples fois. Ces non-terminaux ne sont, de plus, jamais définis ce pourquoi des placeholders de type String ont été définis de manière intermédiaire lors du contrôle de la grammaire.
 
-- NumericAttributeName
-- StructureAttributeName
-- ArgumentName
-- AttributeName
-- BaseName
-- ModelName
-- TopicName
-- StructureName
-- ClassName
-- AssociationName
-- ViewName
-- GraphicName
-- DrawingRuleName
-- SignParameterName
+- NumericAttribute-Name
+- StructureAttribute-Name
+- Argument-Name
+- Attribute-Name
+- Base-Name
+- Model-Name
+- Topic-Name
+- Structure-Name
+- Class-Name
+- Association-Name
+- View-Name
+- Graphic-Name
+- DrawingRule-Name
+- SignParameter-Name
+- LineStructure-Name
 
 
+## Divers
+
+Les règles suivantes ne sont jamais définies dans la grammaire:
+
+- `Factor`
+- `Sub-Enumeration`
+- `Min-Dec`
+- `Max-Dec`
+- `RefSys-MetaObjectRef`
+- `Axis-PosNumber`
+- `Coord-DomainRef`
+- `FormattedType-DomainRef`
+- `Min-String`
+- `Max-String`
+- `NonNum-String`
+- `IntPos-PosNumber`
+- `Formatted-DomainRef`
+- `GenericCoordDef-DomainRef`
+- `ConcreteDomainRef`
+- `AttributePath`
+
+- `LineAttrDef`
+
+- `LogicalExpression`
+- `PercentageDec`
+- `ObjectOrAttributePath`
+- `SignClassRef`
+- `EnumAttributePath`
+
+Toutes les occurences de `'<'`, `'>'`, `'='`, `'('`, `')'`, `','`, `';'` doivent être rempacées par les tokens liés.
+
+Ajouter `DOT: '.';` dans les tokens de base et remplacer partout où cela intervient.
+- MINUS: '-';
+- PLUS: '+';
+- COLON: ':';
+- GTEQ: '>=';
+- LTEQ: '<=';
+- LCBR: '{';
+- RCBR: '}';
+- LSBR: '[';
+- RSBR: ']';
 
 
+### Mots réservés
 
-
-> [!NOTE]
-> Revérifier toute la grammaire pour vérifier contrôler si des recours à des tokens sont encore oubliés dans les règles.
+Les éléments suivants, doivent être ajoutés aux tokens réservés par souci de cohérence
+- ENUM

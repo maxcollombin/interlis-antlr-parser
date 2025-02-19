@@ -1,14 +1,24 @@
 lexer grammar InterlisLexer;
 
 // Lexer rules
-Assign : '=';
+EQ : '=';
 Scaling : ('e' | 'E') Number;
-LParen : '(';
-RParen : ')';
-Comma : ',';
-Semicolon : ';';
+LPAR : '(';
+RPAR : ')';
+COMMA : ',';
+SEMI : ';';
 LT : '<';
+LTEQ: '<=';
 GT : '>';
+GTEQ: '>=';
+DOT: '.';
+COLON: ':';
+MINUS: '-';
+PLUS: '+';
+LCBR: '{';
+RCBR: '}';
+LSBR: '[';
+RSBR: ']';
 
 //Names
 Name : Letter (Letter | Digit | '_')*;
@@ -21,9 +31,9 @@ String : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDi
 
 //Numbers
 PosNumber : Digit+;
-Number : ('+' | '-')? PosNumber;
-Dec : (Number ('.' PosNumber)? | Float);
-Float : ('+' | '-')? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
+Number : (PLUS | MINUS)? PosNumber;
+Dec : (Number (DOT PosNumber)? | Float);
+Float : (PLUS | MINUS)? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
 
 //Sets of properties
 Property : [a-zA-Z0-9_]+;
@@ -50,7 +60,8 @@ AT : 'AT';
 ATTRIBUTE : 'ATTRIBUTE';
 ATTRIBUTES : 'ATTRIBUTES';
 BAG : 'BAG';
-BASE : 'BASED';
+BASE : 'BASE';
+BASED : 'BASED';
 BASKET : 'BASKET';
 BINARY : 'BINARY';
 BLACKBOX : 'BLACKBOX';
@@ -88,6 +99,7 @@ DIM2 : 'DIM2';
 DIRECTED : 'DIRECTED';
 DOMAIN : 'DOMAIN';
 END : 'END';
+ENUM : 'ENUM';
 ENUMTREEVAL : 'ENUMTREEVAL';
 ENUMVAL : 'ENUMVAL';
 EQUAL : 'EQUAL';
@@ -108,7 +120,7 @@ GENERIC : 'GENERIC';
 GENERICS : 'GENERICS';
 GRADS : 'GRADS';
 GRAPHIC : 'GRAPHIC';
-HALIGNEMENT : 'HALIGNEMENT';
+HALIGNMENT : 'HALIGNMENT';
 HIDING : 'HIDING';
 I16 : 'I16';
 I32 : 'I32';
@@ -190,7 +202,7 @@ UNIQUE : 'UNIQUE';
 UNIT : 'UNIT';
 UNQUALIFIED : 'UNQUALIFIED';
 URI : 'URI';
-VALIGNEMENT : 'VALIGNEMENT';
+VALIGNMENT : 'VALIGNMENT';
 VERSION : 'VERSION';
 VERTEX : 'VERTEX';
 VERTEXINFO : 'VERTEXINFO';
@@ -209,16 +221,16 @@ SingleLineComment : '!!' ~[\r\n]*;
 BlockComment : '/*' .*? '*/';
 
 // Règle principale
-INTERLIS2Def : INTERLIS ' ' Dec Semicolon { ModelDef };
+INTERLIS2Def : INTERLIS ' ' Dec SEMI { ModelDef };
 
 // Définition du modèle
 
-ModelDef : 'CONTRACTED'? ('TYPE' | 'REFSYSTEM' | 'SYMBOLOGY')? 
-           'MODEL' Name ('(' Name ')')? 
-           'AT' String 
-           'VERSION' String Explanation? 
-           ('TRANSLATION' 'OF' Name '[' String ']')? '=' 
-           ('IMPORTS' 'UNQUALIFIED'? Name (',' 'UNQUALIFIED'? Name)* ';')* 
+ModelDef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)? 
+           MODEL Name (LPAR Name RPAR)? 
+           AT String 
+           VERSION String Explanation? 
+           (TRANSLATION OF Name LSBR String RSBR)? EQ 
+           (IMPORTS UNQUALIFIED? Name (COMMA UNQUALIFIED? Name)* SEMI)* 
            (MetaDataBasketDef 
            | UnitDef 
            | FunctionDef 
@@ -228,16 +240,16 @@ ModelDef : 'CONTRACTED'? ('TYPE' | 'REFSYSTEM' | 'SYMBOLOGY')?
            | ClassDef 
            | StructureDef 
            | TopicDef)* 
-           'END' Name '.';
+           END Name DOT;
 
 // Thèmes           
 
-TopicDef : 'VIEW'? 'TOPIC' Name
+TopicDef : VIEW? TOPIC Name
            PropertyKeyword? (ABSTRACT | FINAL)?
-           ('EXTENDS' Name)? '='
-           ('BASKET' 'OID' 'AS' Name ';')?
-           ('OID' 'AS' Name ';')?
-           ('DEPENDS' 'ON' Name (',' Name)* ';')?
+           (EXTENDS Name)? EQ
+           (BASKET OID AS Name SEMI)?
+           (OID AS Name SEMI)?
+           (DEPENDS ON Name (COMMA Name)* SEMI)?
            (MetaDataBasketDef 
            | UnitDef 
            | FunctionDef 
@@ -247,7 +259,7 @@ TopicDef : 'VIEW'? 'TOPIC' Name
            | ClassDef 
            | StructureDef 
            | TopicDef)*
-           'END' Name ';';
+           END Name SEMI;
 
 Definitions : MetaDataBasketDef
             | UnitDef
@@ -260,90 +272,90 @@ Definitions : MetaDataBasketDef
             | ViewDef
             | GraphicDef;
 
-TopicRef : (Name '.')? Name;
+TopicRef : (Name DOT)? Name;
 
 // Classes et structures
 
-ClassDef : 'CLASS' Name
+ClassDef : CLASS Name
              PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
-               ('EXTENDS' ClassOrStructureRef)? '='
-               (('OID' 'AS' Name | 'NO' 'OID') ';')?
+               (EXTENDS ClassOrStructureRef)? EQ
+               ((OID AS Name | NO OID) SEMI)?
              ClassOrStructureDef
-           'END' Name ';';
+           END Name SEMI;
 
-StructureDef : 'STRUCTURE' Name
+StructureDef : STRUCTURE Name
                  PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
-                   ('EXTENDS' StructureRef)? '='
+                   (EXTENDS StructureRef)? EQ
                  ClassOrStructureDef
-               'END' Name ';';
+               END Name SEMI;
 
 
-ClassRef : (Name '.' (Name '.')?)? Name;
+ClassRef : (Name DOT (Name DOT)?)? Name;
 ClassOrStructureDef : ('ATTRIBUTE' AttributeDef+ | ConstraintDef+ | 'PARAMETER' ParameterDef+)+;
 
-StructureRef : (Name '.' (Name '.')?)? Name;
+StructureRef : (Name DOT (Name DOT)?)? Name;
 
 ClassOrStructureRef : ClassRef | StructureRef;
 
 // Attributs
 
-AttributeDef : 'CONTINUOUS'? 'SUBDIVISION'? 
+AttributeDef : CONTINUOUS? SUBDIVISION? 
                Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)? 
-               ':' AttrTypeDef 
-               (':=' Factor (',' Factor)*)? ';';
+               COLON AttrTypeDef 
+               (':=' Factor (COMMA Factor)*)? SEMI;
 
-AttrTypeDef : 'MANDATORY'? AttrType 
-            | ('BAG' | 'LIST') Cardinality? 'OF' RestrictedStructureRef;
+AttrTypeDef : MANDATORY? AttrType 
+            | (BAG | LIST) Cardinality? OF RestrictedStructureRef;
 
 AttrType : Type 
          | DomainRef 
          | ReferenceAttr 
          | RestrictedStructureRef;
 
-ReferenceAttr : 'REFERENCE' 'TO' PropertyKeyword? EXTERNAL? RestrictedClassOrAssRef;
+ReferenceAttr : REFERENCE TO PropertyKeyword? EXTERNAL? RestrictedClassOrAssRef;
 
-RestrictedClassOrAssRef : (ClassOrAssociationRef | 'ANYCLASS') 
-                        ('RESTRICTION' '(' ClassOrAssociationRef (',' ClassOrAssociationRef)* ')')?;
+RestrictedClassOrAssRef : (ClassOrAssociationRef | ANYCLASS) 
+                        (RESTRICTION LPAR ClassOrAssociationRef (COMMA ClassOrAssociationRef)* RPAR)?;
 
 ClassOrAssociationRef : ClassRef | AssociationRef;
 
-RestrictedStructureRef : (StructureRef | 'ANYSTRUCTURE') 
-                       ('RESTRICTION' '(' StructureRef (',' StructureRef)* ')')?;
+RestrictedStructureRef : (StructureRef | ANYSTRUCTURE) 
+                       (RESTRICTION LPAR StructureRef (COMMA StructureRef)* RPAR)?;
 
-RestrictedClassOrStructureRef : (ClassOrStructureRef | 'ANYSTRUCTURE') 
-                              ('RESTRICTION' '(' ClassOrStructureRef (',' ClassOrStructureRef)* ')')?;
+RestrictedClassOrStructureRef : (ClassOrStructureRef | ANYSTRUCTURE) 
+                              (RESTRICTION LPAR ClassOrStructureRef (COMMA ClassOrStructureRef)* RPAR)?;
 
 // Relations vraies / Associations
 
-AssociationDef : 'ASSOCIATION' Name
+AssociationDef : ASSOCIATION Name
                      PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | OID)?
-                     ('EXTENDS' AssociationRef)?
-                     ('DERIVED' 'FROM' Name)? '='
-                     (('OID' 'AS' Name | 'NO' 'OID') ';')?
+                     (EXTENDS AssociationRef)?
+                     (DERIVED FROM Name)? EQ
+                     ((OID AS Name | NO OID) SEMI)?
                      RoleDef*
-                     ('ATTRIBUTE' AttributeDef*)?
-                     ('CARDINALITY' '=' Cardinality ';')?
+                     (ATTRIBUTE AttributeDef*)?
+                     (CARDINALITY EQ Cardinality SEMI)?
                      ConstraintDef*
-                 'END' Name ';';
+                 END Name SEMI;
 
-AssociationRef : (Name '.' (Name '.')?)? Name;
+AssociationRef : (Name DOT (Name DOT)?)? Name;
 
 RoleDef : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
               ('--' | '-<>' | '-<#>') Cardinality?
               RestrictedClassOrAssRef ('OR' RestrictedClassOrAssRef)*
-              (':=' Factor)? ';';
+              (':=' Factor)? SEMI;
 
-Cardinality : '{' ('*' | PosNumber ('..' (PosNumber | '*'))?) '}';
+Cardinality : LCBR ('*' | PosNumber ('..' (PosNumber | '*'))?) RCBR;
 
 // Domaines de valeurs et constantes
 
-DomainDef : 'DOMAIN' Name PropertyKeyword? (ABSTRACT | FINAL)?
-                ('EXTENDS' DomainRef)? '='
-                ('MANDATORY'? Type | Type) ';';
+DomainDef : DOMAIN Name PropertyKeyword? (ABSTRACT | FINAL)?
+                (EXTENDS DomainRef)? EQ
+                (MANDATORY? Type | Type) SEMI;
 
 Type : BaseType | LineType;
 
-DomainRef : (Name '.' (Name '.')?)? Name;
+DomainRef : (Name DOT (Name DOT)?)? Name;
 
 BaseType : TextType
            | EnumerationType
@@ -377,19 +389,19 @@ TextConst : String;
 
 // Enumérations
 
-EnumerationType : 'ENUM' '{' EnumElement (',' EnumElement)* '}' ('ORDERED' | 'CIRCULAR')?;
+EnumerationType : ENUM LCBR EnumElement (COMMA EnumElement)* RCBR (ORDERED | CIRCULAR)?;
 
-EnumTreeValueType : 'ALL' 'OF' DomainRef;
+EnumTreeValueType : ALL OF DomainRef;
 
-Enumeration : '(' EnumElement (',' EnumElement)* (':' 'FINAL')? ')';
+Enumeration : LPAR EnumElement (COMMA EnumElement)* (COLON FINAL)? RPAR;
 
-EnumElement : Name ('.' Name)* (SubEnumeration)?;
+EnumElement : Name (DOT Name)* (SubEnumeration)?;
 
-EnumerationConst : '#' (Name ('.' Name)* ('.' 'OTHERS')? | 'OTHERS');
+EnumerationConst : '#' (Name (DOT Name)* ('.' OTHERS)? | OTHERS);
 
 // Alignement du texte
 
-AlignmentType : ( 'HALIGNMENT' | 'VALIGNMENT' );
+AlignmentType : ( HALIGNMENT | VALIGNMENT );
 
 // Boolean
 
@@ -397,23 +409,23 @@ BooleanType : BOOLEAN;
 
 // Types de données numériques
 
-NumericType : (MinDec '..' MaxDec | 'NUMERIC') 'CIRCULAR'?
-        ('[' UnitRef ']')?
-        ('CLOCKWISE' | 'COUNTERCLOCKWISE' | RefSys)?;
+NumericType : (MinDec '..' MaxDec | NUMERIC) CIRCULAR?
+        (LSBR UnitRef RSBR)?
+        (CLOCKWISE | COUNTERCLOCKWISE | RefSys)?;
 
-RefSys : '{' RefSysMetaObjectRef ('[' AxisPosNumber ']')? '}'
-     | '<' CoordDomainRef ('[' AxisPosNumber ']')? '>';
+RefSys : LCBR RefSysMetaObjectRef (LSBR AxisPosNumber RSBR)? RCBR
+     | LT CoordDomainRef (LSBR AxisPosNumber RSBR)? GT;
 
 DecConst : Dec | PI | LNBASE;
 
-NumericConst : DecConst ('[' UnitRef ']')?;
+NumericConst : DecConst (LSBR UnitRef RSBR)?;
 
 // Domaines de valeurs formatés
 
-FormattedType : 'FORMAT' 'BASED' 'ON' StructureRef FormatDef
-        | 'FORMAT' FormattedTypeDomainRef MinString '..' MaxString;
+FormattedType : FORMAT BASED ON StructureRef FormatDef
+        | FORMAT FormattedTypeDomainRef MinString '..' MaxString;
 
-FormatDef : '(' 'INHERITANCE'? NonNumString? (BaseAttrRef NonNumString)* BaseAttrRef NonNumString? ')';
+FormatDef : LPAR INHERITANCE? NonNumString? (BaseAttrRef NonNumString)* BaseAttrRef NonNumString? RPAR;
 
 BaseAttrRef : Name ('/' IntPosPosNumber)?
       | Name '/' FormattedDomainRef;
@@ -426,16 +438,16 @@ DateTimeType : ( DATE | TIMEOFDAY | DATETIME );
 
 // Coordonnées
 
-CoordinateType : 'COORD' NumericType
-           (',' NumericType (',' NumericType)?
-             (',' RotationDef)?)?;
+CoordinateType : COORD NumericType
+           (COMMA NumericType (COMMA NumericType)?
+             (COMMA RotationDef)?)?;
 
-RotationDef : 'ROTATION' NullAxisPosNumber '->' PiHalfAxisPosNumber;
+RotationDef : ROTATION NullAxisPosNumber '->' PiHalfAxisPosNumber;
 
 NullAxisPosNumber : PosNumber;
 PiHalfAxisPosNumber : PosNumber;
 
-ContextDef : 'CONTEXT' Name '=' '{' GenericCoordDefDomainRef '=' ConcreteDomainRef ('OR' ConcreteDomainRef)* ';' '}' ';';
+ContextDef : CONTEXT Name EQ LCBR GenericCoordDefDomainRef EQ ConcreteDomainRef (OR ConcreteDomainRef)* SEMI RCBR SEMI;
 
 // Domaines de valeurs des identifications d’objet
 
@@ -448,46 +460,45 @@ BlackboxType : BLACKBOX ( 'XML' | BINARY );
 // Domaines de valeurs de classes et chemins d’attributs
 
 ClassType : CLASS
-        (RESTRICTION '(' ViewableRef (',' ViewableRef)* ')')?
+        (RESTRICTION LPAR ViewableRef (COMMA ViewableRef)* RPAR)?
       | STRUCTURE
-        (RESTRICTION '(' ClassOrStructureRef (',' ClassOrStructureRef)* ')')?;
+        (RESTRICTION LPAR ClassOrStructureRef (COMMA ClassOrStructureRef)* RPAR)?;
 
 AttributeType : ATTRIBUTE
-          (OF (ClassType '.' AttributePath | '@' Name))?
-          (RESTRICTION '(' AttrTypeDef (',' AttrTypeDef)* ')')?;
+          (OF (ClassType DOT AttributePath | '@' Name))?
+          (RESTRICTION LPAR AttrTypeDef (COMMA AttrTypeDef)* RPAR)?;
 
-ClassConst : '>' ViewableRef;
+ClassConst : GT ViewableRef;
 
-AttributePathConst : '>>' (ViewableRef '.')? Name;
+AttributePathConst : '>>' (ViewableRef DOT)? Name;
 
 // Polylignes
 
-LineType : (DIRECTED POLYLINE | SURFACE | AREA)
-       (WITH '(' LineFormType (',' LineFormType)* ')')?
-       ControlPoints? IntersectionDef? LineAttrDef?;
+LineType : ( DIRECTED? POLYLINE | SURFACE | AREA | DIRECTED? MULTIPOLYLINE | MULTISURFACE | MULTIAREA )
+        LineForm? ControlPoints? IntersectionDef?;
 
-LineFormType : STRAIGHTS | ARCS | Name '.' Name;
+LineFormType : STRAIGHTS | ARCS | Name DOT Name;
 
 ControlPoints : VERTEX Name;
 
-IntersectionDef : WITHOUT OVERLAPS '>' Dec;
+IntersectionDef : WITHOUT OVERLAPS GT Dec;
 
-LineFormTypeDef : LINE FORM '{' LineFormType ':' LineStructure ';' '}';
+LineFormTypeDef : LINE FORM LCBR Name COLON Name SEMI RCBR;
 
 // Unités composées
 
 UnitDef : UNIT Name
-      ('(' ABSTRACT ')')?
-      ('[' Name ']')?
+      (LPAR ABSTRACT RPAR)?
+      (LSBR Name RSBR)?
       (EXTENDS UnitRef)?
-      ('=' (DerivedUnit | ComposedUnit))? ';';
+      (EQ (DerivedUnit | ComposedUnit))? SEMI;
 
 DerivedUnit : (DecConst (('*' | '/') DecConst)*
-        | FUNCTION Explanation) '[' UnitRef ']';
+        | FUNCTION Explanation) LSBR UnitRef RSBR;
 
-ComposedUnit : '(' UnitRef (('*' | '/') UnitRef)* ')';
+ComposedUnit : LPAR UnitRef (('*' | '/') UnitRef)* RPAR;
 
-UnitRef : (Name '.' (Name '.')?)? Name;
+UnitRef : (Name DOT (Name DOT)?)? Name;
 
 // Traitement des méta-objets
 
@@ -495,21 +506,21 @@ MetaDataBasketDef : SIGN | REFSYSTEM BASKET Name
            PropertyKeyword? FINAL?
            ('EXTENDS' MetaDataBasketRef)?
            '~' TopicRef
-           (OBJECTS OF Name ':' Name (',' Name)*)? ';';
+           (OBJECTS OF Name COLON Name (COMMA Name)*)? SEMI;
 
-MetaDataBasketRef : (Name '.' (Name '.')?)? Name;
+MetaDataBasketRef : (Name DOT (Name DOT)?)? Name;
 
-MetaObjectRef : (MetaDataBasketRef '.')? Name;
+MetaObjectRef : (MetaDataBasketRef DOT)? Name;
 
 // Paramètres
 
 ParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
-         ':' (AttrTypeDef | METAOBJECT (OF MetaObjectRef)?) ';';
+         COLON (AttrTypeDef | METAOBJECT (OF MetaObjectRef)?) SEMI;
 
 // Paramètres d’exécution
 
 RunTimeParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
-            ':' AttrTypeDef ';';
+            COLON AttrTypeDef SEMI;
 
 // Conditions de cohérence
 
@@ -519,58 +530,58 @@ ConstraintDef : MandatoryConstraint
         | UniquenessConstraint
         | SetConstraint;
 
-MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression ';';
+MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression SEMI;
 
 PlausibilityConstraint : CONSTRAINT
-             ( '<=' | '>=' ) PercentageDec '%'
-             LogicalExpression ';';
+             ( LTEQ | GTEQ ) PercentageDec '%'
+             LogicalExpression SEMI;
 
 ExistenceConstraint : EXISTENCE CONSTRAINT
            AttributePath REQUIRED IN
-           ViewableRef ':' AttributePath
-           ( OR ViewableRef ':' AttributePath )* ';';
+           ViewableRef COLON AttributePath
+           ( OR ViewableRef COLON AttributePath )* SEMI;
 
-UniquenessConstraint : UNIQUE ( WHERE LogicalExpression ':' )?
-            ( GlobalUniqueness | LocalUniqueness ) ';';
+UniquenessConstraint : UNIQUE ( WHERE LogicalExpression COLON )?
+            ( GlobalUniqueness | LocalUniqueness ) SEMI;
 
-GlobalUniqueness : UniqueEl ( ',' UniqueEl )*;
+GlobalUniqueness : UniqueEl ( COMMA UniqueEl )*;
 
 UniqueEl : ObjectOrAttributePath;
 
-LocalUniqueness : '(' LOCAL ')'
+LocalUniqueness : LPAR LOCAL RPAR
           Name
-          ( '->' Name )* ':'
-          Name ( ',' Name )*;
+          ( '->' Name )* COLON
+          Name ( COMMA Name )*;
 
-SetConstraint : SET CONSTRAINT ( WHERE LogicalExpression ':' )?
-        LogicalExpression ';';
+SetConstraint : SET CONSTRAINT ( WHERE LogicalExpression COLON )?
+        LogicalExpression SEMI;
 
-ConstraintsDef : CONSTRAINTS OF ClassOrAssociationRef '='
+ConstraintsDef : CONSTRAINTS OF ClassOrAssociationRef EQ
         ( ConstraintDef )*
-        END ';';
+        END SEMI;
 
 // Expressions
 
 Expression : Term;
 
 Term : Term0 ( '=>' Term0 )?;
-Term0 : Term1 ( ( OR | '+' | '-' ) Term1 )*;
+Term0 : Term1 ( ( OR | PLUS | MINUS ) Term1 )*;
 Term1 : Term2 ( ( AND | '*' | '/' ) Term2 )*;
 Term2 : Predicate ( Relation Predicate )?;
 
 Predicate : ( Factor
-      | ( NOT )? '(' LogicalExpression ')'
-      | DEFINED '(' Factor ')' );
+      | ( NOT )? LPAR LogicalExpression RPAR
+      | DEFINED LPAR Factor RPAR );
 
-Relation : ( '==' | '!=' | '<>' | '<=' | '>=' | '<' | '>' );
+Relation : ( '==' | '!=' | '<>' | LTEQ | GTEQ | LT | GT );
 
 // Fonctions
 
 FunctionDef : FUNCTION Name
-         '(' ArgumentDef (',' ArgumentDef)* ')'
-         ':' ArgumentType Explanation? ';';
+         LPAR ArgumentDef (COMMA ArgumentDef)* RPAR
+         COLON ArgumentType Explanation? SEMI;
 
-ArgumentDef : Name ':' ArgumentType;
+ArgumentDef : Name COLON ArgumentType;
 
 ArgumentType : AttrTypeDef
          | (OBJECT | OBJECTS) OF (RestrictedClassOrAssRef | ViewRef)
@@ -584,12 +595,12 @@ ViewDef : VIEW Name
       ( FormationDef | 'EXTENDS' ViewRef )?
       BaseExtensionDef*
       Selection*
-      '='
+      EQ
       ViewAttributes?
       ConstraintDef*
-      END Name ';';
+      END Name SEMI;
 
-ViewRef : (Name '.' (Name '.')?)? Name;
+ViewRef : (Name DOT (Name DOT)?)? Name;
 
 FormationDef : Projection 
        | Join 
@@ -600,13 +611,13 @@ FormationDef : Projection
 Projection : 'PROJECTION' 'OF' RenamedViewableRef;
 
 Join : 'JOIN' 'OF' RenamedViewableRef
-     (',' RenamedViewableRef ('(' 'OR' 'NULL' ')')?)*;
+     (COMMA RenamedViewableRef (LPAR 'OR' 'NULL' RPAR)?)*;
 
 Union : 'UNION' 'OF' RenamedViewableRef
-    (',' RenamedViewableRef)*;
+    (COMMA RenamedViewableRef)*;
 
 Aggregation : 'AGGREGATION' 'OF' RenamedViewableRef
-        ('ALL' | 'EQUAL' '(' UniqueEl ')');
+        ('ALL' | 'EQUAL' LPAR UniqueEl RPAR);
 
 Inspection : ('AREA' 'INSPECTION' 'OF' RenamedViewableRef
         '->' Name
@@ -614,50 +625,50 @@ Inspection : ('AREA' 'INSPECTION' 'OF' RenamedViewableRef
 
 RenamedViewableRef : (Name '~')? ViewableRef;
 
-ViewableRef : (Name '.' (Name '.')?)?
+ViewableRef : (Name DOT (Name DOT)?)?
         (Name
         | Name
         | Name
         | Name);
 
-BaseExtensionDef : 'BASE' Name 'EXTENDED' 'BY'
-           RenamedViewableRef (',' RenamedViewableRef)*;
+BaseExtensionDef : BASE Name 'EXTENDED' 'BY'
+           RenamedViewableRef (COMMA RenamedViewableRef)*;
 
-Selection : 'WHERE' LogicalExpression ';';
+Selection : 'WHERE' LogicalExpression SEMI;
 
 ViewAttributes : ATTRIBUTE
-         ( ALL OF Name ';'
+         ( ALL OF Name SEMI
          | AttributeDef
          | Name
          | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
-         ':=' Expression ';' );
+         ':=' Expression SEMI );
 
 // Représentations graphiques
 
 GraphicDef : GRAPHIC Name PropertyKeyword? (ABSTRACT | FINAL)?
      (EXTENDS GraphicRef)?
-     ('BASED' ON ViewableRef)? '='
+     (BASED ON ViewableRef)? EQ
      (Selection)*
      (DrawingRule)*
-     END Name ';';
+     END Name SEMI;
 
-GraphicRef : (Name '.' (Name '.')?)? Name;
+GraphicRef : (Name DOT (Name DOT)?)? Name;
 
 DrawingRule : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
   (OF SignClassRef)?
-  ':' CondSignParamAssignment (',' CondSignParamAssignment)* ';';
+  COLON CondSignParamAssignment (COMMA CondSignParamAssignment)* SEMI;
 
 CondSignParamAssignment : WHERE LogicalExpression
-        '(' SignParamAssignment ( ';' SignParamAssignment )* ')';
+        LPAR SignParamAssignment ( SEMI SignParamAssignment )* RPAR;
 
 SignParamAssignment : Name
-            ':=' ( '{' MetaObjectRef '}'
+            ':=' ( LCBR MetaObjectRef RCBR
                | Factor
                | ACCORDING EnumAttributePath
-                '(' EnumAssignment 
-          ( ',' EnumAssignment )* ')' );
+                LPAR EnumAssignment 
+          ( COMMA EnumAssignment )* RPAR );
 
-EnumAssignment : ( '{' MetaObjectRef '}' | Constant ) 
+EnumAssignment : ( LCBR MetaObjectRef RCBR | Constant ) 
        WHEN IN EnumRange;
 
 EnumRange : EnumerationConst ('..' EnumerationConst)?;
@@ -681,13 +692,12 @@ GenericCoordDefDomainRef: String;
 ConcreteDomainRef: String;
 AttributePath: String;
 LineAttrDef: String;
-LineStructure: String;
 LogicalExpression: String;
 PercentageDec: String;
 ObjectOrAttributePath: String;
 SignClassRef: String;
 EnumAttributePath: String;
-SignParameterName: String;
+LineForm: String;
 
 // Ignore whitespace
 WS : [ \t\r\n]+ -> skip;
