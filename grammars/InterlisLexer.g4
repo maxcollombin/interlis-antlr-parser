@@ -2,17 +2,18 @@ lexer grammar InterlisLexer;
 
 // Lexer rules
 EQ : '=';
+NOT_EQ : '!='; // newly added
 Scaling : ('e' | 'E') Number;
 LPAR : '(';
 RPAR : ')';
 COMMA : ',';
+COLON: ':';
 SEMI : ';';
 LT : '<';
 LTEQ: '<=';
 GT : '>';
 GTEQ: '>=';
 DOT: '.';
-COLON: ':';
 MINUS: '-';
 PLUS: '+';
 LCBR: '{';
@@ -57,6 +58,7 @@ AREA : 'AREA';
 AS : 'AS';
 ASSOCIATION : 'ASSOCIATION';
 AT : 'AT';
+AT_SYMBOL : '@'; // newly added
 ATTRIBUTE : 'ATTRIBUTE';
 ATTRIBUTES : 'ATTRIBUTES';
 BAG : 'BAG';
@@ -97,6 +99,7 @@ DERIVED : 'DERIVED';
 DIM1 : 'DIM1';
 DIM2 : 'DIM2';
 DIRECTED : 'DIRECTED';
+DIV: '/';
 DOMAIN : 'DOMAIN';
 END : 'END';
 ENUM : 'ENUM';
@@ -121,6 +124,7 @@ GENERICS : 'GENERICS';
 GRADS : 'GRADS';
 GRAPHIC : 'GRAPHIC';
 HALIGNMENT : 'HALIGNMENT';
+HASH : '#'; // newly added
 HIDING : 'HIDING';
 I16 : 'I16';
 I32 : 'I32';
@@ -130,6 +134,7 @@ IN : 'IN';
 INHERITANCE : 'INHERITANCE';
 INSPECTION : 'INSPECTION';
 INTERLIS : 'INTERLIS';
+// INTERLIS : 'INTERLIS' [ \t\r\n]+ Dec SEMI;
 JOIN : 'JOIN';
 LAST : 'LAST';
 LINE : 'LINE';
@@ -140,8 +145,10 @@ LNBASE : 'LNBASE';
 LOCAL : 'LOCAL';
 MANDATORY : 'MANDATORY';
 METAOBJECT : 'METAOBJECT';
+MOD: '%';
 MODEL : 'MODEL';
 MTEXT : 'MTEXT';
+MUL: '*';
 MULTIAREA : 'MULTIAREA';
 MULTICOORD : 'MULTICOORD';
 MULTIPOLYLINE : 'MULTIPOLYLINE';
@@ -189,6 +196,7 @@ THIS : 'THIS';
 THISAREA : 'THISAREA';
 TID : 'TID';
 TIDSIZE : 'TIDSIZE';
+TILDE : '~'; // newly added
 TIMEOFDAY : 'TIMEOFDAY';
 TO : 'TO';
 TOPIC : 'TOPIC';
@@ -211,6 +219,7 @@ WHEN : 'WHEN';
 WHERE : 'WHERE';
 WITH : 'WITH';
 WITHOUT : 'WITHOUT';
+XML : 'XML';            
 XMLNS : 'XMLNS';
 
 // Single-line comment
@@ -221,26 +230,26 @@ SingleLineComment : '!!' ~[\r\n]*;
 BlockComment : '/*' .*? '*/';
 
 // Règle principale
-INTERLIS2Def : INTERLIS ' ' Dec SEMI { ModelDef };
+// INTERLIS2Def : INTERLIS WS Dec SEMI { ModelDef };
 
 // Définition du modèle
 
-ModelDef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)? 
-           MODEL Name (LPAR Name RPAR)? 
-           AT String 
-           VERSION String Explanation? 
-           (TRANSLATION OF Name LSBR String RSBR)? EQ 
-           (IMPORTS UNQUALIFIED? Name (COMMA UNQUALIFIED? Name)* SEMI)* 
-           (MetaDataBasketDef 
-           | UnitDef 
-           | FunctionDef 
-           | LineFormTypeDef 
-           | DomainDef 
-           | RunTimeParameterDef 
-           | ClassDef 
-           | StructureDef 
-           | TopicDef)* 
-           END Name DOT;
+// ModelDef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)? 
+//            MODEL Name (LPAR Name RPAR)? 
+//            AT String 
+//            VERSION String Explanation? 
+//            (TRANSLATION OF Name LSBR String RSBR)? EQ 
+//            (IMPORTS UNQUALIFIED? Name (COMMA UNQUALIFIED? Name)* SEMI)* 
+//            (MetaDataBasketDef 
+//            | UnitDef 
+//            | FunctionDef 
+//            | LineFormTypeDef 
+//            | DomainDef 
+//            | RunTimeParameterDef 
+//            | ClassDef 
+//            | StructureDef 
+//            | TopicDef)* 
+//            END Name DOT;
 
 // Thèmes           
 
@@ -291,7 +300,7 @@ StructureDef : STRUCTURE Name
 
 
 ClassRef : (Name DOT (Name DOT)?)? Name;
-ClassOrStructureDef : ('ATTRIBUTE' AttributeDef+ | ConstraintDef+ | 'PARAMETER' ParameterDef+)+;
+ClassOrStructureDef : (ATTRIBUTE AttributeDef+ | ConstraintDef+ | PARAMETER ParameterDef+)+;
 
 StructureRef : (Name DOT (Name DOT)?)? Name;
 
@@ -302,7 +311,7 @@ ClassOrStructureRef : ClassRef | StructureRef;
 AttributeDef : CONTINUOUS? SUBDIVISION? 
                Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)? 
                COLON AttrTypeDef 
-               (':=' Factor (COMMA Factor)*)? SEMI;
+               (COLON EQ Factor (COMMA Factor)*)? SEMI;
 
 AttrTypeDef : MANDATORY? AttrType 
             | (BAG | LIST) Cardinality? OF RestrictedStructureRef;
@@ -341,11 +350,11 @@ AssociationDef : ASSOCIATION Name
 AssociationRef : (Name DOT (Name DOT)?)? Name;
 
 RoleDef : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
-              ('--' | '-<>' | '-<#>') Cardinality?
-              RestrictedClassOrAssRef ('OR' RestrictedClassOrAssRef)*
-              (':=' Factor)? SEMI;
+              (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT) Cardinality?
+              RestrictedClassOrAssRef (OR RestrictedClassOrAssRef)*
+              (COLON EQ Factor)? SEMI;
 
-Cardinality : LCBR ('*' | PosNumber ('..' (PosNumber | '*'))?) RCBR;
+Cardinality : LCBR (MUL | PosNumber (DOT DOT (PosNumber | MUL))?) RCBR;
 
 // Domaines de valeurs et constantes
 
@@ -380,8 +389,8 @@ Constant : UNDEFINED
 
 // Chaînes de caractères
 
-TextType : MTEXT ('*' PosNumber)?
-         | TEXT ('*' PosNumber)?
+TextType : MTEXT (MUL PosNumber)?
+         | TEXT (MUL PosNumber)?
          | NAME
          | URI;
 
@@ -397,7 +406,7 @@ Enumeration : LPAR EnumElement (COMMA EnumElement)* (COLON FINAL)? RPAR;
 
 EnumElement : Name (DOT Name)* (SubEnumeration)?;
 
-EnumerationConst : '#' (Name (DOT Name)* ('.' OTHERS)? | OTHERS);
+EnumerationConst : HASH (Name (DOT Name)* (DOT OTHERS)? | OTHERS);
 
 // Alignement du texte
 
@@ -409,7 +418,7 @@ BooleanType : BOOLEAN;
 
 // Types de données numériques
 
-NumericType : (MinDec '..' MaxDec | NUMERIC) CIRCULAR?
+NumericType : (MinDec DOT DOT MaxDec | NUMERIC) CIRCULAR?
         (LSBR UnitRef RSBR)?
         (CLOCKWISE | COUNTERCLOCKWISE | RefSys)?;
 
@@ -423,12 +432,12 @@ NumericConst : DecConst (LSBR UnitRef RSBR)?;
 // Domaines de valeurs formatés
 
 FormattedType : FORMAT BASED ON StructureRef FormatDef
-        | FORMAT FormattedTypeDomainRef MinString '..' MaxString;
+        | FORMAT FormattedTypeDomainRef MinString DOT DOT MaxString;
 
 FormatDef : LPAR INHERITANCE? NonNumString? (BaseAttrRef NonNumString)* BaseAttrRef NonNumString? RPAR;
 
-BaseAttrRef : Name ('/' IntPosPosNumber)?
-      | Name '/' FormattedDomainRef;
+BaseAttrRef : Name (DIV IntPosPosNumber)?
+      | Name DIV FormattedDomainRef;
 
 FormattedConst : String;
 
@@ -442,7 +451,7 @@ CoordinateType : COORD NumericType
            (COMMA NumericType (COMMA NumericType)?
              (COMMA RotationDef)?)?;
 
-RotationDef : ROTATION NullAxisPosNumber '->' PiHalfAxisPosNumber;
+RotationDef : ROTATION NullAxisPosNumber MINUS GT PiHalfAxisPosNumber;
 
 NullAxisPosNumber : PosNumber;
 PiHalfAxisPosNumber : PosNumber;
@@ -455,7 +464,7 @@ OIDType : OID ( ANY | NumericType | TextType );
 
 // Boîtes noires
 
-BlackboxType : BLACKBOX ( 'XML' | BINARY );
+BlackboxType : BLACKBOX ( XML | BINARY );
 
 // Domaines de valeurs de classes et chemins d’attributs
 
@@ -465,12 +474,12 @@ ClassType : CLASS
         (RESTRICTION LPAR ClassOrStructureRef (COMMA ClassOrStructureRef)* RPAR)?;
 
 AttributeType : ATTRIBUTE
-          (OF (ClassType DOT AttributePath | '@' Name))?
+          (OF (ClassType DOT AttributePath | AT_SYMBOL Name))?
           (RESTRICTION LPAR AttrTypeDef (COMMA AttrTypeDef)* RPAR)?;
 
 ClassConst : GT ViewableRef;
 
-AttributePathConst : '>>' (ViewableRef DOT)? Name;
+AttributePathConst : GT GT (ViewableRef DOT)? Name;
 
 // Polylignes
 
@@ -493,10 +502,10 @@ UnitDef : UNIT Name
       (EXTENDS UnitRef)?
       (EQ (DerivedUnit | ComposedUnit))? SEMI;
 
-DerivedUnit : (DecConst (('*' | '/') DecConst)*
+DerivedUnit : (DecConst ((MUL | DIV) DecConst)*
         | FUNCTION Explanation) LSBR UnitRef RSBR;
 
-ComposedUnit : LPAR UnitRef (('*' | '/') UnitRef)* RPAR;
+ComposedUnit : LPAR UnitRef ((MUL | DIV) UnitRef)* RPAR;
 
 UnitRef : (Name DOT (Name DOT)?)? Name;
 
@@ -504,8 +513,8 @@ UnitRef : (Name DOT (Name DOT)?)? Name;
 
 MetaDataBasketDef : SIGN | REFSYSTEM BASKET Name
            PropertyKeyword? FINAL?
-           ('EXTENDS' MetaDataBasketRef)?
-           '~' TopicRef
+           (EXTENDS MetaDataBasketRef)?
+           TILDE TopicRef
            (OBJECTS OF Name COLON Name (COMMA Name)*)? SEMI;
 
 MetaDataBasketRef : (Name DOT (Name DOT)?)? Name;
@@ -533,7 +542,7 @@ ConstraintDef : MandatoryConstraint
 MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression SEMI;
 
 PlausibilityConstraint : CONSTRAINT
-             ( LTEQ | GTEQ ) PercentageDec '%'
+             ( LTEQ | GTEQ ) PercentageDec MOD
              LogicalExpression SEMI;
 
 ExistenceConstraint : EXISTENCE CONSTRAINT
@@ -550,7 +559,7 @@ UniqueEl : ObjectOrAttributePath;
 
 LocalUniqueness : LPAR LOCAL RPAR
           Name
-          ( '->' Name )* COLON
+          ( MINUS GT Name )* COLON
           Name ( COMMA Name )*;
 
 SetConstraint : SET CONSTRAINT ( WHERE LogicalExpression COLON )?
@@ -564,16 +573,16 @@ ConstraintsDef : CONSTRAINTS OF ClassOrAssociationRef EQ
 
 Expression : Term;
 
-Term : Term0 ( '=>' Term0 )?;
+Term : Term0 ( EQ GT Term0 )?;
 Term0 : Term1 ( ( OR | PLUS | MINUS ) Term1 )*;
-Term1 : Term2 ( ( AND | '*' | '/' ) Term2 )*;
+Term1 : Term2 ( ( AND | MUL | DIV ) Term2 )*;
 Term2 : Predicate ( Relation Predicate )?;
 
 Predicate : ( Factor
       | ( NOT )? LPAR LogicalExpression RPAR
       | DEFINED LPAR Factor RPAR );
 
-Relation : ( '==' | '!=' | '<>' | LTEQ | GTEQ | LT | GT );
+Relation : ( EQ EQ | NOT_EQ | LT GT | LTEQ | GTEQ | LT | GT );
 
 // Fonctions
 
@@ -592,7 +601,7 @@ ArgumentType : AttrTypeDef
 
 ViewDef : VIEW Name
       PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
-      ( FormationDef | 'EXTENDS' ViewRef )?
+      ( FormationDef | EXTENDS ViewRef )?
       BaseExtensionDef*
       Selection*
       EQ
@@ -608,20 +617,20 @@ FormationDef : Projection
        | Aggregation
        | Inspection;
 
-Projection : 'PROJECTION' 'OF' RenamedViewableRef;
+Projection : PROJECTION OF RenamedViewableRef;
 
-Join : 'JOIN' 'OF' RenamedViewableRef
-     (COMMA RenamedViewableRef (LPAR 'OR' 'NULL' RPAR)?)*;
+Join : JOIN OF RenamedViewableRef
+     (COMMA RenamedViewableRef (LPAR OR NULL RPAR)?)*;
 
-Union : 'UNION' 'OF' RenamedViewableRef
+Union : UNION OF RenamedViewableRef
     (COMMA RenamedViewableRef)*;
 
-Aggregation : 'AGGREGATION' 'OF' RenamedViewableRef
-        ('ALL' | 'EQUAL' LPAR UniqueEl RPAR);
+Aggregation : AGGREGATION OF RenamedViewableRef
+        (ALL | EQUAL LPAR UniqueEl RPAR);
 
-Inspection : ('AREA' 'INSPECTION' 'OF' RenamedViewableRef
-        '->' Name
-        ('->' Name)*);
+Inspection : (AREA INSPECTION OF RenamedViewableRef
+        MINUS GT Name
+        (MINUS GT Name)*);
 
 RenamedViewableRef : (Name '~')? ViewableRef;
 
@@ -631,17 +640,17 @@ ViewableRef : (Name DOT (Name DOT)?)?
         | Name
         | Name);
 
-BaseExtensionDef : BASE Name 'EXTENDED' 'BY'
+BaseExtensionDef : BASE Name EXTENDED BY
            RenamedViewableRef (COMMA RenamedViewableRef)*;
 
-Selection : 'WHERE' LogicalExpression SEMI;
+Selection : WHERE LogicalExpression SEMI;
 
 ViewAttributes : ATTRIBUTE
          ( ALL OF Name SEMI
          | AttributeDef
          | Name
          | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
-         ':=' Expression SEMI );
+         COLON EQ Expression SEMI );
 
 // Représentations graphiques
 
@@ -662,7 +671,7 @@ CondSignParamAssignment : WHERE LogicalExpression
         LPAR SignParamAssignment ( SEMI SignParamAssignment )* RPAR;
 
 SignParamAssignment : Name
-            ':=' ( LCBR MetaObjectRef RCBR
+            COLON EQ ( LCBR MetaObjectRef RCBR
                | Factor
                | ACCORDING EnumAttributePath
                 LPAR EnumAssignment 
@@ -671,7 +680,7 @@ SignParamAssignment : Name
 EnumAssignment : ( LCBR MetaObjectRef RCBR | Constant ) 
        WHEN IN EnumRange;
 
-EnumRange : EnumerationConst ('..' EnumerationConst)?;
+EnumRange : EnumerationConst (DOT DOT EnumerationConst)?;
 
 // Placeholders
 

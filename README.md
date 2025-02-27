@@ -51,3 +51,7 @@ To deactivate and remove the virtual environment, run `. clean.sh` script.
 ## References
 
 - [antlr4-tools](https://github.com/antlr/antlr4-tools)
+
+## Updated working command
+
+`antlr4-parse grammars/InterlisLexer.g4 grammars/InterlisParser.g4 interlis2def input/myModel.ili -gui`
