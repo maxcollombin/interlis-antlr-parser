@@ -186,7 +186,7 @@ En plus de la réutilisation des token prédéfinis, le dernier token Name ne pe
 ```
 
 > [!NOTE]
-> La ressource ili2c fait intervenir la règle [LineAttrDef](https://github.com/claeis/ili2c/blob/2b206f6f0180d9cb2616804e76bbdc803838698b/ili2c-core/src/main/antlr/ch/interlis/ili2c/parser/syntax23.txt#L268C1-L268C12) qui n'est définie nulle part dans le manuel de référence (eCH-0031).
+> La ressource ili2c fait intervenir la règle [LineAttrDef](https://github.com/claeis/ili2c/blob/2b206f6f0180d9cb2616804e76bbdc803838698b/ili2c-core/src/main/antlr/ch/interlis/ili2c/parser/syntax23.txt#L268C1-L268C12) qui n'est définie nulle part diffdans le manuel de référence (eCH-0031).
 > La définition de la règle `LineType` n'y est pas non plus correcte.
 
 ### 3.9.3 Unités composées
@@ -392,8 +392,11 @@ Il n'est pas possible de définir des non-terminaux contenant des `-` ce pourquo
 
 Il n'est pas possible de définir des non-terminaux contenant des `-` ce pourquoi il est proposé d'utiliser `ViewName` au lieu de `View-Name` Toutefois, le token `NAME` devrait être utilisé indépendemment de tout élément de syntaxe.
 
+Exemple pour la règle `ViewRef`
+
 ```diff
-ViewRef : (ModelName '.' (TopicName '.')?)? ViewName;
+- ViewRef : (Model-Name '.' (Topic-Name '.')?)? View-Name;
++ ViewRef : (ModelName '.' (TopicName '.')?)? ViewName;
 ```
 
 La définition de la règle `ViewAttributes` intervient 2 dois dans le manuel de référence (eCH-0031) soit aux pages 88 et 91.
@@ -402,7 +405,7 @@ Dans la définition de la règle Inspection, la seconde référence à `Structur
 
 ## Names
 
-Modifier les définitions de toutes les règles comportant les tokens suivants car il correspondent tous à la règle Name qu'il n'est pas utile de répéter de multiples fois. Ces non-terminaux ne sont, de plus, jamais définis ce pourquoi des placeholders de type String ont été définis de manière intermédiaire lors du contrôle de la grammaire.
+Modifier les définitions de toutes les règles comportant les tokens suivants car il correspondent tous à la règle `Name` qu'il n'est pas utile de répéter de multiples fois. Ces non-terminaux ne sont, de plus, jamais définis ce pourquoi des placeholders de type String ont été définis de manière intermédiaire lors du contrôle de la grammaire.
 
 - NumericAttribute-Name
 - StructureAttribute-Name
@@ -420,12 +423,10 @@ Modifier les définitions de toutes les règles comportant les tokens suivants c
 - SignParameter-Name
 - LineStructure-Name
 
-
 ## Divers
 
 Les règles suivantes ne sont jamais définies dans la grammaire:
 
-- `Factor`
 - `Sub-Enumeration`
 - `Min-Dec`
 - `Max-Dec`
@@ -441,9 +442,7 @@ Les règles suivantes ne sont jamais définies dans la grammaire:
 - `GenericCoordDef-DomainRef`
 - `ConcreteDomainRef`
 - `AttributePath`
-
 - `LineAttrDef`
-
 - `LogicalExpression`
 - `PercentageDec`
 - `ObjectOrAttributePath`
@@ -452,19 +451,182 @@ Les règles suivantes ne sont jamais définies dans la grammaire:
 
 Toutes les occurences de `'<'`, `'>'`, `'='`, `'('`, `')'`, `','`, `';'` doivent être rempacées par les tokens liés.
 
-Ajouter `DOT: '.';` dans les tokens de base et remplacer partout où cela intervient.
-- MINUS: '-';
-- PLUS: '+';
-- COLON: ':';
-- GTEQ: '>=';
-- LTEQ: '<=';
-- LCBR: '{';
-- RCBR: '}';
-- LSBR: '[';
-- RSBR: ']';
-
+- Ajouter `DOT: '.';` dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter MINUS: '-'; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter PLUS: '+'; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter COLON: ':'; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter GTEQ: '>='; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter LTEQ: '<='; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter LCBR: '{'; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter RCBR: '}'; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter LSBR: '['; dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter RSBR: ']'; dans les tokens de base et remplacer partout où cela intervient.
 
 ### Mots réservés
 
 Les éléments suivants, doivent être ajoutés aux tokens réservés par souci de cohérence
 - ENUM
+
+### Substitutions
+
+- Remplacer `subEnumeration` (ou `Sub-Enumeration`) qui n'est pas défini par `Enumeration` dans la règle EnumElement:
+
+```diff
+- EnumElement : Name (DOT Name)* (subEnumeration)?;
++ EnumElement : Name (DOT Name)* (Enumeration)?;
+```
+
+Remplacer `MinDec` et `MaxDec` qui ne sont pas définis par `Dec` dans la règle:
+
+```diff
+- NumericType : (MinDec DOT DOT MaxDec | NUMERIC) CIRCULAR?
++ NumericType : (Dec DOT DOT Dec | NUMERIC) CIRCULAR?
+        (LSBR UnitRef RSBR)?
+        (CLOCKWISE | COUNTERCLOCKWISE | RefSys)?;
+```
+
+et effectuer la validation Min, Max avec le parseur.
+
+Remplacer `RefSysMetaObjectRef` (ou `RefSys-MetaObjectRef`) qui n'est pas défini par `MetaObjectRef` dans la règle:
+
+```diff
+- RefSys : LCBR RefSysMetaObjectRef (LSBR AxisPosNumber RSBR)? RCBR
++ RefSys : LCBR MetaObjectRef (LSBR AxisPosNumber RSBR)? RCBR
+     | LT CoordDomainRef (LSBR AxisPosNumber RSBR)? GT;
+```
+
+Remplacer `MinString`& `MaxString` qui ne sont pas définis par STRING dans la règle `FormattedType` et effectuer le contrôle avec le parser 
+
+```diff
+FormattedType : FORMAT BASED ON StructureRef FormatDef
+-        | FORMAT FormattedTypeDomainRef MinString DOT DOT MaxString;
++        | FORMAT FormattedTypeDomainRef STRING DOT DOT STRING;
+```
+
+Remplacer `EnumAttributePath` (ou `Enum-AttributePath`) qui n'est pas défini par `AttributePath` dans la règle:
+
+```diff
+SignParamAssignment : Name
+            COLON EQ ( LCBR MetaObjectRef RCBR
+               | factor
+-               | ACCORDING EnumAttributePath
++               | ACCORDING AttributePath
+                LPAR EnumAssignment 
+          ( COMMA EnumAssignment )* RPAR );
+```
+
+Remplacer `AxisPosNumber` (ou `Axis-PosNumber`) qui n'est pas défini par `PosNumber` dans la règle:
+
+```diff
+- RefSys : LCBR MetaObjectRef (LSBR AxisPosNumber RSBR)? RCBR
++ RefSys : LCBR MetaObjectRef (LSBR PosNumber RSBR)? RCBR
+-     | LT CoordDomainRef (LSBR AxisPosNumber RSBR)? GT;
++     | LT CoordDomainRef (LSBR PosNumber RSBR)? GT;
+```
+Remplacer `CoordDomainRef` (ou `Coord-DomainRef`) qui n'est pas défini par `DomainRef` dans la règle:
+
+```diff
+RefSys : LCBR MetaObjectRef (LSBR PosNumber RSBR)? RCBR
+-     | LT CoordDomainRef (LSBR PosNumber RSBR)? GT;
++     | LT DomainRef (LSBR PosNumber RSBR)? GT;
+```
+
+Remplacer `FormattedDomainRef` (ou `Formatted-DomainRef`) qui n'est pas défini par `DomainRef` dans la règle suivante:
+
+```diff
+BaseAttrRef : Name (DIV IntPosPosNumber)?
+-      | Name DIV FormattedDomainRef;
++      | Name DIV DomainRef;
+```
+
+Remplacer `ConcreteDomainRef` (ou `Concrete-DomainRef`) qui n'est pas défini par `DomainRef` dans la règle:
+
+```diff
+- ContextDef : CONTEXT Name EQ LCBR GenericCoordDefDomainRef EQ ConcreteDomainRef (OR ConcreteDomainRef)* SEMI RCBR SEMI;
++ ContextDef : CONTEXT Name EQ LCBR GenericCoordDefDomainRef EQ DomainRef (OR DomainRef)* SEMI RCBR SEMI;
+```
+Remplacer `FormattedTypeDomainRef` (`FormattedType-DomainRef`) qui n'est pas défini par `DomainRef` dans le règle:
+
+```diff
+FormattedType : FORMAT BASED ON StructureRef FormatDef
+-         | FORMAT FormattedTypeDomainRef STRING DOT DOT STRING;
++         | FORMAT DomainRef STRING DOT DOT STRING;
+```
+
+Remplacer `IntPosPosNumber` (ou `IntPos-PosNumber`) qui n'est pas défini par `PosNumer` dans la règle
+
+```diff
+BaseAttrRef : Name (DIV IntPosPosNumber)?
+      | Name DIV DomainRef;
+```
+
+Remplacer `NonNumString` (ou `NonNum-String`) qui n'est pas défini par `STRING` dans la règle:
+
+```diff
+- FormatDef : LPAR INHERITANCE? NonNumString? (BaseAttrRef NonNumString)* BaseAttrRef NonNumString? RPAR;
++ FormatDef : LPAR INHERITANCE? STRING? (BaseAttrRef STRING)* BaseAttrRef STRING? RPAR;
+```
+
+Remplacer `GenericCoordDefDomainRef` (ou `GenericCoordDef-DomainRef`) qui n'est pas défini par `DomainRef` dans la règle:
+
+```diff
+- ContextDef : CONTEXT Name EQ LCBR GenericCoordDefDomainRef EQ DomainRef (OR DomainRef)* SEMI RCBR SEMI;
++ ContextDef : CONTEXT Name EQ LCBR DomainRef EQ DomainRef (OR DomainRef)* SEMI RCBR SEMI;
+```
+
+Remplacer `PercentageDec` (ou `Percentage-Dec`) qui n'est pas défini par `Dec` dans la règle:
+
+```diff
+PlausibilityConstraint : CONSTRAINT
+-             ( LTEQ | GTEQ ) PercentageDec MOD
++             ( LTEQ | GTEQ ) Dec MOD
+             LogicalExpression SEMI;
+``
+Remplacer `Sign-ClassRef` (ou `Sign-ClassRef`) qui n'est pas défini par `ClassRef` dans la règle:
+
+```diff
+DrawingRule : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+-  (OF SignClassRef)?
++  (OF ClassRef)?
+  COLON CondSignParamAssignment (COMMA CondSignParamAssignment)* SEMI;
+```
+
+La règle `LogicalExpression` n'est pas définie dans la grammaire. Nous proposons dans un 1er temps de la remplacer par la règle `Expression`.
+Il conviendrait cependant de la définir. Actuellement, cela concerne les règles suivantes:
+
+```diff
+- MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression SEMI;
++ MandatoryConstraint : MANDATORY CONSTRAINT Expression SEMI;
+```
+
+```diff
+PlausibilityConstraint : CONSTRAINT
+             ( LTEQ | GTEQ ) Dec MOD
+-             LogicalExpression SEMI;
++             LogicalExpression SEMI;
+```
+
+```diff
+- SetConstraint : SET CONSTRAINT ( WHERE LogicalExpression COLON )?
++ SetConstraint : SET CONSTRAINT ( WHERE Expression COLON )?
+-        LogicalExpression SEMI;
++        Expression SEMI;
+```
+
+```diff
+Predicate : ( factor
+-      | ( NOT )? LPAR LogicalExpression RPAR
++      | ( NOT )? LPAR Expression RPAR
+      | DEFINED LPAR factor RPAR );
+```
+
+```diff
+- Selection : WHERE LogicalExpression SEMI;
++ Selection : WHERE Expression SEMI;
+```
+
+```diff
+- CondSignParamAssignment : WHERE LogicalExpression
++ CondSignParamAssignment : WHERE LogicalExpression
+        LPAR SignParamAssignment ( SEMI SignParamAssignment )* RPAR;
+```

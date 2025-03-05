@@ -16,69 +16,71 @@ public class InterlisParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		EQ=1, Scaling=2, LPAR=3, RPAR=4, COMMA=5, SEMI=6, LT=7, LTEQ=8, GT=9, 
-		GTEQ=10, DOT=11, COLON=12, MINUS=13, PLUS=14, LCBR=15, RCBR=16, LSBR=17, 
-		RSBR=18, Name=19, Letter=20, Digit=21, HexDigit=22, String=23, PosNumber=24, 
-		Number=25, Dec=26, Float=27, Property=28, PropertyKeyword=29, Explanation=30, 
-		ABSTRACT=31, ACCORDING=32, AGGREGATES=33, AGGREGATION=34, ALL=35, AND=36, 
-		ANY=37, ANYCLASS=38, ANYSTRUCTURE=39, ARCS=40, AREA=41, AS=42, ASSOCIATION=43, 
-		AT=44, ATTRIBUTE=45, ATTRIBUTES=46, BAG=47, BASE=48, BASED=49, BASKET=50, 
-		BINARY=51, BLACKBOX=52, BLANK=53, BOOLEAN=54, BY=55, CARDINALITY=56, CHARSET=57, 
-		CIRCULAR=58, CLASS=59, CLOCKWISE=60, CODE=61, CONSTRAINT=62, CONSTRAINTS=63, 
-		CONTEXT=64, CONTINUE=65, CONTINUOUS=66, CONTOUR=67, CONTRACTED=68, COORD=69, 
-		COORD2=70, COORD3=71, COUNTERCLOCKWISE=72, DATE=73, DATETIME=74, DEFAULT=75, 
-		DEFERRED=76, DEFINED=77, DEGREES=78, DEPENDS=79, DERIVATIVES=80, DERIVED=81, 
-		DIM1=82, DIM2=83, DIRECTED=84, DOMAIN=85, END=86, ENUM=87, ENUMTREEVAL=88, 
-		ENUMVAL=89, EQUAL=90, EXISTENCE=91, EXTENDED=92, EXTENDS=93, EXTERNAL=94, 
-		FINAL=95, FIRST=96, FIX=97, FONT=98, FORM=99, FORMAT=100, FREE=101, FROM=102, 
-		FUNCTION=103, GENERIC=104, GENERICS=105, GRADS=106, GRAPHIC=107, HALIGNMENT=108, 
-		HIDING=109, I16=110, I32=111, IDENT=112, IMPORTS=113, IN=114, INHERITANCE=115, 
-		INSPECTION=116, INTERLIS=117, JOIN=118, LAST=119, LINE=120, LINEATTR=121, 
-		LINESIZE=122, LIST=123, LNBASE=124, LOCAL=125, MANDATORY=126, METAOBJECT=127, 
-		MODEL=128, MTEXT=129, MULTIAREA=130, MULTICOORD=131, MULTIPOLYLINE=132, 
-		MULTISURFACE=133, NAME=134, NO=135, NOINCREMENTALTRANSFER=136, NOT=137, 
-		NULL=138, NUMERIC=139, OBJECT=140, OBJECTS=141, OF=142, OID=143, ON=144, 
-		OPTIONAL=145, OR=146, ORDERED=147, OTHERS=148, OVERLAPS=149, PARAMETER=150, 
-		PARENT=151, PERIPHERY=152, PI=153, POLYLINE=154, PROJECTION=155, RADIANS=156, 
-		REFERENCE=157, REFSYS=158, REFSYSTEM=159, REQUIRED=160, RESTRICTION=161, 
-		ROTATION=162, SET=163, SIGN=164, STRAIGHTS=165, STRUCTURE=166, SUBDIVISION=167, 
-		SURFACE=168, SYMBOLOGY=169, TABLE=170, TEXT=171, THATAREA=172, THIS=173, 
-		THISAREA=174, TID=175, TIDSIZE=176, TIMEOFDAY=177, TO=178, TOPIC=179, 
-		TRANSFER=180, TRANSIENT=181, TRANSLATION=182, TYPE=183, UNDEFINED=184, 
-		UNION=185, UNIQUE=186, UNIT=187, UNQUALIFIED=188, URI=189, VALIGNMENT=190, 
-		VERSION=191, VERTEX=192, VERTEXINFO=193, VIEW=194, WHEN=195, WHERE=196, 
-		WITH=197, WITHOUT=198, XML=199, XMLNS=200, SingleLineComment=201, BlockComment=202, 
-		TopicDef=203, Definitions=204, TopicRef=205, ClassDef=206, StructureDef=207, 
-		ClassRef=208, ClassOrStructureDef=209, StructureRef=210, ClassOrStructureRef=211, 
-		AttributeDef=212, AttrTypeDef=213, AttrType=214, ReferenceAttr=215, RestrictedClassOrAssRef=216, 
-		ClassOrAssociationRef=217, RestrictedStructureRef=218, RestrictedClassOrStructureRef=219, 
-		AssociationDef=220, AssociationRef=221, RoleDef=222, Cardinality=223, 
-		DomainDef=224, Type=225, DomainRef=226, BaseType=227, Constant=228, TextType=229, 
-		TextConst=230, EnumerationType=231, EnumTreeValueType=232, Enumeration=233, 
-		EnumElement=234, EnumerationConst=235, AlignmentType=236, BooleanType=237, 
-		NumericType=238, RefSys=239, DecConst=240, NumericConst=241, FormattedType=242, 
-		FormatDef=243, BaseAttrRef=244, FormattedConst=245, DateTimeType=246, 
-		CoordinateType=247, RotationDef=248, NullAxisPosNumber=249, PiHalfAxisPosNumber=250, 
-		ContextDef=251, OIDType=252, BlackboxType=253, ClassType=254, AttributeType=255, 
-		ClassConst=256, AttributePathConst=257, LineType=258, LineFormType=259, 
-		ControlPoints=260, IntersectionDef=261, LineFormTypeDef=262, UnitDef=263, 
-		DerivedUnit=264, ComposedUnit=265, UnitRef=266, MetaDataBasketDef=267, 
-		MetaDataBasketRef=268, MetaObjectRef=269, ParameterDef=270, RunTimeParameterDef=271, 
-		ConstraintDef=272, MandatoryConstraint=273, PlausibilityConstraint=274, 
-		ExistenceConstraint=275, UniquenessConstraint=276, GlobalUniqueness=277, 
-		UniqueEl=278, LocalUniqueness=279, SetConstraint=280, ConstraintsDef=281, 
-		Expression=282, Term=283, Term0=284, Term1=285, Term2=286, Predicate=287, 
-		Relation=288, FunctionDef=289, ArgumentDef=290, ArgumentType=291, ViewDef=292, 
-		ViewRef=293, FormationDef=294, Projection=295, Join=296, Union=297, Aggregation=298, 
-		Inspection=299, RenamedViewableRef=300, ViewableRef=301, BaseExtensionDef=302, 
-		Selection=303, ViewAttributes=304, GraphicDef=305, GraphicRef=306, DrawingRule=307, 
-		CondSignParamAssignment=308, SignParamAssignment=309, EnumAssignment=310, 
-		EnumRange=311, Factor=312, SubEnumeration=313, MinDec=314, MaxDec=315, 
-		RefSysMetaObjectRef=316, AxisPosNumber=317, CoordDomainRef=318, FormattedTypeDomainRef=319, 
-		MinString=320, MaxString=321, NonNumString=322, IntPosPosNumber=323, FormattedDomainRef=324, 
-		GenericCoordDefDomainRef=325, ConcreteDomainRef=326, AttributePath=327, 
-		LineAttrDef=328, LogicalExpression=329, PercentageDec=330, ObjectOrAttributePath=331, 
-		SignClassRef=332, EnumAttributePath=333, LineForm=334, WS=335;
+		EQ=1, NOT_EQ=2, Scaling=3, LPAR=4, RPAR=5, COMMA=6, COLON=7, SEMI=8, LT=9, 
+		LTEQ=10, GT=11, GTEQ=12, DOT=13, MINUS=14, PLUS=15, LCBR=16, RCBR=17, 
+		LSBR=18, RSBR=19, Name=20, Letter=21, Digit=22, HexDigit=23, String=24, 
+		PosNumber=25, Number=26, Dec=27, Float=28, Property=29, PropertyKeyword=30, 
+		Explanation=31, ABSTRACT=32, ACCORDING=33, AGGREGATES=34, AGGREGATION=35, 
+		ALL=36, AND=37, ANY=38, ANYCLASS=39, ANYSTRUCTURE=40, ARCS=41, AREA=42, 
+		AS=43, ASSOCIATION=44, AT=45, AT_SYMBOL=46, ATTRIBUTE=47, ATTRIBUTES=48, 
+		BAG=49, BASE=50, BASED=51, BASKET=52, BINARY=53, BLACKBOX=54, BLANK=55, 
+		BOOLEAN=56, BY=57, CARDINALITY=58, CHARSET=59, CIRCULAR=60, CLASS=61, 
+		CLOCKWISE=62, CODE=63, CONSTRAINT=64, CONSTRAINTS=65, CONTEXT=66, CONTINUE=67, 
+		CONTINUOUS=68, CONTOUR=69, CONTRACTED=70, COORD=71, COORD2=72, COORD3=73, 
+		COUNTERCLOCKWISE=74, DATE=75, DATETIME=76, DEFAULT=77, DEFERRED=78, DEFINED=79, 
+		DEGREES=80, DEPENDS=81, DERIVATIVES=82, DERIVED=83, DIM1=84, DIM2=85, 
+		DIRECTED=86, DIV=87, DOMAIN=88, END=89, ENUM=90, ENUMTREEVAL=91, ENUMVAL=92, 
+		EQUAL=93, EXISTENCE=94, EXTENDED=95, EXTENDS=96, EXTERNAL=97, FINAL=98, 
+		FIRST=99, FIX=100, FONT=101, FORM=102, FORMAT=103, FREE=104, FROM=105, 
+		FUNCTION=106, GENERIC=107, GENERICS=108, GRADS=109, GRAPHIC=110, HALIGNMENT=111, 
+		HASH=112, HIDING=113, I16=114, I32=115, IDENT=116, IMPORTS=117, IN=118, 
+		INHERITANCE=119, INSPECTION=120, INTERLIS=121, JOIN=122, LAST=123, LINE=124, 
+		LINEATTR=125, LINESIZE=126, LIST=127, LNBASE=128, LOCAL=129, MANDATORY=130, 
+		METAOBJECT=131, MOD=132, MODEL=133, MTEXT=134, MUL=135, MULTIAREA=136, 
+		MULTICOORD=137, MULTIPOLYLINE=138, MULTISURFACE=139, NAME=140, NO=141, 
+		NOINCREMENTALTRANSFER=142, NOT=143, NULL=144, NUMERIC=145, OBJECT=146, 
+		OBJECTS=147, OF=148, OID=149, ON=150, OPTIONAL=151, OR=152, ORDERED=153, 
+		OTHERS=154, OVERLAPS=155, PARAMETER=156, PARENT=157, PERIPHERY=158, PI=159, 
+		POLYLINE=160, PROJECTION=161, RADIANS=162, REFERENCE=163, REFSYS=164, 
+		REFSYSTEM=165, REQUIRED=166, RESTRICTION=167, ROTATION=168, SET=169, SIGN=170, 
+		STRAIGHTS=171, STRUCTURE=172, SUBDIVISION=173, SURFACE=174, SYMBOLOGY=175, 
+		TABLE=176, TEXT=177, THATAREA=178, THIS=179, THISAREA=180, TID=181, TIDSIZE=182, 
+		TILDE=183, TIMEOFDAY=184, TO=185, TOPIC=186, TRANSFER=187, TRANSIENT=188, 
+		TRANSLATION=189, TYPE=190, UNDEFINED=191, UNION=192, UNIQUE=193, UNIT=194, 
+		UNQUALIFIED=195, URI=196, VALIGNMENT=197, VERSION=198, VERTEX=199, VERTEXINFO=200, 
+		VIEW=201, WHEN=202, WHERE=203, WITH=204, WITHOUT=205, XML=206, XMLNS=207, 
+		SingleLineComment=208, BlockComment=209, TopicDef=210, Definitions=211, 
+		TopicRef=212, ClassDef=213, StructureDef=214, ClassRef=215, ClassOrStructureDef=216, 
+		StructureRef=217, ClassOrStructureRef=218, AttributeDef=219, AttrTypeDef=220, 
+		AttrType=221, ReferenceAttr=222, RestrictedClassOrAssRef=223, ClassOrAssociationRef=224, 
+		RestrictedStructureRef=225, RestrictedClassOrStructureRef=226, AssociationDef=227, 
+		AssociationRef=228, RoleDef=229, Cardinality=230, DomainDef=231, Type=232, 
+		DomainRef=233, BaseType=234, Constant=235, TextType=236, TextConst=237, 
+		EnumerationType=238, EnumTreeValueType=239, Enumeration=240, EnumElement=241, 
+		EnumerationConst=242, AlignmentType=243, BooleanType=244, NumericType=245, 
+		RefSys=246, DecConst=247, NumericConst=248, FormattedType=249, FormatDef=250, 
+		BaseAttrRef=251, FormattedConst=252, DateTimeType=253, CoordinateType=254, 
+		RotationDef=255, NullAxisPosNumber=256, PiHalfAxisPosNumber=257, ContextDef=258, 
+		OIDType=259, BlackboxType=260, ClassType=261, AttributeType=262, ClassConst=263, 
+		AttributePathConst=264, LineType=265, LineFormType=266, ControlPoints=267, 
+		IntersectionDef=268, LineFormTypeDef=269, UnitDef=270, DerivedUnit=271, 
+		ComposedUnit=272, UnitRef=273, MetaDataBasketDef=274, MetaDataBasketRef=275, 
+		MetaObjectRef=276, ParameterDef=277, RunTimeParameterDef=278, ConstraintDef=279, 
+		MandatoryConstraint=280, PlausibilityConstraint=281, ExistenceConstraint=282, 
+		UniquenessConstraint=283, GlobalUniqueness=284, UniqueEl=285, LocalUniqueness=286, 
+		SetConstraint=287, ConstraintsDef=288, Expression=289, Term=290, Term0=291, 
+		Term1=292, Term2=293, Predicate=294, Relation=295, FunctionDef=296, ArgumentDef=297, 
+		ArgumentType=298, ViewDef=299, ViewRef=300, FormationDef=301, Projection=302, 
+		Join=303, Union=304, Aggregation=305, Inspection=306, RenamedViewableRef=307, 
+		ViewableRef=308, BaseExtensionDef=309, Selection=310, ViewAttributes=311, 
+		GraphicDef=312, GraphicRef=313, DrawingRule=314, CondSignParamAssignment=315, 
+		SignParamAssignment=316, EnumAssignment=317, EnumRange=318, Factor=319, 
+		SubEnumeration=320, MinDec=321, MaxDec=322, RefSysMetaObjectRef=323, AxisPosNumber=324, 
+		CoordDomainRef=325, FormattedTypeDomainRef=326, MinString=327, MaxString=328, 
+		NonNumString=329, IntPosPosNumber=330, FormattedDomainRef=331, GenericCoordDefDomainRef=332, 
+		ConcreteDomainRef=333, AttributePath=334, LineAttrDef=335, LogicalExpression=336, 
+		PercentageDec=337, ObjectOrAttributePath=338, SignClassRef=339, EnumAttributePath=340, 
+		LineForm=341, WS=342;
 	public static final int
 		RULE_interlis2def = 0, RULE_modeldef = 1;
 	private static String[] makeRuleNames() {
@@ -90,35 +92,35 @@ public class InterlisParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'='", null, "'('", "')'", "','", "';'", "'<'", "'<='", "'>'", 
-			"'>='", "'.'", "':'", "'-'", "'+'", "'{'", "'}'", "'['", "']'", null, 
-			null, null, null, null, null, null, null, null, null, "'Properties'", 
+			null, "'='", "'!='", null, "'('", "')'", "','", "':'", "';'", "'<'", 
+			"'<='", "'>'", "'>='", "'.'", "'-'", "'+'", "'{'", "'}'", "'['", "']'", 
+			null, null, null, null, null, null, null, null, null, null, "'Properties'", 
 			null, "'ABSTRACT'", "'ACCORDING'", "'AGGREGATES'", "'AGGREGATION'", "'ALL'", 
 			"'AND'", "'ANY'", "'ANYCLASS'", "'ANYSTRUCTURE'", "'ARCS'", "'AREA'", 
-			"'AS'", "'ASSOCIATION'", "'AT'", "'ATTRIBUTE'", "'ATTRIBUTES'", "'BAG'", 
-			"'BASE'", "'BASED'", "'BASKET'", "'BINARY'", "'BLACKBOX'", "'BLANK'", 
+			"'AS'", "'ASSOCIATION'", "'AT'", "'@'", "'ATTRIBUTE'", "'ATTRIBUTES'", 
+			"'BAG'", "'BASE'", "'BASED'", "'BASKET'", "'BINARY'", "'BLACKBOX'", "'BLANK'", 
 			"'BOOLEAN'", "'BY'", "'CARDINALITY'", "'CHARSET'", "'CIRCULAR'", "'CLASS'", 
 			"'CLOCKWISE'", "'CODE'", "'CONSTRAINT'", "'CONSTRAINTS'", "'CONTEXT'", 
 			"'CONTINUE'", "'CONTINUOUS'", "'CONTOUR'", "'CONTRACTED'", "'COORD'", 
 			"'COORD2'", "'COORD3'", "'COUNTERCLOCKWISE'", "'DATE'", "'DATETIME'", 
 			"'DEFAULT'", "'DEFERRED'", "'DEFINED'", "'DEGREES'", "'DEPENDS'", "'DERIVATIVES'", 
-			"'DERIVED'", "'DIM1'", "'DIM2'", "'DIRECTED'", "'DOMAIN'", "'END'", "'ENUM'", 
-			"'ENUMTREEVAL'", "'ENUMVAL'", "'EQUAL'", "'EXISTENCE'", "'EXTENDED'", 
+			"'DERIVED'", "'DIM1'", "'DIM2'", "'DIRECTED'", "'/'", "'DOMAIN'", "'END'", 
+			"'ENUM'", "'ENUMTREEVAL'", "'ENUMVAL'", "'EQUAL'", "'EXISTENCE'", "'EXTENDED'", 
 			"'EXTENDS'", "'EXTERNAL'", "'FINAL'", "'FIRST'", "'FIX'", "'FONT'", "'FORM'", 
 			"'FORMAT'", "'FREE'", "'FROM'", "'FUNCTION'", "'GENERIC'", "'GENERICS'", 
-			"'GRADS'", "'GRAPHIC'", "'HALIGNMENT'", "'HIDING'", "'I16'", "'I32'", 
+			"'GRADS'", "'GRAPHIC'", "'HALIGNMENT'", "'#'", "'HIDING'", "'I16'", "'I32'", 
 			"'IDENT'", "'IMPORTS'", "'IN'", "'INHERITANCE'", "'INSPECTION'", "'INTERLIS'", 
 			"'JOIN'", "'LAST'", "'LINE'", "'LINEATTR'", "'LINESIZE'", "'LIST'", "'LNBASE'", 
-			"'LOCAL'", "'MANDATORY'", "'METAOBJECT'", "'MODEL'", "'MTEXT'", "'MULTIAREA'", 
-			"'MULTICOORD'", "'MULTIPOLYLINE'", "'MULTISURFACE'", "'NAME'", "'NO'", 
-			"'NOINCREMENTALTRANSFER'", "'NOT'", "'NULL'", "'NUMERIC'", "'OBJECT'", 
-			"'OBJECTS'", "'OF'", "'OID'", "'ON'", "'OPTIONAL'", "'OR'", "'ORDERED'", 
-			"'OTHERS'", "'OVERLAPS'", "'PARAMETER'", "'PARENT'", "'PERIPHERY'", "'PI'", 
-			"'POLYLINE'", "'PROJECTION'", "'RADIANS'", "'REFERENCE'", "'REFSYS'", 
+			"'LOCAL'", "'MANDATORY'", "'METAOBJECT'", "'%'", "'MODEL'", "'MTEXT'", 
+			"'*'", "'MULTIAREA'", "'MULTICOORD'", "'MULTIPOLYLINE'", "'MULTISURFACE'", 
+			"'NAME'", "'NO'", "'NOINCREMENTALTRANSFER'", "'NOT'", "'NULL'", "'NUMERIC'", 
+			"'OBJECT'", "'OBJECTS'", "'OF'", "'OID'", "'ON'", "'OPTIONAL'", "'OR'", 
+			"'ORDERED'", "'OTHERS'", "'OVERLAPS'", "'PARAMETER'", "'PARENT'", "'PERIPHERY'", 
+			"'PI'", "'POLYLINE'", "'PROJECTION'", "'RADIANS'", "'REFERENCE'", "'REFSYS'", 
 			"'REFSYSTEM'", "'REQUIRED'", "'RESTRICTION'", "'ROTATION'", "'SET'", 
 			"'SIGN'", "'STRAIGHTS'", "'STRUCTURE'", "'SUBDIVISION'", "'SURFACE'", 
 			"'SYMBOLOGY'", "'TABLE'", "'TEXT'", "'THATAREA'", "'THIS'", "'THISAREA'", 
-			"'TID'", "'TIDSIZE'", "'TIMEOFDAY'", "'TO'", "'TOPIC'", "'TRANSFER'", 
+			"'TID'", "'TIDSIZE'", "'~'", "'TIMEOFDAY'", "'TO'", "'TOPIC'", "'TRANSFER'", 
 			"'TRANSIENT'", "'TRANSLATION'", "'TYPE'", "'UNDEFINED'", "'UNION'", "'UNIQUE'", 
 			"'UNIT'", "'UNQUALIFIED'", "'URI'", "'VALIGNMENT'", "'VERSION'", "'VERTEX'", 
 			"'VERTEXINFO'", "'VIEW'", "'WHEN'", "'WHERE'", "'WITH'", "'WITHOUT'", 
@@ -128,38 +130,38 @@ public class InterlisParser extends Parser {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "EQ", "Scaling", "LPAR", "RPAR", "COMMA", "SEMI", "LT", "LTEQ", 
-			"GT", "GTEQ", "DOT", "COLON", "MINUS", "PLUS", "LCBR", "RCBR", "LSBR", 
+			null, "EQ", "NOT_EQ", "Scaling", "LPAR", "RPAR", "COMMA", "COLON", "SEMI", 
+			"LT", "LTEQ", "GT", "GTEQ", "DOT", "MINUS", "PLUS", "LCBR", "RCBR", "LSBR", 
 			"RSBR", "Name", "Letter", "Digit", "HexDigit", "String", "PosNumber", 
 			"Number", "Dec", "Float", "Property", "PropertyKeyword", "Explanation", 
 			"ABSTRACT", "ACCORDING", "AGGREGATES", "AGGREGATION", "ALL", "AND", "ANY", 
 			"ANYCLASS", "ANYSTRUCTURE", "ARCS", "AREA", "AS", "ASSOCIATION", "AT", 
-			"ATTRIBUTE", "ATTRIBUTES", "BAG", "BASE", "BASED", "BASKET", "BINARY", 
-			"BLACKBOX", "BLANK", "BOOLEAN", "BY", "CARDINALITY", "CHARSET", "CIRCULAR", 
-			"CLASS", "CLOCKWISE", "CODE", "CONSTRAINT", "CONSTRAINTS", "CONTEXT", 
-			"CONTINUE", "CONTINUOUS", "CONTOUR", "CONTRACTED", "COORD", "COORD2", 
-			"COORD3", "COUNTERCLOCKWISE", "DATE", "DATETIME", "DEFAULT", "DEFERRED", 
-			"DEFINED", "DEGREES", "DEPENDS", "DERIVATIVES", "DERIVED", "DIM1", "DIM2", 
-			"DIRECTED", "DOMAIN", "END", "ENUM", "ENUMTREEVAL", "ENUMVAL", "EQUAL", 
-			"EXISTENCE", "EXTENDED", "EXTENDS", "EXTERNAL", "FINAL", "FIRST", "FIX", 
-			"FONT", "FORM", "FORMAT", "FREE", "FROM", "FUNCTION", "GENERIC", "GENERICS", 
-			"GRADS", "GRAPHIC", "HALIGNMENT", "HIDING", "I16", "I32", "IDENT", "IMPORTS", 
-			"IN", "INHERITANCE", "INSPECTION", "INTERLIS", "JOIN", "LAST", "LINE", 
-			"LINEATTR", "LINESIZE", "LIST", "LNBASE", "LOCAL", "MANDATORY", "METAOBJECT", 
-			"MODEL", "MTEXT", "MULTIAREA", "MULTICOORD", "MULTIPOLYLINE", "MULTISURFACE", 
-			"NAME", "NO", "NOINCREMENTALTRANSFER", "NOT", "NULL", "NUMERIC", "OBJECT", 
-			"OBJECTS", "OF", "OID", "ON", "OPTIONAL", "OR", "ORDERED", "OTHERS", 
-			"OVERLAPS", "PARAMETER", "PARENT", "PERIPHERY", "PI", "POLYLINE", "PROJECTION", 
-			"RADIANS", "REFERENCE", "REFSYS", "REFSYSTEM", "REQUIRED", "RESTRICTION", 
-			"ROTATION", "SET", "SIGN", "STRAIGHTS", "STRUCTURE", "SUBDIVISION", "SURFACE", 
-			"SYMBOLOGY", "TABLE", "TEXT", "THATAREA", "THIS", "THISAREA", "TID", 
-			"TIDSIZE", "TIMEOFDAY", "TO", "TOPIC", "TRANSFER", "TRANSIENT", "TRANSLATION", 
-			"TYPE", "UNDEFINED", "UNION", "UNIQUE", "UNIT", "UNQUALIFIED", "URI", 
-			"VALIGNMENT", "VERSION", "VERTEX", "VERTEXINFO", "VIEW", "WHEN", "WHERE", 
-			"WITH", "WITHOUT", "XML", "XMLNS", "SingleLineComment", "BlockComment", 
-			"TopicDef", "Definitions", "TopicRef", "ClassDef", "StructureDef", "ClassRef", 
-			"ClassOrStructureDef", "StructureRef", "ClassOrStructureRef", "AttributeDef", 
-			"AttrTypeDef", "AttrType", "ReferenceAttr", "RestrictedClassOrAssRef", 
+			"AT_SYMBOL", "ATTRIBUTE", "ATTRIBUTES", "BAG", "BASE", "BASED", "BASKET", 
+			"BINARY", "BLACKBOX", "BLANK", "BOOLEAN", "BY", "CARDINALITY", "CHARSET", 
+			"CIRCULAR", "CLASS", "CLOCKWISE", "CODE", "CONSTRAINT", "CONSTRAINTS", 
+			"CONTEXT", "CONTINUE", "CONTINUOUS", "CONTOUR", "CONTRACTED", "COORD", 
+			"COORD2", "COORD3", "COUNTERCLOCKWISE", "DATE", "DATETIME", "DEFAULT", 
+			"DEFERRED", "DEFINED", "DEGREES", "DEPENDS", "DERIVATIVES", "DERIVED", 
+			"DIM1", "DIM2", "DIRECTED", "DIV", "DOMAIN", "END", "ENUM", "ENUMTREEVAL", 
+			"ENUMVAL", "EQUAL", "EXISTENCE", "EXTENDED", "EXTENDS", "EXTERNAL", "FINAL", 
+			"FIRST", "FIX", "FONT", "FORM", "FORMAT", "FREE", "FROM", "FUNCTION", 
+			"GENERIC", "GENERICS", "GRADS", "GRAPHIC", "HALIGNMENT", "HASH", "HIDING", 
+			"I16", "I32", "IDENT", "IMPORTS", "IN", "INHERITANCE", "INSPECTION", 
+			"INTERLIS", "JOIN", "LAST", "LINE", "LINEATTR", "LINESIZE", "LIST", "LNBASE", 
+			"LOCAL", "MANDATORY", "METAOBJECT", "MOD", "MODEL", "MTEXT", "MUL", "MULTIAREA", 
+			"MULTICOORD", "MULTIPOLYLINE", "MULTISURFACE", "NAME", "NO", "NOINCREMENTALTRANSFER", 
+			"NOT", "NULL", "NUMERIC", "OBJECT", "OBJECTS", "OF", "OID", "ON", "OPTIONAL", 
+			"OR", "ORDERED", "OTHERS", "OVERLAPS", "PARAMETER", "PARENT", "PERIPHERY", 
+			"PI", "POLYLINE", "PROJECTION", "RADIANS", "REFERENCE", "REFSYS", "REFSYSTEM", 
+			"REQUIRED", "RESTRICTION", "ROTATION", "SET", "SIGN", "STRAIGHTS", "STRUCTURE", 
+			"SUBDIVISION", "SURFACE", "SYMBOLOGY", "TABLE", "TEXT", "THATAREA", "THIS", 
+			"THISAREA", "TID", "TIDSIZE", "TILDE", "TIMEOFDAY", "TO", "TOPIC", "TRANSFER", 
+			"TRANSIENT", "TRANSLATION", "TYPE", "UNDEFINED", "UNION", "UNIQUE", "UNIT", 
+			"UNQUALIFIED", "URI", "VALIGNMENT", "VERSION", "VERTEX", "VERTEXINFO", 
+			"VIEW", "WHEN", "WHERE", "WITH", "WITHOUT", "XML", "XMLNS", "SingleLineComment", 
+			"BlockComment", "TopicDef", "Definitions", "TopicRef", "ClassDef", "StructureDef", 
+			"ClassRef", "ClassOrStructureDef", "StructureRef", "ClassOrStructureRef", 
+			"AttributeDef", "AttrTypeDef", "AttrType", "ReferenceAttr", "RestrictedClassOrAssRef", 
 			"ClassOrAssociationRef", "RestrictedStructureRef", "RestrictedClassOrStructureRef", 
 			"AssociationDef", "AssociationRef", "RoleDef", "Cardinality", "DomainDef", 
 			"Type", "DomainRef", "BaseType", "Constant", "TextType", "TextConst", 
@@ -384,11 +386,11 @@ public class InterlisParser extends Parser {
 			setState(14);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (((((_la - 159)) & ~0x3f) == 0 && ((1L << (_la - 159)) & 16778241L) != 0)) {
+			if (((((_la - 165)) & ~0x3f) == 0 && ((1L << (_la - 165)) & 33555457L) != 0)) {
 				{
 				setState(13);
 				_la = _input.LA(1);
-				if ( !(((((_la - 159)) & ~0x3f) == 0 && ((1L << (_la - 159)) & 16778241L) != 0)) ) {
+				if ( !(((((_la - 165)) & ~0x3f) == 0 && ((1L << (_la - 165)) & 33555457L) != 0)) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -514,12 +516,12 @@ public class InterlisParser extends Parser {
 			setState(63);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (((((_la - 203)) & ~0x3f) == 0 && ((1L << (_la - 203)) & 1729382256912367641L) != 0) || ((((_la - 267)) & ~0x3f) == 0 && ((1L << (_la - 267)) & 4194321L) != 0)) {
+			while (((((_la - 210)) & ~0x3f) == 0 && ((1L << (_la - 210)) & 1729382256912367641L) != 0) || ((((_la - 274)) & ~0x3f) == 0 && ((1L << (_la - 274)) & 4194321L) != 0)) {
 				{
 				{
 				setState(60);
 				_la = _input.LA(1);
-				if ( !(((((_la - 203)) & ~0x3f) == 0 && ((1L << (_la - 203)) & 1729382256912367641L) != 0) || ((((_la - 267)) & ~0x3f) == 0 && ((1L << (_la - 267)) & 4194321L) != 0)) ) {
+				if ( !(((((_la - 210)) & ~0x3f) == 0 && ((1L << (_la - 210)) & 1729382256912367641L) != 0) || ((((_la - 274)) & ~0x3f) == 0 && ((1L << (_la - 274)) & 4194321L) != 0)) ) {
 				_errHandler.recoverInline(this);
 				}
 				else {
@@ -553,7 +555,7 @@ public class InterlisParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u014fG\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0001"+
+		"\u0004\u0001\u0156G\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0001"+
 		"\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0001"+
 		"\u0001\u0003\u0001\f\b\u0001\u0001\u0001\u0003\u0001\u000f\b\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001\u0016"+
@@ -565,41 +567,41 @@ public class InterlisParser extends Parser {
 		"\u0001\u0001\u0005\u00018\b\u0001\n\u0001\f\u0001;\t\u0001\u0001\u0001"+
 		"\u0005\u0001>\b\u0001\n\u0001\f\u0001A\t\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0000\u0000\u0002\u0000\u0002\u0000"+
-		"\u0002\u0003\u0000\u009f\u009f\u00a9\u00a9\u00b7\u00b7\u0007\u0000\u00cb"+
-		"\u00cb\u00ce\u00cf\u00e0\u00e0\u0106\u0107\u010b\u010b\u010f\u010f\u0121"+
-		"\u0121N\u0000\u0004\u0001\u0000\u0000\u0000\u0002\u000b\u0001\u0000\u0000"+
-		"\u0000\u0004\u0005\u0005u\u0000\u0000\u0005\u0006\u0005\u014f\u0000\u0000"+
-		"\u0006\u0007\u0005\u001a\u0000\u0000\u0007\b\u0005\u0006\u0000\u0000\b"+
-		"\t\u0006\u0000\uffff\uffff\u0000\t\u0001\u0001\u0000\u0000\u0000\n\f\u0005"+
-		"D\u0000\u0000\u000b\n\u0001\u0000\u0000\u0000\u000b\f\u0001\u0000\u0000"+
-		"\u0000\f\u000e\u0001\u0000\u0000\u0000\r\u000f\u0007\u0000\u0000\u0000"+
-		"\u000e\r\u0001\u0000\u0000\u0000\u000e\u000f\u0001\u0000\u0000\u0000\u000f"+
-		"\u0010\u0001\u0000\u0000\u0000\u0010\u0011\u0005\u0080\u0000\u0000\u0011"+
-		"\u0015\u0005\u0013\u0000\u0000\u0012\u0013\u0005\u0003\u0000\u0000\u0013"+
-		"\u0014\u0005\u0013\u0000\u0000\u0014\u0016\u0005\u0004\u0000\u0000\u0015"+
-		"\u0012\u0001\u0000\u0000\u0000\u0015\u0016\u0001\u0000\u0000\u0000\u0016"+
-		"\u0017\u0001\u0000\u0000\u0000\u0017\u0018\u0005,\u0000\u0000\u0018\u0019"+
-		"\u0005\u0017\u0000\u0000\u0019\u001a\u0005\u00bf\u0000\u0000\u001a\u001c"+
-		"\u0005\u0017\u0000\u0000\u001b\u001d\u0005\u001e\u0000\u0000\u001c\u001b"+
-		"\u0001\u0000\u0000\u0000\u001c\u001d\u0001\u0000\u0000\u0000\u001d$\u0001"+
-		"\u0000\u0000\u0000\u001e\u001f\u0005\u00b6\u0000\u0000\u001f \u0005\u008e"+
-		"\u0000\u0000 !\u0005\u0013\u0000\u0000!\"\u0005\u0011\u0000\u0000\"#\u0005"+
-		"\u0017\u0000\u0000#%\u0005\u0012\u0000\u0000$\u001e\u0001\u0000\u0000"+
-		"\u0000$%\u0001\u0000\u0000\u0000%&\u0001\u0000\u0000\u0000&9\u0005\u0001"+
-		"\u0000\u0000\')\u0005q\u0000\u0000(*\u0005\u00bc\u0000\u0000)(\u0001\u0000"+
-		"\u0000\u0000)*\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+3\u0005"+
-		"\u0013\u0000\u0000,.\u0005\u0005\u0000\u0000-/\u0005\u00bc\u0000\u0000"+
-		".-\u0001\u0000\u0000\u0000./\u0001\u0000\u0000\u0000/0\u0001\u0000\u0000"+
-		"\u000002\u0005\u0013\u0000\u00001,\u0001\u0000\u0000\u000025\u0001\u0000"+
-		"\u0000\u000031\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000046\u0001"+
-		"\u0000\u0000\u000053\u0001\u0000\u0000\u000068\u0005\u0006\u0000\u0000"+
-		"7\'\u0001\u0000\u0000\u00008;\u0001\u0000\u0000\u000097\u0001\u0000\u0000"+
-		"\u00009:\u0001\u0000\u0000\u0000:?\u0001\u0000\u0000\u0000;9\u0001\u0000"+
-		"\u0000\u0000<>\u0007\u0001\u0000\u0000=<\u0001\u0000\u0000\u0000>A\u0001"+
-		"\u0000\u0000\u0000?=\u0001\u0000\u0000\u0000?@\u0001\u0000\u0000\u0000"+
-		"@B\u0001\u0000\u0000\u0000A?\u0001\u0000\u0000\u0000BC\u0005V\u0000\u0000"+
-		"CD\u0005\u0013\u0000\u0000DE\u0005\u000b\u0000\u0000E\u0003\u0001\u0000"+
-		"\u0000\u0000\n\u000b\u000e\u0015\u001c$).39?";
+		"\u0002\u0003\u0000\u00a5\u00a5\u00af\u00af\u00be\u00be\u0007\u0000\u00d2"+
+		"\u00d2\u00d5\u00d6\u00e7\u00e7\u010d\u010e\u0112\u0112\u0116\u0116\u0128"+
+		"\u0128N\u0000\u0004\u0001\u0000\u0000\u0000\u0002\u000b\u0001\u0000\u0000"+
+		"\u0000\u0004\u0005\u0005y\u0000\u0000\u0005\u0006\u0005\u0156\u0000\u0000"+
+		"\u0006\u0007\u0005\u001b\u0000\u0000\u0007\b\u0005\b\u0000\u0000\b\t\u0006"+
+		"\u0000\uffff\uffff\u0000\t\u0001\u0001\u0000\u0000\u0000\n\f\u0005F\u0000"+
+		"\u0000\u000b\n\u0001\u0000\u0000\u0000\u000b\f\u0001\u0000\u0000\u0000"+
+		"\f\u000e\u0001\u0000\u0000\u0000\r\u000f\u0007\u0000\u0000\u0000\u000e"+
+		"\r\u0001\u0000\u0000\u0000\u000e\u000f\u0001\u0000\u0000\u0000\u000f\u0010"+
+		"\u0001\u0000\u0000\u0000\u0010\u0011\u0005\u0085\u0000\u0000\u0011\u0015"+
+		"\u0005\u0014\u0000\u0000\u0012\u0013\u0005\u0004\u0000\u0000\u0013\u0014"+
+		"\u0005\u0014\u0000\u0000\u0014\u0016\u0005\u0005\u0000\u0000\u0015\u0012"+
+		"\u0001\u0000\u0000\u0000\u0015\u0016\u0001\u0000\u0000\u0000\u0016\u0017"+
+		"\u0001\u0000\u0000\u0000\u0017\u0018\u0005-\u0000\u0000\u0018\u0019\u0005"+
+		"\u0018\u0000\u0000\u0019\u001a\u0005\u00c6\u0000\u0000\u001a\u001c\u0005"+
+		"\u0018\u0000\u0000\u001b\u001d\u0005\u001f\u0000\u0000\u001c\u001b\u0001"+
+		"\u0000\u0000\u0000\u001c\u001d\u0001\u0000\u0000\u0000\u001d$\u0001\u0000"+
+		"\u0000\u0000\u001e\u001f\u0005\u00bd\u0000\u0000\u001f \u0005\u0094\u0000"+
+		"\u0000 !\u0005\u0014\u0000\u0000!\"\u0005\u0012\u0000\u0000\"#\u0005\u0018"+
+		"\u0000\u0000#%\u0005\u0013\u0000\u0000$\u001e\u0001\u0000\u0000\u0000"+
+		"$%\u0001\u0000\u0000\u0000%&\u0001\u0000\u0000\u0000&9\u0005\u0001\u0000"+
+		"\u0000\')\u0005u\u0000\u0000(*\u0005\u00c3\u0000\u0000)(\u0001\u0000\u0000"+
+		"\u0000)*\u0001\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+3\u0005\u0014"+
+		"\u0000\u0000,.\u0005\u0006\u0000\u0000-/\u0005\u00c3\u0000\u0000.-\u0001"+
+		"\u0000\u0000\u0000./\u0001\u0000\u0000\u0000/0\u0001\u0000\u0000\u0000"+
+		"02\u0005\u0014\u0000\u00001,\u0001\u0000\u0000\u000025\u0001\u0000\u0000"+
+		"\u000031\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000046\u0001\u0000"+
+		"\u0000\u000053\u0001\u0000\u0000\u000068\u0005\b\u0000\u00007\'\u0001"+
+		"\u0000\u0000\u00008;\u0001\u0000\u0000\u000097\u0001\u0000\u0000\u0000"+
+		"9:\u0001\u0000\u0000\u0000:?\u0001\u0000\u0000\u0000;9\u0001\u0000\u0000"+
+		"\u0000<>\u0007\u0001\u0000\u0000=<\u0001\u0000\u0000\u0000>A\u0001\u0000"+
+		"\u0000\u0000?=\u0001\u0000\u0000\u0000?@\u0001\u0000\u0000\u0000@B\u0001"+
+		"\u0000\u0000\u0000A?\u0001\u0000\u0000\u0000BC\u0005Y\u0000\u0000CD\u0005"+
+		"\u0014\u0000\u0000DE\u0005\r\u0000\u0000E\u0003\u0001\u0000\u0000\u0000"+
+		"\n\u000b\u000e\u0015\u001c$).39?";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
