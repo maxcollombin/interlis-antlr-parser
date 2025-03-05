@@ -21,7 +21,6 @@ RCBR: '}';
 LSBR: '[';
 RSBR: ']';
 
-
 //Names
 Name : Letter (Letter | Digit | '_')*;
 Letter : [A-Za-z];
@@ -29,7 +28,6 @@ Digit : [0-9];
 HexDigit : [0-9A-Fa-f];
 
 //Character strings
-// String : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDigit )* '"';
 STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDigit )* '"';
 
 //Numbers
@@ -63,6 +61,7 @@ AT : 'AT';
 AT_SYMBOL : '@'; // newly added
 ATTRIBUTE : 'ATTRIBUTE';
 ATTRIBUTES : 'ATTRIBUTES';
+BACKSLASH: '\\'; // newly added
 BAG : 'BAG';
 BASE : 'BASE';
 BASED : 'BASED';
@@ -136,7 +135,6 @@ IN : 'IN';
 INHERITANCE : 'INHERITANCE';
 INSPECTION : 'INSPECTION';
 INTERLIS : 'INTERLIS';
-// INTERLIS : 'INTERLIS' [ \t\r\n]+ Dec SEMI;
 JOIN : 'JOIN';
 LAST : 'LAST';
 LINE : 'LINE';
@@ -221,7 +219,7 @@ WHEN : 'WHEN';
 WHERE : 'WHERE';
 WITH : 'WITH';
 WITHOUT : 'WITHOUT';
-XML : 'XML';            
+XML : 'XML';        
 XMLNS : 'XMLNS';
 
 // Single-line comment

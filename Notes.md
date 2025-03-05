@@ -595,6 +595,12 @@ La règle `LogicalExpression` n'est pas définie dans la grammaire. Nous proposo
 Il conviendrait cependant de la définir. Actuellement, cela concerne les règles suivantes:
 
 ```diff
+- uniquenessConstraint : UNIQUE ( WHERE LogicalExpression COLON )?
++ uniquenessConstraint : UNIQUE ( WHERE expression COLON )?
+            ( globalUniqueness | localUniqueness ) SEMI;
+```
+
+```diff
 - MandatoryConstraint : MANDATORY CONSTRAINT LogicalExpression SEMI;
 + MandatoryConstraint : MANDATORY CONSTRAINT Expression SEMI;
 ```
@@ -630,3 +636,79 @@ Predicate : ( factor
 + CondSignParamAssignment : WHERE LogicalExpression
         LPAR SignParamAssignment ( SEMI SignParamAssignment )* RPAR;
 ```
+
+### Adapations en relation avec les conventions ANTLR et la distinction entre lexer et parser
+
+Actuellement, la règle `` est considérée comme Lexer par ANTLR du fait qu'elle commande par une majuscule ce qui génère des erreurs lors du parsing. Il convient donc de la renommer en et de remplacer toutes ces occurences à savoir:
+
+```diff
+- AttributeDef : CONTINUOUS? SUBDIVISION?
++ attributeDef : CONTINUOUS? SUBDIVISION?
+               Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+               COLON AttrTypeDef
+               (COLON EQ factor (COMMA factor)*)? SEMI;
+```
+
+```diff
+- ClassOrStructureDef : (ATTRIBUTE AttributeDef+ | ConstraintDef+ | PARAMETER ParameterDef+)+;
++ ClassOrStructureDef : (ATTRIBUTE attributeDef+ | ConstraintDef+ | PARAMETER ParameterDef+)+;
+```
+
+```diff
+AssociationDef : ASSOCIATION Name
+                     PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | OID)?
+                     (EXTENDS AssociationRef)?
+                     (DERIVED FROM Name)? EQ
+                     ((OID AS Name | NO OID) SEMI)?
+                     RoleDef*
+-                     (ATTRIBUTE AttributeDef*)?
++                     (ATTRIBUTE attributeDef*)?
+                     (CARDINALITY EQ Cardinality SEMI)?
+                     ConstraintDef*
+                 END Name SEMI;
+```
+
+```diff
+ViewAttributes : ATTRIBUTE
+         ( ALL OF Name SEMI
+-         | AttributeDef
++         | attributeDef
+         | Name
+         | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+         COLON EQ Expression SEMI );
+```
+
+Il en est de même pour toutes les autres règles du Parser.
+
+#### Simplification de la grammaire
+
+Dans la règle ``, il n'est pas nécessaire de faire référence à `nullAxisPosNumber`et `piHalfAxisPosNumber` qui se rapportent tous deux au même token `PosNumber` qui peuvent être gérés par le parser.
+
+```diff
+- rotationDef : ROTATION nullAxisPosNumber MINUS GT piHalfAxisPosNumber;
++ rotationDef : ROTATION PosNumber MINUS GT PosNumber;
+```
+
+```diff
+- nullAxisPosNumber : PosNumber;
+- piHalfAxisPosNumber : PosNumber;
+```
+
+La règle factor doit être adaptée comme suit:
+
+```diff
+factor : objectOrAttributePath 
+-        | (inspection | INSPECTION InspectionViewableRef) (OF objectOrAttributePath)?
++        | (inspection | INSPECTION viewableRef) (OF objectOrAttributePath)?
+        | functionCall
+-        | PARAMETER (ModelName DOT)? RunTimeParameterName
++        | PARAMETER (Name DOT)? Name
+        | constant;
+```
+
+Les règles suivantes pourraient encore être supprimées mais il convient de vérifier avec le parser:
+
+- textConst
+- booleanType
+- formattedConst
+- expression
