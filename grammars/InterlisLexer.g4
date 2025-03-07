@@ -1,49 +1,10 @@
 lexer grammar InterlisLexer;
 
-// Lexer rules
-EQ : '=';
-NOT_EQ : '!='; // newly added
-Scaling : ('e' | 'E') Number;
-LPAR : '(';
-RPAR : ')';
-COMMA : ',';
-COLON: ':';
-SEMI : ';';
-LT : '<';
-LTEQ: '<=';
-GT : '>';
-GTEQ: '>=';
-DOT: '.';
-MINUS: '-';
-PLUS: '+';
-LCBR: '{';
-RCBR: '}';
-LSBR: '[';
-RSBR: ']';
+// Règles lexicales INTERLIS 2.4 définies avec les référénce eCH-0031
+// INTERLIS 2.4 lexikalische Regeln, definiert mit eCH-0031-Referenzen
 
-//Names
-Name : Letter (Letter | Digit | '_')*;
-Letter : [A-Za-z];
-Digit : [0-9];
-HexDigit : [0-9A-Fa-f];
+// 3.2.7 Signes particuliers et mots réservés - Sonderzeichen und reservierte Wörter
 
-//Character strings
-STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDigit )* '"';
-
-//Numbers
-PosNumber : Digit+;
-Number : (PLUS | MINUS)? PosNumber;
-Dec : (Number (DOT PosNumber)? | Float);
-Float : (PLUS | MINUS)? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
-
-//Sets of properties
-Property : [a-zA-Z0-9_]+;
-PropertyKeyword : 'Properties';
-
-// Explanations
-Explanation : '//' ~('\n'|'\r')* ('\r'? '\n' | EOF);
-
-// Reserved words and special symbols
 ABSTRACT : 'ABSTRACT';
 ACCORDING : 'ACCORDING';
 AGGREGATES : 'AGGREGATES';
@@ -56,6 +17,7 @@ ANYSTRUCTURE : 'ANYSTRUCTURE';
 ARCS : 'ARCS';
 AREA : 'AREA';
 AS : 'AS';
+ASSIGN: ':=';
 ASSOCIATION : 'ASSOCIATION';
 AT : 'AT';
 AT_SYMBOL : '@'; // newly added
@@ -222,12 +184,65 @@ WITHOUT : 'WITHOUT';
 XML : 'XML';        
 XMLNS : 'XMLNS';
 
-// Single-line comment
-SingleLineComment : '!!' ~[\r\n]*;
+// 3.2.4 Nombres - Zahlen
+//  (intervient avant les Noms car des règles de Noms sont utilisées dans les Nombres) - (kommt vor den Namen, da Namensregeln in Zahlen verwendet werden)
 
-//Comment block
+EQ : '=';
+NOT_EQ : '!='; // newly added
+Scaling : ('e' | 'E') Number;
+LPAR : '(';
+RPAR : ')';
+COMMA : ',';
+COLON: ':';
+SEMI : ';';
+LT : '<';
+LTEQ: '<=';
+GT : '>';
+GTEQ: '>=';
+DOT: '.';
+DOTDOT: '..';
+MINUS: '-';
+PLUS: '+';
+LCBR: '{';
+RCBR: '}';
+LSBR: '[';
+RSBR: ']';
 
-BlockComment : '/*' .*? '*/';
+PosNumber : Digit+;
+Number : (PLUS | MINUS)? PosNumber;
+Dec : (Number (DOT PosNumber)? | Float);
+Float : (PLUS | MINUS)? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
+
+// 3.2.2 Noms - Namen
+
+Name : Letter (Letter | Digit | '_')*;
+Letter : [A-Za-z];
+Digit : [0-9];
+HexDigit : [0-9A-Fa-f];
+
+// 3.2.3 Chaîne de caractères - Zeichenketten
+
+STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDigit )* '"';
+
+// 3.2.5 Ensembles de propriétés - Eigenschaftsmengen
+
+Property : [a-zA-Z0-9_]+;
+PropertyKeyword : 'Properties';
+
+// 3.2.6 Explications - Erläuterungen
+
+Explanation : '//' ~('\n'|'\r')* ('\r'? '\n' | EOF);
+
+// 3.2.8 Commentaires - Kommentare
+
+// 3.2.8.1 Commentaire rédigé sur une ligne - Zeilenkommentar
+
+SingleLineComment : '!!' ~[\r\n]* -> channel(HIDDEN); // ignore comments
+
+// 3.2.8.2 Bloc de commentaire - Blockkommentar
+
+BlockComment : '/*' .*? '*/' -> channel(HIDDEN); // ignore comments
 
 // Ignore whitespace
+
 WS : [ \t\r\n]+ -> skip;

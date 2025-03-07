@@ -712,3 +712,18 @@ Les règles suivantes pourraient encore être supprimées mais il convient de v�
 - booleanType
 - formattedConst
 - expression
+
+#### Ordre des règles
+
+Faire attention à l'ordre dans lequel interviennent les règles dans le lexer (les nombres p.ex. doivent intervenir avant les noms car PosNumber utilise Digit)
+
+La règle `numericType` n'est pas cohérente et doit être changée.
+
+```diff
++numeric : (PosNumber HexDigit PosNumber | Dec HexDigit Dec);
++
+-numericType : (Dec DOT DOT Dec | NUMERIC) CIRCULAR?
++numericType : NUMERIC? numeric CIRCULAR?
+        (LSBR unitRef RSBR)?
+        (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
+```

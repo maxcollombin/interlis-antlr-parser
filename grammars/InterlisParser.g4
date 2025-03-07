@@ -1,11 +1,15 @@
 parser grammar InterlisParser;
 options { tokenVocab=InterlisLexer; }
 
-// Règle principale
+// Règles syntaxiques INTERLIS 2.4 définies avec les référénce eCH-0031
+// INTERLIS 2.4 Syntaxregeln definiert mit eCH-0031-Referenzen
 
-interlis2def : INTERLIS Dec SEMI { modeldef };
+// 3.3 Règle principale - Hauptregel
 
-// Définition du modèle
+interlis2def : INTERLIS Dec SEMI modeldef?;
+
+// 3.5 Modèles, thèmes, classes - Modelle, Themen, Klassen
+// 3.5.1 Modèles - Modelle
 
 modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
            MODEL Name (LPAR Name RPAR)?
@@ -24,7 +28,7 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
            | topicDef)*
            END Name DOT;
 
-// Thèmes
+// 3.5.2 Thèmes - Themen
 
 topicDef : VIEW? TOPIC Name
                    PropertyKeyword? (ABSTRACT | FINAL)?
@@ -48,7 +52,7 @@ definitions : metaDataBasketDef
 
 topicRef : (Name DOT)? Name;
 
-// Classes et structures
+// 3.5.3 Classes et structures - Klassen und Strukturen
 
 classDef : CLASS Name
              PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
@@ -64,18 +68,18 @@ structureDef : STRUCTURE Name
                END Name SEMI;
 
 classRef : (Name DOT (Name DOT)?)? Name;
-classOrStructureDef : (ATTRIBUTE attributeDef+ | constraintDef+ | PARAMETER parameterDef+)+;
+classOrStructureDef : (ATTRIBUTE? attributeDef+ | constraintDef+ | PARAMETER? parameterDef+)+;
 
 structureRef : (Name DOT (Name DOT)?)? Name;
 
 classOrStructureRef : classRef | structureRef;
 
-// Attributs
+// 3.6 Attributs - Attribute
 
 attributeDef : CONTINUOUS? SUBDIVISION?
                Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
                COLON attrTypeDef
-               (COLON EQ factor (COMMA factor)*)? SEMI;
+               (ASSIGN? factor (COMMA factor)*)? SEMI;
 
 attrTypeDef : MANDATORY? attrType
             | (BAG | LIST) cardinality? OF restrictedStructureRef;
@@ -98,7 +102,8 @@ restrictedStructureRef : (structureRef | ANYSTRUCTURE)
 restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
                               (RESTRICTION LPAR classOrStructureRef (COMMA classOrStructureRef)* RPAR)?;
 
-// Relations vraies / Associations
+// 3.7 Relations vraies - Eigentliche Beziehungen
+//3.7.1 Description des relations - Beschreibung von Beziehungen
 
 associationDef : ASSOCIATION Name
                      PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | OID)?
@@ -120,7 +125,7 @@ roleDef : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED 
 
 cardinality : LCBR (MUL | PosNumber (DOT DOT (PosNumber | MUL))?) RCBR;
 
-// Domaines de valeurs et constantes
+// 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
 domainDef : DOMAIN Name PropertyKeyword? (ABSTRACT | FINAL)?
                 (EXTENDS domainRef)? EQ
@@ -151,7 +156,7 @@ constant : UNDEFINED
          | classConst
          | attributePathConst;
 
-// Chaînes de caractères
+// 3.8.1 Chaînes de caractères - Zeichenketten
 
 textType : MTEXT (MUL PosNumber)?
          | TEXT (MUL PosNumber)?
@@ -160,7 +165,7 @@ textType : MTEXT (MUL PosNumber)?
 
 textConst : STRING;
 
-// Enumérations
+// 3.8.2 Enumérations - Aufzählungen
 
 enumerationType : ENUM LCBR enumElement (COMMA enumElement)* RCBR (ORDERED | CIRCULAR)?;
 
@@ -172,17 +177,19 @@ enumElement : Name (DOT Name)* (enumeration)?;
 
 enumerationConst : HASH (Name (DOT Name)* (DOT OTHERS)? | OTHERS);
 
-// Alignement du texte
+// 3.8.3 Alignement du texte - Textausrichtungen
 
 alignmentType : ( HALIGNMENT | VALIGNMENT );
 
-// Boolean
+// 3.8.4 Boolean - Boolean
 
 booleanType : BOOLEAN;
 
-// Types de données numériques
+// 3.8.5 Types de données numériques - Numerische Datentypen
 
-numericType : (Dec DOT DOT Dec | NUMERIC) CIRCULAR?
+numeric : (PosNumber DOTDOT PosNumber | Dec DOTDOT Dec);
+
+numericType : NUMERIC? numeric CIRCULAR?
         (LSBR unitRef RSBR)?
         (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
 
@@ -193,7 +200,7 @@ decConst : Dec | PI | LNBASE;
 
 numericConst : decConst (LSBR unitRef RSBR)?;
 
-// Domaines de valeurs formatés
+// 3.8.6 Domaines de valeurs formatés - Formatierte Wertebereiche
 
 formattedType : FORMAT BASED ON structureRef formatDef
         | FORMAT domainRef STRING DOT DOT STRING;
@@ -205,11 +212,11 @@ baseAttrRef : Name (DIV PosNumber)?
 
 formattedConst : STRING;
 
-// Date et heure
+// 3.8.7 Date et heure - Datum und Zeit
 
 dateTimeType : ( DATE | TIMEOFDAY | DATETIME );
 
-// Coordonnées
+// 3.8.8 Coordonnées - Koordinaten
 
 coordinateType : COORD numericType
            (COMMA numericType (COMMA numericType)?
@@ -219,15 +226,15 @@ rotationDef : ROTATION PosNumber MINUS GT PosNumber;
 
 contextDef : CONTEXT Name EQ LCBR domainRef EQ domainRef (OR domainRef)* SEMI RCBR SEMI;
 
-// Domaines de valeurs des identifications d’objet
+// 3.8.9 Domaines de valeurs des identifications d’objet - Wertebereiche von Objektidentifikationen
 
 oIDType : OID ( ANY | numericType | textType );
 
-// Boîtes noires
+// 3.8.10 Boîtes noires - Gefässe
 
 blackboxType : BLACKBOX ( XML | BINARY );
 
-// Domaines de valeurs de classes et chemins d’attributs
+// 3.8.11 Domaines de valeurs de classes et chemins d’attributs - Wertebereiche von Klassen und Attributpfaden
 
 classType : CLASS
         (RESTRICTION LPAR viewableRef (COMMA viewableRef)* RPAR)?
@@ -242,7 +249,9 @@ classConst : GT viewableRef;
 
 attributePathConst : GT GT (viewableRef DOT)? Name;
 
-// Polylignes
+// 3.8.12 Polylignes - Linienzüge
+// 3.8.12.2 Polyligne comportant des segments de droite et des arcs de cercle en tant qu’éléments de portion de courbe prédéfinis
+// 3.8.12.2 Linienzug mit Strecken und Kreisbogen als vordefinierte Kurvenstücke
 
 lineType : ( DIRECTED? POLYLINE | SURFACE | AREA | DIRECTED? MULTIPOLYLINE | MULTISURFACE | MULTIAREA )
         lineForm? controlPoints? intersectionDef?;
@@ -255,9 +264,13 @@ controlPoints : VERTEX Name;
 
 intersectionDef : WITHOUT OVERLAPS GT Dec;
 
+// 3.8.12.3 Formes de portions de courbes supplémentaires - Weitere Kurvenstück-Formen
+
 lineFormTypeDef : LINE FORM LCBR Name COLON Name SEMI RCBR;
 
-// Unités composées
+// 3.9 Unités - Einheiten
+
+// 3.9.3 Unités composées - Zusammengesetzte Einheiten
 
 unitDef : UNIT Name
       (LPAR ABSTRACT RPAR)?
@@ -272,7 +285,7 @@ composedUnit : LPAR unitRef ((MUL | DIV) unitRef)* RPAR;
 
 unitRef : (Name DOT (Name DOT)?)? Name;
 
-// Traitement des méta-objets
+// 3.10 Traitement des méta-objets - Umgang mit Metaobjekten
 
 metaDataBasketDef : SIGN | REFSYSTEM BASKET Name
            PropertyKeyword? FINAL?
@@ -284,17 +297,18 @@ metaDataBasketRef : (Name DOT (Name DOT)?)? Name;
 
 metaObjectRef : (metaDataBasketRef DOT)? Name;
 
-// Paramètres
+// 3.10.2 Paramètres - Parameter
+// 3.10.2.2 Paramètres des signatures - Parameter von Signaturen
 
 parameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
          COLON (attrTypeDef | METAOBJECT (OF metaObjectRef)?) SEMI;
 
-// Paramètres d’exécution
+// 3.11 Paramètres d’exécution - Laufzeitparameter
 
 runTimeParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
             COLON attrTypeDef SEMI;
 
-// Conditions de cohérence
+// 3.12 Conditions de cohérence - Konsistenzbedingungen
 
 constraintDef : mandatoryConstraint
         | plausibilityConstraint
@@ -332,7 +346,7 @@ constraintsDef : CONSTRAINTS OF classOrAssociationRef EQ
         ( constraintDef )*
         END SEMI;
 
-// Expressions
+// 3.13 Expressions - Ausdrücke
 
 expression : term;
 
@@ -378,7 +392,7 @@ functionCall : (Name DOT)? (Name DOT)? Name
 argument : expression
           | ALL (LPAR restrictedClassOrAssRef | viewableRef RPAR)?;
 
-// Fonctions
+// 3.14 Fonctions
 
 functionDef : FUNCTION Name
          LPAR argumentDef (COMMA argumentDef)* RPAR
@@ -391,7 +405,7 @@ argumentType : attrTypeDef
          | ENUMVAL
          | ENUMTREEVAL;
 
-// Vues
+// 3.15 Vues
 
 viewDef : VIEW Name
       PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
@@ -446,7 +460,7 @@ viewAttributes : ATTRIBUTE
          | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
          COLON EQ expression SEMI );
 
-// Représentations graphiques
+// 3.16 Représentations graphiques
 
 graphicDef : GRAPHIC Name PropertyKeyword? (ABSTRACT | FINAL)?
      (EXTENDS graphicRef)?
