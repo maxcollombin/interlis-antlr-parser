@@ -45,6 +45,7 @@ To deactivate and remove the virtual environment, run `. clean.sh` script.
 - [ ] Grammar definition: Currently being defined and tested.
     - [x] Handle the placeholders
     - [x] Refactor the lexer and parser files to have 2 clean and distinct ressources
+    - [ ] Check for grammar consistency and corrections
     - [ ] Update the file Notes.md with the grammar inconsistencies
 - [ ] Parser implementation: To be implemented after the grammar is defined.
 

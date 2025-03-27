@@ -31,7 +31,7 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
 // 3.5.2 Thèmes - Themen
 
 topicDef : VIEW? TOPIC Name
-                   PropertyKeyword? (ABSTRACT | FINAL)?
+                   Properties? (ABSTRACT | FINAL)?
                    (EXTENDS topicRef)? EQ
                    (BASKET OID AS Name SEMI)?
                    (OID AS Name SEMI)?
@@ -55,14 +55,14 @@ topicRef : (Name DOT)? Name;
 // 3.5.3 Classes et structures - Klassen und Strukturen
 
 classDef : CLASS Name
-             PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+             Properties? (ABSTRACT | EXTENDED | FINAL)?
                (EXTENDS classOrStructureRef)? EQ
                ((OID AS Name | NO OID) SEMI)?
              classOrStructureDef
            END Name SEMI;
 
 structureDef : STRUCTURE Name
-                 PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+                 Properties? (ABSTRACT | EXTENDED | FINAL)?
                    (EXTENDS structureRef)? EQ
                  classOrStructureDef
                END Name SEMI;
@@ -77,7 +77,7 @@ classOrStructureRef : classRef | structureRef;
 // 3.6 Attributs - Attribute
 
 attributeDef : CONTINUOUS? SUBDIVISION?
-               Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+               Name Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
                COLON attrTypeDef
                (ASSIGN? factor (COMMA factor)*)? SEMI;
 
@@ -89,7 +89,7 @@ attrType : type
          | referenceAttr
          | restrictedStructureRef;
 
-referenceAttr : REFERENCE TO PropertyKeyword? EXTERNAL? restrictedClassOrAssRef;
+referenceAttr : REFERENCE TO Properties? EXTERNAL? restrictedClassOrAssRef;
 
 restrictedClassOrAssRef : (classOrAssociationRef | ANYCLASS)
                         (RESTRICTION LPAR classOrAssociationRef (COMMA classOrAssociationRef)* RPAR)?;
@@ -106,7 +106,7 @@ restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
 //3.7.1 Description des relations - Beschreibung von Beziehungen
 
 associationDef : ASSOCIATION Name
-                     PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | OID)?
+                     Properties? (ABSTRACT | EXTENDED | FINAL | OID)?
                      (EXTENDS associationRef)?
                      (DERIVED FROM Name)? EQ
                      ((OID AS Name | NO OID) SEMI)?
@@ -118,16 +118,16 @@ associationDef : ASSOCIATION Name
 
 associationRef : (Name DOT (Name DOT)?)? Name;
 
-roleDef : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
+roleDef : Name Properties? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
               (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT) cardinality?
               restrictedClassOrAssRef (OR restrictedClassOrAssRef)*
               (COLON EQ STRING)? SEMI;
 
-cardinality : LCBR (MUL | PosNumber (DOT DOT (PosNumber | MUL))?) RCBR;
+cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
-domainDef : DOMAIN Name PropertyKeyword? (ABSTRACT | FINAL)?
+domainDef : DOMAIN Name Properties? (ABSTRACT | FINAL)?
                 (EXTENDS domainRef)? EQ
                 (MANDATORY? type | type) SEMI;
 
@@ -288,7 +288,7 @@ unitRef : (Name DOT (Name DOT)?)? Name;
 // 3.10 Traitement des méta-objets - Umgang mit Metaobjekten
 
 metaDataBasketDef : SIGN | REFSYSTEM BASKET Name
-           PropertyKeyword? FINAL?
+           Properties? FINAL?
            (EXTENDS metaDataBasketRef)?
            TILDE topicRef
            (OBJECTS OF Name COLON Name (COMMA Name)*)? SEMI;
@@ -300,12 +300,12 @@ metaObjectRef : (metaDataBasketRef DOT)? Name;
 // 3.10.2 Paramètres - Parameter
 // 3.10.2.2 Paramètres des signatures - Parameter von Signaturen
 
-parameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+parameterDef : PARAMETER Name Properties? (ABSTRACT | EXTENDED | FINAL)?
          COLON (attrTypeDef | METAOBJECT (OF metaObjectRef)?) SEMI;
 
 // 3.11 Paramètres d’exécution - Laufzeitparameter
 
-runTimeParameterDef : PARAMETER Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+runTimeParameterDef : PARAMETER Name Properties? (ABSTRACT | EXTENDED | FINAL)?
             COLON attrTypeDef SEMI;
 
 // 3.12 Conditions de cohérence - Konsistenzbedingungen
@@ -408,14 +408,14 @@ argumentType : attrTypeDef
 // 3.15 Vues
 
 viewDef : VIEW Name
-      PropertyKeyword? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
-      ( formationDef | EXTENDS viewRef )?
-      baseExtensionDef*
-      selection*
-      EQ
-      viewAttributes?
-      constraintDef*
-      END Name SEMI;
+        Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+        ( formationDef | EXTENDS viewRef )?
+        baseExtensionDef*
+        selection*
+        EQ
+        viewAttributes?
+        constraintDef*
+        END Name SEMI;
 
 viewRef : (Name DOT (Name DOT)?)? Name;
 
@@ -425,20 +425,20 @@ formationDef : projection
        | aggregation
        | inspection;
 
-projection : PROJECTION OF renamedViewableRef;
+projection : PROJECTION_OF renamedViewableRef SEMI;
 
-join : JOIN OF renamedViewableRef
-     (COMMA renamedViewableRef (LPAR OR NULL RPAR)?)*;
+join : JOIN_OF renamedViewableRef
+     (COMMA renamedViewableRef (LPAR OR NULL RPAR)?)* SEMI;
 
-union : UNION OF renamedViewableRef
-    (COMMA renamedViewableRef)*;
+union : UNION_OF renamedViewableRef
+    (COMMA renamedViewableRef)* SEMI;
 
-aggregation : AGGREGATION OF renamedViewableRef
-        (ALL | EQUAL LPAR uniqueEl RPAR);
+aggregation : AGGREGATION_OF renamedViewableRef
+        (ALL | EQUAL LPAR uniqueEl RPAR) SEMI;
 
-inspection : (AREA INSPECTION OF renamedViewableRef
+inspection : (AREA INSPECTION_OF renamedViewableRef
         MINUS GT Name
-        (MINUS GT Name)*);
+        (MINUS GT Name)*) SEMI;
 
 renamedViewableRef : (Name TILDE)? viewableRef;
 
@@ -453,16 +453,16 @@ baseExtensionDef : BASE Name EXTENDED BY
 
 selection : WHERE expression SEMI;
 
-viewAttributes : ATTRIBUTE
+viewAttributes : ATTRIBUTE?
          ( ALL OF Name SEMI
          | attributeDef
          | Name
-         | PropertyKeyword (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+         | Properties (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
          COLON EQ expression SEMI );
 
 // 3.16 Représentations graphiques
 
-graphicDef : GRAPHIC Name PropertyKeyword? (ABSTRACT | FINAL)?
+graphicDef : GRAPHIC Name Properties? (ABSTRACT | FINAL)?
      (EXTENDS graphicRef)?
      (BASED ON viewableRef)? EQ
      (selection)*
@@ -471,7 +471,7 @@ graphicDef : GRAPHIC Name PropertyKeyword? (ABSTRACT | FINAL)?
 
 graphicRef : (Name DOT (Name DOT)?)? Name;
 
-drawingRule : Name PropertyKeyword? (ABSTRACT | EXTENDED | FINAL)?
+drawingRule : Name Properties? (ABSTRACT | EXTENDED | FINAL)?
   (OF classRef)?
   COLON condSignParamAssignment (COMMA condSignParamAssignment)* SEMI;
 

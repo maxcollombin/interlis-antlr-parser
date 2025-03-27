@@ -727,3 +727,82 @@ La règle `numericType` n'est pas cohérente et doit être changée.
         (LSBR unitRef RSBR)?
         (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
 ```
+
+### 3.2.5 Ensembles de propriétés - Eigenschaftsmengen
+
+Les `Property-Keyword`ne devraient idéalement pas être définis dans la grammaire mais dans le parser uniquement.
+
+### XXX
+
+Rajouter SEMI dans la déifinition de la VIEW
+
+```diff
+viewDef : VIEW Name
+--      Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+++      Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)? SEMI
+      ( formationDef | EXTENDS viewRef )?
+      baseExtensionDef*
+      selection*
+      EQ
+      viewAttributes?
+      constraintDef*
+      END Name SEMI;
+```
+
+##### formationDef
+
+```diff
+-- projection : PROJECTION OF renamedViewableRef;
+++ projection : PROJECTION_OF renamedViewableRef SEMI;
+```
+
+```diff
+--join : JOIN OF renamedViewableRef
+++join : JOIN_OF renamedViewableRef
+--     (COMMA renamedViewableRef (LPAR OR NULL RPAR)?)*;
+++     (COMMA renamedViewableRef (LPAR OR NULL RPAR)?)* SEMI;
+```
+
+```diff
+-- union : UNION OF renamedViewableRef
+++ union : UNION_OF renamedViewableRef
+--    (COMMA renamedViewableRef)*;
+++    (COMMA renamedViewableRef)* SEMI;
+```
+
+```diff
+-- aggregation : AGGREGATION OF renamedViewableRef
+++ aggregation : AGGREGATION_OF renamedViewableRef
+--        (ALL | EQUAL LPAR uniqueEl RPAR);
+++        (ALL | EQUAL LPAR uniqueEl RPAR) SEMI;
+```
+
+```diff
+-- inspection : (AREA INSPECTION OF renamedViewableRef
+++ inspection : (AREA INSPECTION_OF renamedViewableRef
+        MINUS GT Name
+--        (MINUS GT Name)*);
+++        (MINUS GT Name)*) SEMI;
+```
+
+> [!NOTE]
+> Cela implique également de définir les tokens: `PROJECTION_OF` , `JOIN_OF` , `UNION_OF` , `AGGREGATION_OF` , `INSPECTION_OF`
+> Tous les tokens associés sans le `OF` devraient, en principe, pouvoir être supprimés.
+> On pourrait aussi définir les tokens sous la forme projection : 'PROJECTION_OF';
+
+
+
+
+
+
+##### viewAttributes
+
+```diff
+-- viewAttributes : ATTRIBUTE
+++ viewAttributes : ATTRIBUTE?
+         ( ALL OF Name SEMI
+         | attributeDef
+         | Name
+         | Properties (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+         COLON EQ expression SEMI );
+```
