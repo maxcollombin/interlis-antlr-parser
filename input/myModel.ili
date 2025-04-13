@@ -20,7 +20,6 @@ VERSION "2023-11-29" =
         END CityPerson;
         VIEW myView
           PROJECTION OF City;
-          !! WHERE CityName == "Les Avants";
           WHERE City->PostalCode > 1000;
             =
           ALL OF City;

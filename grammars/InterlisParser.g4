@@ -31,7 +31,7 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
 // 3.5.2 Thèmes - Themen
 
 topicDef : VIEW? TOPIC Name
-                   Properties? (ABSTRACT | FINAL)?
+                   (ABSTRACT | FINAL)?
                    (EXTENDS topicRef)? EQ
                    (BASKET OID AS Name SEMI)?
                    (OID AS Name SEMI)?
@@ -55,16 +55,16 @@ topicRef : (Name DOT)? Name;
 // 3.5.3 Classes et structures - Klassen und Strukturen
 
 classDef : CLASS Name
-             Properties? (ABSTRACT | EXTENDED | FINAL)?
-               (EXTENDS classOrStructureRef)? EQ
-               ((OID AS Name | NO OID) SEMI)?
-             classOrStructureDef
+             (LPAR (ABSTRACT | EXTENDED | FINAL)RPAR)?
+             (EXTENDS classOrStructureRef)? EQ
+             ((OID AS Name | NO OID) SEMI)?
+             classOrStructureDef?
            END Name SEMI;
 
 structureDef : STRUCTURE Name
-                 Properties? (ABSTRACT | EXTENDED | FINAL)?
-                   (EXTENDS structureRef)? EQ
-                 classOrStructureDef
+                 (ABSTRACT | EXTENDED | FINAL)?
+                 (EXTENDS structureRef)? EQ
+                 classOrStructureDef?
                END Name SEMI;
 
 classRef : (Name DOT (Name DOT)?)? Name;
@@ -77,11 +77,11 @@ classOrStructureRef : classRef | structureRef;
 // 3.6 Attributs - Attribute
 
 attributeDef : CONTINUOUS? SUBDIVISION?
-               Name Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+               Name (LPAR(ABSTRACT | EXTENDED | FINAL | TRANSIENT)RPAR)?
                COLON attrTypeDef
                (ASSIGN? factor (COMMA factor)*)? SEMI;
 
-attrTypeDef : MANDATORY? attrType
+attrTypeDef : MANDATORY? (attrType | enumeration)
             | (BAG | LIST) cardinality? OF restrictedStructureRef;
 
 attrType : type
@@ -89,7 +89,7 @@ attrType : type
          | referenceAttr
          | restrictedStructureRef;
 
-referenceAttr : REFERENCE TO Properties? EXTERNAL? restrictedClassOrAssRef;
+referenceAttr : REFERENCE TO (LPAR EXTERNAL RPAR)? restrictedClassOrAssRef;
 
 restrictedClassOrAssRef : (classOrAssociationRef | ANYCLASS)
                         (RESTRICTION LPAR classOrAssociationRef (COMMA classOrAssociationRef)* RPAR)?;
@@ -106,7 +106,7 @@ restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
 //3.7.1 Description des relations - Beschreibung von Beziehungen
 
 associationDef : ASSOCIATION Name
-                     Properties? (ABSTRACT | EXTENDED | FINAL | OID)?
+                     (ABSTRACT | EXTENDED | FINAL | OID)?
                      (EXTENDS associationRef)?
                      (DERIVED FROM Name)? EQ
                      ((OID AS Name | NO OID) SEMI)?
@@ -118,18 +118,18 @@ associationDef : ASSOCIATION Name
 
 associationRef : (Name DOT (Name DOT)?)? Name;
 
-roleDef : Name Properties? (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL)?
+roleDef : Name (LPAR (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL) RPAR)?
               (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT) cardinality?
               restrictedClassOrAssRef (OR restrictedClassOrAssRef)*
-              (COLON EQ STRING)? SEMI;
+              (ASSIGN STRING)? SEMI;
 
 cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
-domainDef : DOMAIN Name Properties? (ABSTRACT | FINAL)?
+domainDef : DOMAIN Name (ABSTRACT | FINAL)?
                 (EXTENDS domainRef)? EQ
-                (MANDATORY? type | type) SEMI;
+                (MANDATORY? type | type | enumeration) SEMI;
 
 type : baseType | lineType;
 
@@ -187,7 +187,7 @@ booleanType : BOOLEAN;
 
 // 3.8.5 Types de données numériques - Numerische Datentypen
 
-numeric : (PosNumber DOTDOT PosNumber | Dec DOTDOT Dec);
+numeric : (Number DOTDOT Number | Number DOTDOT PosNumber | PosNumber DOTDOT PosNumber| Dec DOTDOT Dec);
 
 numericType : NUMERIC? numeric CIRCULAR?
         (LSBR unitRef RSBR)?
@@ -203,7 +203,7 @@ numericConst : decConst (LSBR unitRef RSBR)?;
 // 3.8.6 Domaines de valeurs formatés - Formatierte Wertebereiche
 
 formattedType : FORMAT BASED ON structureRef formatDef
-        | FORMAT domainRef STRING DOT DOT STRING;
+        | FORMAT domainRef STRING DOTDOT STRING;
 
 formatDef : LPAR INHERITANCE? STRING? (baseAttrRef STRING)* baseAttrRef STRING? RPAR;
 
@@ -256,11 +256,11 @@ attributePathConst : GT GT (viewableRef DOT)? Name;
 lineType : ( DIRECTED? POLYLINE | SURFACE | AREA | DIRECTED? MULTIPOLYLINE | MULTISURFACE | MULTIAREA )
         lineForm? controlPoints? intersectionDef?;
 
-lineForm : WITH LPAR lineFormType { COMMA lineFormType } RPAR;
+lineForm : WITH LPAR lineFormType (COMMA lineFormType)* RPAR;
 
 lineFormType : STRAIGHTS | ARCS | Name DOT Name;
 
-controlPoints : VERTEX Name;
+controlPoints : VERTEX Name (DOT Name)*;
 
 intersectionDef : WITHOUT OVERLAPS GT Dec;
 
@@ -287,11 +287,12 @@ unitRef : (Name DOT (Name DOT)?)? Name;
 
 // 3.10 Traitement des méta-objets - Umgang mit Metaobjekten
 
-metaDataBasketDef : SIGN | REFSYSTEM BASKET Name
-           Properties? FINAL?
+metaDataBasketDef : (SIGN | REFSYSTEM) BASKET Name
+           FINAL?
            (EXTENDS metaDataBasketRef)?
            TILDE topicRef
-           (OBJECTS OF Name COLON Name (COMMA Name)*)? SEMI;
+           (OBJECTS OF Name COLON (Name (COMMA Name)*) SEMI?)+;
+
 
 metaDataBasketRef : (Name DOT (Name DOT)?)? Name;
 
@@ -300,12 +301,12 @@ metaObjectRef : (metaDataBasketRef DOT)? Name;
 // 3.10.2 Paramètres - Parameter
 // 3.10.2.2 Paramètres des signatures - Parameter von Signaturen
 
-parameterDef : PARAMETER Name Properties? (ABSTRACT | EXTENDED | FINAL)?
+parameterDef : PARAMETER Name (ABSTRACT | EXTENDED | FINAL)?
          COLON (attrTypeDef | METAOBJECT (OF metaObjectRef)?) SEMI;
 
 // 3.11 Paramètres d’exécution - Laufzeitparameter
 
-runTimeParameterDef : PARAMETER Name Properties? (ABSTRACT | EXTENDED | FINAL)?
+runTimeParameterDef : PARAMETER Name (ABSTRACT | EXTENDED | FINAL)?
             COLON attrTypeDef SEMI;
 
 // 3.12 Conditions de cohérence - Konsistenzbedingungen
@@ -408,7 +409,7 @@ argumentType : attrTypeDef
 // 3.15 Vues
 
 viewDef : VIEW Name
-        Properties? (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+        (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
         ( formationDef | EXTENDS viewRef )?
         baseExtensionDef*
         selection*
@@ -457,12 +458,12 @@ viewAttributes : ATTRIBUTE?
          ( ALL OF Name SEMI
          | attributeDef
          | (Name ASSIGN expression SEMI)+
-         | Properties (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
-         COLON EQ expression SEMI );
+         | (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+         ASSIGN expression SEMI );
 
 // 3.16 Représentations graphiques
 
-graphicDef : GRAPHIC Name Properties? (ABSTRACT | FINAL)?
+graphicDef : GRAPHIC Name (ABSTRACT | FINAL)?
      (EXTENDS graphicRef)?
      (BASED ON viewableRef)? EQ
      (selection)*
@@ -471,7 +472,7 @@ graphicDef : GRAPHIC Name Properties? (ABSTRACT | FINAL)?
 
 graphicRef : (Name DOT (Name DOT)?)? Name;
 
-drawingRule : Name Properties? (ABSTRACT | EXTENDED | FINAL)?
+drawingRule : Name (ABSTRACT | EXTENDED | FINAL)?
   (OF classRef)?
   COLON condSignParamAssignment (COMMA condSignParamAssignment)* SEMI;
 
@@ -479,7 +480,7 @@ condSignParamAssignment : WHERE expression
         LPAR signParamAssignment ( SEMI signParamAssignment )* RPAR;
 
 signParamAssignment : Name
-            COLON EQ ( LCBR metaObjectRef RCBR
+            ASSIGN ( LCBR metaObjectRef RCBR
                | factor
                | ACCORDING attributePath
                 LPAR enumAssignment 
@@ -488,4 +489,4 @@ signParamAssignment : Name
 enumAssignment : ( LCBR metaObjectRef RCBR | constant )
        WHEN IN enumRange;
 
-enumRange : enumerationConst (DOT DOT enumerationConst)?;
+enumRange : enumerationConst (DOTDOT enumerationConst)?;

@@ -1,1 +1,3 @@
 antlr4-tools
+input/
+errors.log

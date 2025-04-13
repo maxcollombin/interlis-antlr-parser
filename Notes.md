@@ -816,3 +816,47 @@ Ainsi, il serait judicieux de la modifier comme suit:
 > [!WARNING]
 > Il y a des problèmes importants dans la définition des nombres (conflits entre `Dec` et `PosNumber`)
 > Faire une comparaison avec la grammaire CartoSym
+
+
+## 3.6 Attributs - Attribute
+
+Les règles `attributeDef` et `` doivent être modifier pour inclure les parenthpses entre le properies keywords
+
+```diff
+attributeDef : CONTINUOUS? SUBDIVISION?
+--               Name (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
+++               Name (LPAR(ABSTRACT | EXTENDED | FINAL | TRANSIENT)RPAR)?
+               COLON attrTypeDef
+               (ASSIGN? factor (COMMA factor)*)? SEMI;
+```
+
+```diff
+-- referenceAttr : REFERENCE TO (EXTERNAL )? restrictedClassOrAssRef;
+++ referenceAttr : REFERENCE TO (LPAR EXTERNAL RPAR)? restrictedClassOrAssRef;
+```
+
+Dans certains modèles (comme p.e.x [Axis_V1_1.ili](https://models.geo.admin.ch/ASTRA/Axis_V1_1.ili)) , INTERLIS est utilisé pour définir des attributs ce qui rentre en conflit avec le token et les règles `interlis2def` et `attributeDef`. 
+
+> [!NOTE]
+> ili2c permet permet de valider un modèle avec DEPENDS ON model1.topic1 ; DEPENDS ON model1.topic2 ce qui n'est pas correct par rapport à la grammaire. L'input correct est DEPENDS ON model1.topic1, model1.topic2;
+
+## // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
+
+
+```diff
+domainDef : DOMAIN Name (ABSTRACT | FINAL)?
+                (EXTENDS domainRef)? EQ
+--                (MANDATORY? type | type ) SEMI;
+++                (MANDATORY? type | type | enumeration) SEMI;
+```
+
+Ajouter la règle enumeration à la règle domainDef afin de pouvoir permettre les énumerations dans les DOMAIN.
+
+// 3.8.5 Types de données numériques - Numerische Datentypen
+
+Modifier la règle numeric pour permettre toutes les comibnaisons possibles avec ou sans les signes:
+
+```diff
+-- numeric : (PosNumber DOTDOT PosNumber | Dec DOTDOT Dec);
+++ numeric : (Number DOTDOT Number | Number DOTDOT PosNumber | PosNumber DOTDOT PosNumber| Dec DOTDOT Dec);
+```
