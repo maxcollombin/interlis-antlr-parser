@@ -1,4 +1,4 @@
-// Generated from /home/maxime/Desktop/interlis-antlr-parser/grammars/InterlisParser.g4 by ANTLR 4.13.1
+// Generated from grammars/InterlisParser.g4 by ANTLR 4.13.2
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
 public class InterlisParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -254,6 +254,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_interlis2def; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterInterlis2def(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitInterlis2def(this);
+		}
 	}
 
 	public final Interlis2defContext interlis2def() throws RecognitionException {
@@ -393,6 +401,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_modeldef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterModeldef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitModeldef(this);
+		}
 	}
 
 	public final ModeldefContext modeldef() throws RecognitionException {
@@ -682,6 +698,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_topicDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTopicDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTopicDef(this);
+		}
 	}
 
 	public final TopicDefContext topicDef() throws RecognitionException {
@@ -882,6 +906,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_definitions; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDefinitions(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDefinitions(this);
+		}
 	}
 
 	public final DefinitionsContext definitions() throws RecognitionException {
@@ -988,6 +1020,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_topicRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTopicRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTopicRef(this);
+		}
 	}
 
 	public final TopicRefContext topicRef() throws RecognitionException {
@@ -1054,6 +1094,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassDef(this);
+		}
 	}
 
 	public final ClassDefContext classDef() throws RecognitionException {
@@ -1189,6 +1237,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_structureDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterStructureDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitStructureDef(this);
+		}
 	}
 
 	public final StructureDefContext structureDef() throws RecognitionException {
@@ -1279,6 +1335,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassRef(this);
+		}
 	}
 
 	public final ClassRefContext classRef() throws RecognitionException {
@@ -1358,6 +1422,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classOrStructureDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassOrStructureDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassOrStructureDef(this);
+		}
 	}
 
 	public final ClassOrStructureDefContext classOrStructureDef() throws RecognitionException {
@@ -1510,6 +1582,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_structureRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterStructureRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitStructureRef(this);
+		}
 	}
 
 	public final StructureRefContext structureRef() throws RecognitionException {
@@ -1569,6 +1649,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classOrStructureRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassOrStructureRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassOrStructureRef(this);
+		}
 	}
 
 	public final ClassOrStructureRefContext classOrStructureRef() throws RecognitionException {
@@ -1635,6 +1723,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttributeDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttributeDef(this);
+		}
 	}
 
 	public final AttributeDefContext attributeDef() throws RecognitionException {
@@ -1768,6 +1864,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attrTypeDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttrTypeDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttrTypeDef(this);
+		}
 	}
 
 	public final AttrTypeDefContext attrTypeDef() throws RecognitionException {
@@ -1887,6 +1991,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attrType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttrType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttrType(this);
+		}
 	}
 
 	public final AttrTypeContext attrType() throws RecognitionException {
@@ -1950,6 +2062,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_referenceAttr; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterReferenceAttr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitReferenceAttr(this);
+		}
 	}
 
 	public final ReferenceAttrContext referenceAttr() throws RecognitionException {
@@ -2018,6 +2138,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_restrictedClassOrAssRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRestrictedClassOrAssRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRestrictedClassOrAssRef(this);
+		}
 	}
 
 	public final RestrictedClassOrAssRefContext restrictedClassOrAssRef() throws RecognitionException {
@@ -2102,6 +2230,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classOrAssociationRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassOrAssociationRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassOrAssociationRef(this);
+		}
 	}
 
 	public final ClassOrAssociationRefContext classOrAssociationRef() throws RecognitionException {
@@ -2158,6 +2294,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_restrictedStructureRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRestrictedStructureRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRestrictedStructureRef(this);
+		}
 	}
 
 	public final RestrictedStructureRefContext restrictedStructureRef() throws RecognitionException {
@@ -2250,6 +2394,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_restrictedClassOrStructureRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRestrictedClassOrStructureRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRestrictedClassOrStructureRef(this);
+		}
 	}
 
 	public final RestrictedClassOrStructureRefContext restrictedClassOrStructureRef() throws RecognitionException {
@@ -2381,6 +2533,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAssociationDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAssociationDef(this);
+		}
 	}
 
 	public final AssociationDefContext associationDef() throws RecognitionException {
@@ -2585,6 +2745,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAssociationRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAssociationRef(this);
+		}
 	}
 
 	public final AssociationRefContext associationRef() throws RecognitionException {
@@ -2670,6 +2838,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_roleDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRoleDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRoleDef(this);
+		}
 	}
 
 	public final RoleDefContext roleDef() throws RecognitionException {
@@ -2814,6 +2990,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_cardinality; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterCardinality(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitCardinality(this);
+		}
 	}
 
 	public final CardinalityContext cardinality() throws RecognitionException {
@@ -2899,6 +3083,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_domainDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDomainDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDomainDef(this);
+		}
 	}
 
 	public final DomainDefContext domainDef() throws RecognitionException {
@@ -3007,6 +3199,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitType(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -3083,6 +3283,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_domainRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDomainRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDomainRef(this);
+		}
 	}
 
 	public final DomainRefContext domainRef() throws RecognitionException {
@@ -3172,6 +3380,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_baseType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterBaseType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitBaseType(this);
+		}
 	}
 
 	public final BaseTypeContext baseType() throws RecognitionException {
@@ -3312,6 +3528,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constant; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterConstant(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitConstant(this);
+		}
 	}
 
 	public final ConstantContext constant() throws RecognitionException {
@@ -3395,6 +3619,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_textType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTextType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTextType(this);
+		}
 	}
 
 	public final TextTypeContext textType() throws RecognitionException {
@@ -3479,6 +3711,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_textConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTextConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTextConst(this);
+		}
 	}
 
 	public final TextConstContext textConst() throws RecognitionException {
@@ -3523,6 +3763,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumerationType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumerationType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumerationType(this);
+		}
 	}
 
 	public final EnumerationTypeContext enumerationType() throws RecognitionException {
@@ -3598,6 +3846,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumTreeValueType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumTreeValueType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumTreeValueType(this);
+		}
 	}
 
 	public final EnumTreeValueTypeContext enumTreeValueType() throws RecognitionException {
@@ -3645,6 +3901,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumeration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumeration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumeration(this);
+		}
 	}
 
 	public final EnumerationContext enumeration() throws RecognitionException {
@@ -3718,6 +3982,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumElement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumElement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumElement(this);
+		}
 	}
 
 	public final EnumElementContext enumElement() throws RecognitionException {
@@ -3784,6 +4056,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumerationConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumerationConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumerationConst(this);
+		}
 	}
 
 	public final EnumerationConstContext enumerationConst() throws RecognitionException {
@@ -3864,6 +4144,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_alignmentType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAlignmentType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAlignmentType(this);
+		}
 	}
 
 	public final AlignmentTypeContext alignmentType() throws RecognitionException {
@@ -3903,6 +4191,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_booleanType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterBooleanType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitBooleanType(this);
+		}
 	}
 
 	public final BooleanTypeContext booleanType() throws RecognitionException {
@@ -3941,6 +4237,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_numeric; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterNumeric(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitNumeric(this);
+		}
 	}
 
 	public final NumericContext numeric() throws RecognitionException {
@@ -4009,6 +4313,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_numericType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterNumericType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitNumericType(this);
+		}
 	}
 
 	public final NumericTypeContext numericType() throws RecognitionException {
@@ -4135,6 +4447,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_refSys; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRefSys(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRefSys(this);
+		}
 	}
 
 	public final RefSysContext refSys() throws RecognitionException {
@@ -4220,6 +4540,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_decConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDecConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDecConst(this);
+		}
 	}
 
 	public final DecConstContext decConst() throws RecognitionException {
@@ -4266,6 +4594,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_numericConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterNumericConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitNumericConst(this);
+		}
 	}
 
 	public final NumericConstContext numericConst() throws RecognitionException {
@@ -4330,6 +4666,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formattedType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFormattedType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFormattedType(this);
+		}
 	}
 
 	public final FormattedTypeContext formattedType() throws RecognitionException {
@@ -4403,6 +4747,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formatDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFormatDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFormatDef(this);
+		}
 	}
 
 	public final FormatDefContext formatDef() throws RecognitionException {
@@ -4492,6 +4844,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_baseAttrRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterBaseAttrRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitBaseAttrRef(this);
+		}
 	}
 
 	public final BaseAttrRefContext baseAttrRef() throws RecognitionException {
@@ -4552,6 +4912,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formattedConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFormattedConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFormattedConst(this);
+		}
 	}
 
 	public final FormattedConstContext formattedConst() throws RecognitionException {
@@ -4584,6 +4952,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_dateTimeType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDateTimeType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDateTimeType(this);
+		}
 	}
 
 	public final DateTimeTypeContext dateTimeType() throws RecognitionException {
@@ -4636,6 +5012,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_coordinateType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterCoordinateType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitCoordinateType(this);
+		}
 	}
 
 	public final CoordinateTypeContext coordinateType() throws RecognitionException {
@@ -4710,6 +5094,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_rotationDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRotationDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRotationDef(this);
+		}
 	}
 
 	public final RotationDefContext rotationDef() throws RecognitionException {
@@ -4769,6 +5161,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_contextDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterContextDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitContextDef(this);
+		}
 	}
 
 	public final ContextDefContext contextDef() throws RecognitionException {
@@ -4841,6 +5241,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_oIDType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterOIDType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitOIDType(this);
+		}
 	}
 
 	public final OIDTypeContext oIDType() throws RecognitionException {
@@ -4902,6 +5310,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_blackboxType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterBlackboxType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitBlackboxType(this);
+		}
 	}
 
 	public final BlackboxTypeContext blackboxType() throws RecognitionException {
@@ -4963,6 +5379,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassType(this);
+		}
 	}
 
 	public final ClassTypeContext classType() throws RecognitionException {
@@ -5096,6 +5520,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttributeType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttributeType(this);
+		}
 	}
 
 	public final AttributeTypeContext attributeType() throws RecognitionException {
@@ -5197,6 +5629,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterClassConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitClassConst(this);
+		}
 	}
 
 	public final ClassConstContext classConst() throws RecognitionException {
@@ -5237,6 +5677,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributePathConst; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttributePathConst(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttributePathConst(this);
+		}
 	}
 
 	public final AttributePathConstContext attributePathConst() throws RecognitionException {
@@ -5298,6 +5746,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lineType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterLineType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitLineType(this);
+		}
 	}
 
 	public final LineTypeContext lineType() throws RecognitionException {
@@ -5422,6 +5878,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lineForm; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterLineForm(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitLineForm(this);
+		}
 	}
 
 	public final LineFormContext lineForm() throws RecognitionException {
@@ -5465,6 +5929,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lineFormType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterLineFormType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitLineFormType(this);
+		}
 	}
 
 	public final LineFormTypeContext lineFormType() throws RecognitionException {
@@ -5522,6 +5994,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_controlPoints; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterControlPoints(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitControlPoints(this);
+		}
 	}
 
 	public final ControlPointsContext controlPoints() throws RecognitionException {
@@ -5557,6 +6037,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_intersectionDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterIntersectionDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitIntersectionDef(this);
+		}
 	}
 
 	public final IntersectionDefContext intersectionDef() throws RecognitionException {
@@ -5602,6 +6090,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lineFormTypeDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterLineFormTypeDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitLineFormTypeDef(this);
+		}
 	}
 
 	public final LineFormTypeDefContext lineFormTypeDef() throws RecognitionException {
@@ -5667,6 +6163,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_unitDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterUnitDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitUnitDef(this);
+		}
 	}
 
 	public final UnitDefContext unitDef() throws RecognitionException {
@@ -5794,6 +6298,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_derivedUnit; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDerivedUnit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDerivedUnit(this);
+		}
 	}
 
 	public final DerivedUnitContext derivedUnit() throws RecognitionException {
@@ -5891,6 +6403,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_composedUnit; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterComposedUnit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitComposedUnit(this);
+		}
 	}
 
 	public final ComposedUnitContext composedUnit() throws RecognitionException {
@@ -5957,6 +6477,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_unitRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterUnitRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitUnitRef(this);
+		}
 	}
 
 	public final UnitRefContext unitRef() throws RecognitionException {
@@ -6035,6 +6563,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_metaDataBasketDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterMetaDataBasketDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitMetaDataBasketDef(this);
+		}
 	}
 
 	public final MetaDataBasketDefContext metaDataBasketDef() throws RecognitionException {
@@ -6164,6 +6700,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_metaDataBasketRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterMetaDataBasketRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitMetaDataBasketRef(this);
+		}
 	}
 
 	public final MetaDataBasketRefContext metaDataBasketRef() throws RecognitionException {
@@ -6222,6 +6766,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_metaObjectRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterMetaObjectRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitMetaObjectRef(this);
+		}
 	}
 
 	public final MetaObjectRefContext metaObjectRef() throws RecognitionException {
@@ -6279,6 +6831,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_parameterDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterParameterDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitParameterDef(this);
+		}
 	}
 
 	public final ParameterDefContext parameterDef() throws RecognitionException {
@@ -6415,6 +6975,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_runTimeParameterDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRunTimeParameterDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRunTimeParameterDef(this);
+		}
 	}
 
 	public final RunTimeParameterDefContext runTimeParameterDef() throws RecognitionException {
@@ -6496,6 +7064,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constraintDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterConstraintDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitConstraintDef(this);
+		}
 	}
 
 	public final ConstraintDefContext constraintDef() throws RecognitionException {
@@ -6567,6 +7143,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_mandatoryConstraint; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterMandatoryConstraint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitMandatoryConstraint(this);
+		}
 	}
 
 	public final MandatoryConstraintContext mandatoryConstraint() throws RecognitionException {
@@ -6611,6 +7195,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_plausibilityConstraint; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterPlausibilityConstraint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitPlausibilityConstraint(this);
+		}
 	}
 
 	public final PlausibilityConstraintContext plausibilityConstraint() throws RecognitionException {
@@ -6684,6 +7276,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_existenceConstraint; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterExistenceConstraint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitExistenceConstraint(this);
+		}
 	}
 
 	public final ExistenceConstraintContext existenceConstraint() throws RecognitionException {
@@ -6763,6 +7363,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_uniquenessConstraint; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterUniquenessConstraint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitUniquenessConstraint(this);
+		}
 	}
 
 	public final UniquenessConstraintContext uniquenessConstraint() throws RecognitionException {
@@ -6843,6 +7451,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_globalUniqueness; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterGlobalUniqueness(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitGlobalUniqueness(this);
+		}
 	}
 
 	public final GlobalUniquenessContext globalUniqueness() throws RecognitionException {
@@ -6892,6 +7508,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_uniqueEl; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterUniqueEl(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitUniqueEl(this);
+		}
 	}
 
 	public final UniqueElContext uniqueEl() throws RecognitionException {
@@ -6941,6 +7565,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_localUniqueness; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterLocalUniqueness(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitLocalUniqueness(this);
+		}
 	}
 
 	public final LocalUniquenessContext localUniqueness() throws RecognitionException {
@@ -7026,6 +7658,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_setConstraint; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterSetConstraint(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitSetConstraint(this);
+		}
 	}
 
 	public final SetConstraintContext setConstraint() throws RecognitionException {
@@ -7090,6 +7730,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constraintsDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterConstraintsDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitConstraintsDef(this);
+		}
 	}
 
 	public final ConstraintsDefContext constraintsDef() throws RecognitionException {
@@ -7147,6 +7795,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitExpression(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -7184,6 +7840,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_term; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTerm(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTerm(this);
+		}
 	}
 
 	public final TermContext term() throws RecognitionException {
@@ -7246,6 +7910,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_term0; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTerm0(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTerm0(this);
+		}
 	}
 
 	public final Term0Context term0() throws RecognitionException {
@@ -7318,6 +7990,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_term1; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTerm1(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTerm1(this);
+		}
 	}
 
 	public final Term1Context term1() throws RecognitionException {
@@ -7381,6 +8061,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_term2; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterTerm2(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitTerm2(this);
+		}
 	}
 
 	public final Term2Context term2() throws RecognitionException {
@@ -7432,6 +8120,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_predicate; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterPredicate(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitPredicate(this);
+		}
 	}
 
 	public final PredicateContext predicate() throws RecognitionException {
@@ -7531,6 +8227,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_relation; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRelation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRelation(this);
+		}
 	}
 
 	public final RelationContext relation() throws RecognitionException {
@@ -7631,6 +8335,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_factor; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFactor(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFactor(this);
+		}
 	}
 
 	public final FactorContext factor() throws RecognitionException {
@@ -7753,6 +8465,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_objectOrAttributePath; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterObjectOrAttributePath(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitObjectOrAttributePath(this);
+		}
 	}
 
 	public final ObjectOrAttributePathContext objectOrAttributePath() throws RecognitionException {
@@ -7806,6 +8526,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributePath; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttributePath(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttributePath(this);
+		}
 	}
 
 	public final AttributePathContext attributePath() throws RecognitionException {
@@ -7851,6 +8579,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pathEl; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterPathEl(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitPathEl(this);
+		}
 	}
 
 	public final PathElContext pathEl() throws RecognitionException {
@@ -7959,6 +8695,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationPath; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAssociationPath(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAssociationPath(this);
+		}
 	}
 
 	public final AssociationPathContext associationPath() throws RecognitionException {
@@ -8006,6 +8750,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAttributeRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAttributeRef(this);
+		}
 	}
 
 	public final AttributeRefContext attributeRef() throws RecognitionException {
@@ -8093,6 +8845,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionCall; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFunctionCall(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFunctionCall(this);
+		}
 	}
 
 	public final FunctionCallContext functionCall() throws RecognitionException {
@@ -8181,6 +8941,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argument; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterArgument(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitArgument(this);
+		}
 	}
 
 	public final ArgumentContext argument() throws RecognitionException {
@@ -8290,6 +9058,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFunctionDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFunctionDef(this);
+		}
 	}
 
 	public final FunctionDefContext functionDef() throws RecognitionException {
@@ -8365,6 +9141,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argumentDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterArgumentDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitArgumentDef(this);
+		}
 	}
 
 	public final ArgumentDefContext argumentDef() throws RecognitionException {
@@ -8412,6 +9196,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argumentType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterArgumentType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitArgumentType(this);
+		}
 	}
 
 	public final ArgumentTypeContext argumentType() throws RecognitionException {
@@ -8570,6 +9362,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_viewDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterViewDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitViewDef(this);
+		}
 	}
 
 	public final ViewDefContext viewDef() throws RecognitionException {
@@ -8726,6 +9526,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_viewRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterViewRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitViewRef(this);
+		}
 	}
 
 	public final ViewRefContext viewRef() throws RecognitionException {
@@ -8794,6 +9602,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formationDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterFormationDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitFormationDef(this);
+		}
 	}
 
 	public final FormationDefContext formationDef() throws RecognitionException {
@@ -8864,6 +9680,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_projection; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterProjection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitProjection(this);
+		}
 	}
 
 	public final ProjectionContext projection() throws RecognitionException {
@@ -8925,6 +9749,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_join; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterJoin(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitJoin(this);
+		}
 	}
 
 	public final JoinContext join() throws RecognitionException {
@@ -9003,6 +9835,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_union; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterUnion(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitUnion(this);
+		}
 	}
 
 	public final UnionContext union() throws RecognitionException {
@@ -9065,6 +9905,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_aggregation; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterAggregation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitAggregation(this);
+		}
 	}
 
 	public final AggregationContext aggregation() throws RecognitionException {
@@ -9140,6 +9988,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inspection; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterInspection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitInspection(this);
+		}
 	}
 
 	public final InspectionContext inspection() throws RecognitionException {
@@ -9207,6 +10063,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_renamedViewableRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterRenamedViewableRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitRenamedViewableRef(this);
+		}
 	}
 
 	public final RenamedViewableRefContext renamedViewableRef() throws RecognitionException {
@@ -9256,6 +10120,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_viewableRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterViewableRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitViewableRef(this);
+		}
 	}
 
 	public final ViewableRefContext viewableRef() throws RecognitionException {
@@ -9332,6 +10204,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_baseExtensionDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterBaseExtensionDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitBaseExtensionDef(this);
+		}
 	}
 
 	public final BaseExtensionDefContext baseExtensionDef() throws RecognitionException {
@@ -9391,6 +10271,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_selection; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterSelection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitSelection(this);
+		}
 	}
 
 	public final SelectionContext selection() throws RecognitionException {
@@ -9455,6 +10343,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_viewAttributes; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterViewAttributes(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitViewAttributes(this);
+		}
 	}
 
 	public final ViewAttributesContext viewAttributes() throws RecognitionException {
@@ -9603,6 +10499,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_graphicDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterGraphicDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitGraphicDef(this);
+		}
 	}
 
 	public final GraphicDefContext graphicDef() throws RecognitionException {
@@ -9733,6 +10637,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_graphicRef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterGraphicRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitGraphicRef(this);
+		}
 	}
 
 	public final GraphicRefContext graphicRef() throws RecognitionException {
@@ -9807,6 +10719,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_drawingRule; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterDrawingRule(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitDrawingRule(this);
+		}
 	}
 
 	public final DrawingRuleContext drawingRule() throws RecognitionException {
@@ -9915,6 +10835,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_condSignParamAssignment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterCondSignParamAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitCondSignParamAssignment(this);
+		}
 	}
 
 	public final CondSignParamAssignmentContext condSignParamAssignment() throws RecognitionException {
@@ -9996,6 +10924,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_signParamAssignment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterSignParamAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitSignParamAssignment(this);
+		}
 	}
 
 	public final SignParamAssignmentContext signParamAssignment() throws RecognitionException {
@@ -10112,6 +11048,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumAssignment; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumAssignment(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumAssignment(this);
+		}
 	}
 
 	public final EnumAssignmentContext enumAssignment() throws RecognitionException {
@@ -10184,6 +11128,14 @@ public class InterlisParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumRange; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).enterEnumRange(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof InterlisParserListener ) ((InterlisParserListener)listener).exitEnumRange(this);
+		}
 	}
 
 	public final EnumRangeContext enumRange() throws RecognitionException {

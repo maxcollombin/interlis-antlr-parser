@@ -216,7 +216,7 @@ RSBR: ']';
 PosNumber : Digit+;
 Number : (PLUS | MINUS)? PosNumber;
 Dec : (Number (DOT PosNumber)? | Float);
-Float : (PLUS | MINUS)? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
+Float : (PLUS | MINUS)? Digit+ (DOT Digit+)? Scaling?;
 
 // 3.2.2 Noms - Namen
 

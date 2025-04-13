@@ -196,7 +196,7 @@ numericType : NUMERIC? numeric CIRCULAR?
 refSys : LCBR metaObjectRef (LSBR PosNumber RSBR)? RCBR
      | LT domainRef (LSBR PosNumber RSBR)? GT;
 
-decConst : Dec | PI | LNBASE;
+decConst : Dec | PI | LNBASE | PosNumber; // ajout de PosNumber car l'emporte sur Dec
 
 numericConst : decConst (LSBR unitRef RSBR)?;
 
@@ -456,7 +456,7 @@ selection : WHERE expression SEMI;
 viewAttributes : ATTRIBUTE?
          ( ALL OF Name SEMI
          | attributeDef
-         | Name
+         | (Name ASSIGN expression SEMI)+
          | Properties (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
          COLON EQ expression SEMI );
 

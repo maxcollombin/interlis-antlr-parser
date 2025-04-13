@@ -790,19 +790,29 @@ viewDef : VIEW Name
 > Tous les tokens associés sans le `OF` devraient, en principe, pouvoir être supprimés.
 > On pourrait aussi définir les tokens sous la forme projection : 'PROJECTION_OF';
 
-
-
-
-
-
 ##### viewAttributes
 
+La règle viewAttribute doit être modifiée pour permeetre l'utilisation du token `ASSIGN` (:=) qu'elle ne permet pas en l'état. Elle doit aussi être modifiée pour permettre d'utiliser plusieurs attributs. Ce qui, une nouvelle fois n'est pas le cas en l'état
+
 ```diff
--- viewAttributes : ATTRIBUTE
-++ viewAttributes : ATTRIBUTE?
+viewAttributes : ATTRIBUTE?
          ( ALL OF Name SEMI
          | attributeDef
-         | Name
+--       | Name
+++       | (Name ASSIGN expression SEMI)+
          | Properties (ABSTRACT | EXTENDED | FINAL | TRANSIENT)?
          COLON EQ expression SEMI );
 ```
+
+La règle actuelle pour des nombres flottants est trop restrictive est implique qu'ils doivent nécessairement commencer par `0`.
+
+Ainsi, il serait judicieux de la modifier comme suit:
+
+```diff
+-- Float : (PLUS | MINUS)? '0.' (('1'..'9') PosNumber | '0'*) Scaling;
+++ Float : (PLUS | MINUS)? Digit+ (DOT Digit+)? Scaling?;
+```
+
+> [!WARNING]
+> Il y a des problèmes importants dans la définition des nombres (conflits entre `Dec` et `PosNumber`)
+> Faire une comparaison avec la grammaire CartoSym

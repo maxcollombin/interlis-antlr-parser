@@ -20,11 +20,10 @@ VERSION "2023-11-29" =
         END CityPerson;
         VIEW myView
           PROJECTION OF City;
-          WHERE CityName == Bern;
-        !!   WHERE City->PostalCode > 1000;
+          !! WHERE CityName == "Les Avants";
+          WHERE City->PostalCode > 1000;
             =
           ALL OF City;
         END myView;
     END Test;
 END myModel.
-
