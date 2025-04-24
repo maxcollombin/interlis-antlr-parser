@@ -860,3 +860,13 @@ Modifier la règle numeric pour permettre toutes les comibnaisons possibles avec
 -- numeric : (PosNumber DOTDOT PosNumber | Dec DOTDOT Dec);
 ++ numeric : (Number DOTDOT Number | Number DOTDOT PosNumber | PosNumber DOTDOT PosNumber| Dec DOTDOT Dec);
 ```
+
+## 3.16 Représentations graphiques
+
+Modification de la règle pour gérer le cas où la clause WHERE est absente:
+
+```diff
+- condSignParamAssignment : WHERE? expression 
++ condSignParamAssignment : (WHERE? expression)? 
+        LPAR signParamAssignment ( SEMI signParamAssignment )* RPAR;
+```

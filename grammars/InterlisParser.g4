@@ -31,7 +31,7 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
 // 3.5.2 Thèmes - Themen
 
 topicDef : VIEW? TOPIC Name
-                   (ABSTRACT | FINAL)?
+                   (LPAR (ABSTRACT | FINAL) RPAR)?
                    (EXTENDS topicRef)? EQ
                    (BASKET OID AS Name SEMI)?
                    (OID AS Name SEMI)?
@@ -376,10 +376,8 @@ pathEl : THIS
         | THISAREA
         | THATAREA
         | PARENT
-        | Name
-        | associationPath
         | Name (LSBR Name RSBR)?
-        | Name
+        | associationPath
         | attributeRef;
 
 associationPath : BACKSLASH? Name;
@@ -437,7 +435,7 @@ union : UNION_OF renamedViewableRef
 aggregation : AGGREGATION_OF renamedViewableRef
         (ALL | EQUAL LPAR uniqueEl RPAR) SEMI;
 
-inspection : (AREA INSPECTION_OF renamedViewableRef
+inspection : (AREA? INSPECTION_OF renamedViewableRef
         MINUS GT Name
         (MINUS GT Name)*) SEMI;
 
@@ -476,7 +474,7 @@ drawingRule : Name (ABSTRACT | EXTENDED | FINAL)?
   (OF classRef)?
   COLON condSignParamAssignment (COMMA condSignParamAssignment)* SEMI;
 
-condSignParamAssignment : WHERE expression
+condSignParamAssignment : (WHERE? expression)? 
         LPAR signParamAssignment ( SEMI signParamAssignment )* RPAR;
 
 signParamAssignment : Name

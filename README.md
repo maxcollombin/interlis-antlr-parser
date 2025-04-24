@@ -19,7 +19,7 @@ antlr4-parse grammars/InterlisLexer.g4 grammars/InterlisParser.g4 <rule> input/<
 - `-tree`: Display the parse tree.
 - `-gui`: Display the parse tree in a graphical interface.
 - `-tokens`: Display the tokens.
-- `diagnostics`: Display the errors
+- `-diagnostics`: Display the errors
 
 You can also parse an expression directly from the command line:
 
@@ -32,10 +32,8 @@ antlr4-parse grammars/InterlisLexer.g4 grammars/InterlisParser.g4 <startRule> -t
 Generating a log with all the inconsistencies:
 
 ```bash
-antlr4-parse grammars/InterlisLexer.g4 grammars/InterlisParser.g4 <rule> input/<inputfile.extension> -diagnosti
-cs > errors.log 2>&1
+antlr4-parse grammars/InterlisLexer.g4 grammars/InterlisParser.g4 <rule> input/<inputfile.extension> -diagnostics > errors.log 2>&1
 ```
-
 
 ## Generating the Parser
 

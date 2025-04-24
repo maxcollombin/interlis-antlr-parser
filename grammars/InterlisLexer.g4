@@ -9,7 +9,7 @@ ABSTRACT : 'ABSTRACT';
 ACCORDING : 'ACCORDING';
 AGGREGATES : 'AGGREGATES';
 AGGREGATION : 'AGGREGATION';
-AGGREGATION_OF : 'AGGREGATION_OF';
+AGGREGATION_OF : 'AGGREGATION OF';
 ALL : 'ALL';
 AND : 'AND';
 ANY : 'ANY';
@@ -97,7 +97,7 @@ IMPORTS : 'IMPORTS';
 IN : 'IN';
 INHERITANCE : 'INHERITANCE';
 INSPECTION : 'INSPECTION';
-INSPECTION_OF : 'INSPECTION_OF';
+INSPECTION_OF : 'INSPECTION OF';
 INTERLIS : 'INTERLIS';
 JOIN : 'JOIN';
 JOIN_OF  : 'JOIN OF';
@@ -196,9 +196,9 @@ EQ : '=';
 NOT_EQ : '!='; // newly added
 Scaling : ('e' | 'E') Number;
 // LPAR : '(';
-LPAR : '(' { System.out.println("LPAR token: " + getText()); };
+LPAR : '(';
 // RPAR : ')';
-RPAR : ')' { System.out.println("RPAR token: " + getText()); };
+RPAR : ')';
 COMMA : ',';
 COLON: ':';
 SEMI : ';';
@@ -223,7 +223,7 @@ Float : (PLUS | MINUS)? Digit+ (DOT Digit+)? Scaling?;
 // 3.2.2 Noms - Namen
 
 // Name : Letter (Letter | Digit | '_')*;
-Name : Letter (Letter | Digit | '_')* { System.out.println("Name token: " + getText()); };
+Name : Letter (Letter | Digit | '_')*;
 Letter : [A-Za-z];
 Digit : [0-9];
 HexDigit : [0-9A-Fa-f];
@@ -235,7 +235,7 @@ STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDi
 // 3.2.5 Ensembles de propriétés - Eigenschaftsmengen
 
 // Toutes les propriétés sont définies dans les règles spécifiques.
-// Il n'est donc pas nécessaire de les définir ici sans quoi cela peut créer des ambiguïtés notamment avec Name dasn modelDef.
+// Il n'est donc pas nécessaire de les définir ici sans quoi cela peut créer des ambiguïtés notamment avec Name dans modelDef.
 // Property : [a-zA-Z0-9_]+;
 // Properties : LPAR Property (COMMA Property)* RPAR;
 // Properties : LPAR ('ABSTRACT' | 'EXTENDED' | 'FINAL') RPAR;
