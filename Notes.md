@@ -870,3 +870,50 @@ Modification de la règle pour gérer le cas où la clause WHERE est absente:
 + condSignParamAssignment : (WHERE? expression)? 
         LPAR signParamAssignment ( SEMI signParamAssignment )* RPAR;
 ```
+
+## 3.6 Attributs - Attribute
+
+Ajout de la règle type à la règle restrictedStructureRef
+
+
+```diff
+- restrictedStructureRef : (structureRef | ANYSTRUCTURE)
++ restrictedStructureRef : (structureRef | type | ANYSTRUCTURE)
+                       (RESTRICTION LPAR structureRef (COMMA structureRef)* RPAR)?;
+```
+
+afin de permettre des inputs tels que:
+
+```bash
+INTERLIS 2.4;
+
+MODEL ModelA AT "http://www.interlis.ch/ili2c/tests/" VERSION "1" =
+	TOPIC TopicA =
+		CLASS ClassA =
+			attrA : LIST {0..*} OF TEXT*20; !! ok in 2.4
+		END ClassA;
+	END TopicA;
+END ModelA.
+```
+
+## 3.9.3 Unités composées - Zusammengesetzte Einheiten
+
+Ajout du caractère optionnel à UNIT dans la règle unitDef de manière à ne pas avoir à systématiquement répéter UNIT pour chaque unité.
+
+```diff
+- unitDef : UNIT Name
++ unitDef : UNIT? Name
+      (LPAR ABSTRACT RPAR)?
+      (LSBR Name RSBR)?
+      (EXTENDS unitRef)?
+      (EQ (derivedUnit | composedUnit))? SEMI;
+```
+
+ajout de INTERLIS à la règle unitRef 
+
+```diff
+unitRef : (Name DOT (Name DOT)?)? Name
++        | (INTERLIS DOT  Name);
+```
+
+pour permettre INTERLIS. dans les unités

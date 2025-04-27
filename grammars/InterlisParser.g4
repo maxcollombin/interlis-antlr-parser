@@ -96,7 +96,7 @@ restrictedClassOrAssRef : (classOrAssociationRef | ANYCLASS)
 
 classOrAssociationRef : classRef | associationRef;
 
-restrictedStructureRef : (structureRef | ANYSTRUCTURE)
+restrictedStructureRef : (structureRef | type | ANYSTRUCTURE)
                        (RESTRICTION LPAR structureRef (COMMA structureRef)* RPAR)?;
 
 restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
@@ -127,9 +127,9 @@ cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
-domainDef : DOMAIN Name (ABSTRACT | FINAL)?
+domainDef : DOMAIN? Name (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
                 (EXTENDS domainRef)? EQ
-                (MANDATORY? type | type | enumeration) SEMI;
+                ((MANDATORY? type | type | enumeration) COMMA)* SEMI;
 
 type : baseType | lineType;
 
@@ -272,18 +272,19 @@ lineFormTypeDef : LINE FORM LCBR Name COLON Name SEMI RCBR;
 
 // 3.9.3 Unités composées - Zusammengesetzte Einheiten
 
-unitDef : UNIT Name
+unitDef : UNIT? Name
       (LPAR ABSTRACT RPAR)?
       (LSBR Name RSBR)?
       (EXTENDS unitRef)?
       (EQ (derivedUnit | composedUnit))? SEMI;
 
 derivedUnit : (decConst ((MUL | DIV) decConst)*
-        | FUNCTION Explanation) LSBR unitRef RSBR;
+        | functionDef) LSBR unitRef RSBR;
 
 composedUnit : LPAR unitRef ((MUL | DIV) unitRef)* RPAR;
 
-unitRef : (Name DOT (Name DOT)?)? Name;
+unitRef : (Name DOT (Name DOT)?)? Name
+        | (INTERLIS DOT  Name);
 
 // 3.10 Traitement des méta-objets - Umgang mit Metaobjekten
 
@@ -292,7 +293,6 @@ metaDataBasketDef : (SIGN | REFSYSTEM) BASKET Name
            (EXTENDS metaDataBasketRef)?
            TILDE topicRef
            (OBJECTS OF Name COLON (Name (COMMA Name)*) SEMI?)+;
-
 
 metaDataBasketRef : (Name DOT (Name DOT)?)? Name;
 
@@ -393,7 +393,7 @@ argument : expression
 
 // 3.14 Fonctions
 
-functionDef : FUNCTION Name
+functionDef : FUNCTION Name?
          LPAR argumentDef (COMMA argumentDef)* RPAR
          COLON argumentType Explanation? SEMI;
 

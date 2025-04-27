@@ -222,7 +222,6 @@ Float : (PLUS | MINUS)? Digit+ (DOT Digit+)? Scaling?;
 
 // 3.2.2 Noms - Namen
 
-// Name : Letter (Letter | Digit | '_')*;
 Name : Letter (Letter | Digit | '_')*;
 Letter : [A-Za-z];
 Digit : [0-9];
