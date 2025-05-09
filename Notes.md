@@ -963,3 +963,14 @@ END ModelData;
 ```
 
 extraits de [IlisMeta16.ili](https://github.com/claeis/ili2c/blob/master/standard/IlisMeta16.ili)
+
+## 3.8.6 Domaines de valeurs formatés - Formatierte Wertebereiche
+
+```diff
+-formattedType : FORMAT BASED_ON structureRef formatDef
++formattedType : FORMAT INTERLIS DOT Name STRING DOTDOT STRING
++              | FORMAT BASED_ON structureRef formatDef
+              | FORMAT domainRef STRING DOTDOT STRING;
+```
+
+Modification de la règle des domaines de valeurs formattées pour pouvoir intégrer le token INTERLIS

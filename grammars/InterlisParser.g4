@@ -129,7 +129,7 @@ cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 domainDef : DOMAIN? Name (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
                 (EXTENDS domainRef)? EQ
-                ((MANDATORY? type | type | enumeration) COMMA?)* SEMI;
+                ((MANDATORY? type | enumeration) COMMA?)* SEMI;
 
 type : baseType | lineType;
 
@@ -202,8 +202,9 @@ numericConst : decConst (LSBR unitRef RSBR)?;
 
 // 3.8.6 Domaines de valeurs formatés - Formatierte Wertebereiche
 
-formattedType : FORMAT BASED_ON structureRef formatDef
-        | FORMAT domainRef STRING DOTDOT STRING;
+formattedType : FORMAT INTERLIS DOT Name STRING DOTDOT STRING
+              | FORMAT BASED_ON structureRef formatDef
+              | FORMAT domainRef STRING DOTDOT STRING;
 
 formatDef : LPAR INHERITANCE? STRING? (baseAttrRef STRING)* baseAttrRef STRING? RPAR;
 
