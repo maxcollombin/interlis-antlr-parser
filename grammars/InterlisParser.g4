@@ -33,8 +33,8 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
 topicDef : VIEW? TOPIC Name
                    (LPAR (ABSTRACT | FINAL) RPAR)?
                    (EXTENDS topicRef)? EQ
-                   (BASKET OID AS Name SEMI)?
-                   (OID AS Name SEMI)?
+                   (BASKET? OID AS (Name | Name DOT Name) SEMI)?
+                   (OID AS (Name | Name DOT Name) SEMI)?
                    (DEPENDS ON topicRef (COMMA topicRef)* SEMI)?
                    definitions*
                    END Name SEMI;
@@ -129,7 +129,7 @@ cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 domainDef : DOMAIN? Name (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
                 (EXTENDS domainRef)? EQ
-                ((MANDATORY? type | type | enumeration) COMMA)* SEMI;
+                ((MANDATORY? type | type | enumeration) COMMA?)* SEMI;
 
 type : baseType | lineType;
 
@@ -202,7 +202,7 @@ numericConst : decConst (LSBR unitRef RSBR)?;
 
 // 3.8.6 Domaines de valeurs formatés - Formatierte Wertebereiche
 
-formattedType : FORMAT BASED ON structureRef formatDef
+formattedType : FORMAT BASED_ON structureRef formatDef
         | FORMAT domainRef STRING DOTDOT STRING;
 
 formatDef : LPAR INHERITANCE? STRING? (baseAttrRef STRING)* baseAttrRef STRING? RPAR;

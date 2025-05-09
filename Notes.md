@@ -838,7 +838,7 @@ attributeDef : CONTINUOUS? SUBDIVISION?
 Dans certains modèles (comme p.e.x [Axis_V1_1.ili](https://models.geo.admin.ch/ASTRA/Axis_V1_1.ili)) , INTERLIS est utilisé pour définir des attributs ce qui rentre en conflit avec le token et les règles `interlis2def` et `attributeDef`. 
 
 > [!NOTE]
-> ili2c permet permet de valider un modèle avec DEPENDS ON model1.topic1 ; DEPENDS ON model1.topic2 ce qui n'est pas correct par rapport à la grammaire. L'input correct est DEPENDS ON model1.topic1, model1.topic2;
+> ili2c permet de valider un modèle avec DEPENDS ON model1.topic1 ; DEPENDS ON model1.topic2 ce qui n'est pas correct par rapport à la grammaire. L'input correct est DEPENDS ON model1.topic1, model1.topic2;
 
 ## // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
@@ -917,3 +917,49 @@ unitRef : (Name DOT (Name DOT)?)? Name
 ```
 
 pour permettre INTERLIS. dans les unités
+
+
+## 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
+
+```diff
+domainDef : DOMAIN? Name (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
+                (EXTENDS domainRef)? EQ
+-                ((MANDATORY? type | type | enumeration) COMMA)* SEMI;
++                ((MANDATORY? type | type | enumeration) COMMA?)* SEMI;
+```
+
+Ajout d'un option pour la virgule dans la définition des DOMAIN de manière à permettre des inputs tels que :
+
+```bash
+  DOMAIN
+    BasketOID = OID TEXT;  !! Filename
+```
+
+## 3.5.2 Thèmes - Themen
+
+Modification de la règle `topicDef`:
+
+```diff
+topicDef : VIEW? TOPIC Name
+                   (LPAR (ABSTRACT | FINAL) RPAR)?
+                   (EXTENDS topicRef)? EQ
+-                   (BASKET OID AS Name SEMI)?
++                   (BASKET? OID AS (Name | Name DOT Name) SEMI)?
+-                   (OID AS Name SEMI)?
++                   (OID AS (Name | Name DOT Name) SEMI)?
+                   (DEPENDS ON topicRef (COMMA topicRef)* SEMI)?
+                   definitions*
+                   END Name SEMI;
+```
+
+afin de pouvoir gérer des inputs tels que :
+
+```bash
+TOPIC ModelData =
+ BASKET OID AS IlisMeta16.BasketOID;
+  OID AS IlisMeta16.MetaElemOID;
+  [...]
+END ModelData;
+```
+
+extraits de [IlisMeta16.ili](https://github.com/claeis/ili2c/blob/master/standard/IlisMeta16.ili)

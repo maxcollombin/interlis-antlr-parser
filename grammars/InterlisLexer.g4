@@ -28,6 +28,7 @@ BACKSLASH: '\\'; // newly added
 BAG : 'BAG';
 BASE : 'BASE';
 BASED : 'BASED';
+BASED_ON : 'BASED ON';
 BASKET : 'BASKET';
 BINARY : 'BINARY';
 BLACKBOX : 'BLACKBOX';
