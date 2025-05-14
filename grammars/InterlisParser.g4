@@ -22,6 +22,7 @@ modeldef : CONTRACTED? (TYPE | REFSYSTEM | SYMBOLOGY)?
            | functionDef
            | lineFormTypeDef
            | domainDef
+           | contextDef
            | runTimeParameterDef
            | classDef
            | structureDef
@@ -36,6 +37,7 @@ topicDef : VIEW? TOPIC Name
                    (BASKET? OID AS (Name | Name DOT Name) SEMI)?
                    (OID AS (Name | Name DOT Name) SEMI)?
                    (DEPENDS ON topicRef (COMMA topicRef)* SEMI)?
+                   (DEFERRED GENERICS genericRef (COMMA genericRef)* SEMI)?
                    definitions*
                    END Name SEMI;
 
@@ -43,6 +45,7 @@ definitions : metaDataBasketDef
             | unitDef
             | functionDef
             | domainDef
+            | contextDef
             | classDef
             | structureDef
             | associationDef
@@ -51,6 +54,8 @@ definitions : metaDataBasketDef
             | graphicDef;
 
 topicRef : (Name DOT)? Name;
+
+genericRef : domainRef;
 
 // 3.5.3 Classes et structures - Klassen und Strukturen
 
@@ -67,10 +72,12 @@ structureDef : STRUCTURE Name
                  classOrStructureDef?
                END Name SEMI;
 
-classRef : (Name DOT (Name DOT)?)? Name;
+classRef : (Name DOT (Name DOT)?)? Name
+         | (INTERLIS DOT  REFSYSTEM);
 classOrStructureDef : (ATTRIBUTE? attributeDef+ | constraintDef+ | PARAMETER? parameterDef+)+;
 
-structureRef : (Name DOT (Name DOT)?)? Name;
+structureRef : (Name DOT (Name DOT)?)? Name
+             | (INTERLIS DOT  Name);
 
 classOrStructureRef : classRef | structureRef;
 
@@ -127,9 +134,17 @@ cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
 // 3.8 Domaines de valeurs et constantes - Wertebereiche und Konstanten
 
-domainDef : DOMAIN? Name (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
-                (EXTENDS domainRef)? EQ
-                ((MANDATORY? type | enumeration) COMMA?)* SEMI;
+domainDef
+  : DOMAIN?
+    (
+      Name
+      (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
+      (EXTENDS domainRef)?
+      EQ (MANDATORY? type | numeric | CLASS (RESTRICTION LPAR classOrAssociationRef (SEMI classOrAssociationRef)* RPAR)?)
+      (CONSTRAINTS (Name COLON constraintDef) (COMMA Name COLON constraintDef)*)?
+      SEMI
+    )+
+  ;
 
 type : baseType | lineType;
 
@@ -142,6 +157,7 @@ baseType : textType
            | booleanType
            | numericType
            | formattedType
+           | dateTimeType
            | coordinateType
            | oIDType
            | blackboxType
@@ -189,9 +205,10 @@ booleanType : BOOLEAN;
 
 numeric : (Number DOTDOT Number | Number DOTDOT PosNumber | PosNumber DOTDOT PosNumber| Dec DOTDOT Dec);
 
-numericType : NUMERIC? numeric CIRCULAR?
-        (LSBR unitRef RSBR)?
-        (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
+numericType : NUMERIC
+            | NUMERIC numeric CIRCULAR?
+              (LSBR unitRef RSBR)?
+              (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
 
 refSys : LCBR metaObjectRef (LSBR PosNumber RSBR)? RCBR
      | LT domainRef (LSBR PosNumber RSBR)? GT;
@@ -219,13 +236,18 @@ dateTimeType : ( DATE | TIMEOFDAY | DATETIME );
 
 // 3.8.8 Coordonnées - Koordinaten
 
-coordinateType : COORD numericType
-           (COMMA numericType (COMMA numericType)?
-             (COMMA rotationDef)?)?;
+coordinateType : (COORD | MULTICOORD)
+               | (COORD | MULTICOORD) (numeric | NUMERIC)
+                 (COMMA (numeric | NUMERIC)
+                 (COMMA (numeric | NUMERIC))?)?
+               | (COORD | MULTICOORD) numeric
+                 (COMMA numeric (COMMA numeric)?
+                 (COMMA rotationDef)?)?;
 
 rotationDef : ROTATION PosNumber MINUS GT PosNumber;
 
-contextDef : CONTEXT Name EQ LCBR domainRef EQ domainRef (OR domainRef)* SEMI RCBR SEMI;
+contextDef : CONTEXT? Name EQ 
+                (domainRef EQ domainRef (OR domainRef)* SEMI)+ ;
 
 // 3.8.9 Domaines de valeurs des identifications d’objet - Wertebereiche von Objektidentifikationen
 
@@ -316,7 +338,8 @@ constraintDef : mandatoryConstraint
         | plausibilityConstraint
         | existenceConstraint
         | uniquenessConstraint
-        | setConstraint;
+        | setConstraint
+        | expression;
 
 mandatoryConstraint : MANDATORY CONSTRAINT expression SEMI;
 
@@ -366,6 +389,7 @@ relation : ( EQ EQ | NOT_EQ | LT GT | LTEQ | GTEQ | LT | GT );
 factor : objectOrAttributePath
         | (inspection | INSPECTION viewableRef) (OF objectOrAttributePath)?
         | functionCall
+        | INTERLIS DOT Name LPAR (expression (COMMA expression)*)? RPAR
         | PARAMETER (Name DOT)? Name
         | constant;
 
@@ -395,7 +419,7 @@ argument : expression
 // 3.14 Fonctions
 
 functionDef : FUNCTION Name?
-         LPAR argumentDef (COMMA argumentDef)* RPAR
+         LPAR argumentDef (SEMI argumentDef)* RPAR
          COLON argumentType Explanation? SEMI;
 
 argumentDef : Name COLON argumentType;

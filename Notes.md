@@ -974,3 +974,23 @@ extraits de [IlisMeta16.ili](https://github.com/claeis/ili2c/blob/master/standar
 ```
 
 Modification de la règle des domaines de valeurs formattées pour pouvoir intégrer le token INTERLIS
+
+## 3.8 Domaines de valeurs et constantes
+
+Ajouter la règle dateTimeType à la règle baseType
+
+```diff
+baseType : textType
+           | enumerationType
+           | enumTreeValueType
+           | alignmentType
+           | booleanType
+           | numericType
+           | formattedType
++          | dateTimeType
+           | coordinateType
+           | oIDType
+           | blackboxType
+           | classType
+           | attributeType;
+```
