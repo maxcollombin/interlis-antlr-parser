@@ -72,12 +72,14 @@ structureDef : STRUCTURE Name
                  classOrStructureDef?
                END Name SEMI;
 
-classRef : (Name DOT (Name DOT)?)? Name
-         | (INTERLIS DOT  REFSYSTEM);
+classRef : (INTERLIS DOT REFSYSTEM)
+         | (INTERLIS DOT Name (DOT Name)*)
+         | (Name DOT Name (DOT Name)*)? Name;
+
 classOrStructureDef : (ATTRIBUTE? attributeDef+ | constraintDef+ | PARAMETER? parameterDef+)+;
 
-structureRef : (Name DOT (Name DOT)?)? Name
-             | (INTERLIS DOT  Name);
+structureRef : (INTERLIS DOT Name (DOT Name)*)
+             | (Name DOT Name (DOT Name)*)? Name;
 
 classOrStructureRef : classRef | structureRef;
 
@@ -85,10 +87,13 @@ classOrStructureRef : classRef | structureRef;
 
 attributeDef : CONTINUOUS? SUBDIVISION?
                Name (LPAR(ABSTRACT | EXTENDED | FINAL | TRANSIENT)RPAR)?
-               COLON attrTypeDef
+               COLON (attrTypeDef | lineType)
                (ASSIGN? factor (COMMA factor)*)? SEMI;
 
-attrTypeDef : MANDATORY? (attrType | enumeration)
+attrTypeDef : MANDATORY? (attrType 
+            | enumeration 
+            | (numeric (CIRCULAR)? (LSBR unitRef RSBR)?)
+            | (NUMERIC (LSBR unitRef RSBR)))
             | (BAG | LIST) cardinality? OF restrictedStructureRef;
 
 attrType : type
@@ -140,13 +145,17 @@ domainDef
       Name
       (LPAR (ABSTRACT | FINAL | GENERIC) RPAR)?
       (EXTENDS domainRef)?
-      EQ (MANDATORY? type | numeric | CLASS (RESTRICTION LPAR classOrAssociationRef (SEMI classOrAssociationRef)* RPAR)?)
+      EQ (MANDATORY? type | numeric | enumeration | (STRING DOTDOT STRING) | CLASS (RESTRICTION LPAR classOrAssociationRef (SEMI classOrAssociationRef)* RPAR)?)
       (CONSTRAINTS (Name COLON constraintDef) (COMMA Name COLON constraintDef)*)?
       SEMI
     )+
   ;
 
-type : baseType | lineType;
+// type : baseType | lineType;
+
+type : baseType
+     | lineType
+     | STRING DOTDOT STRING; // Ajout pour les plages de chaînes
 
 domainRef : (Name DOT (Name DOT)?)? Name;
 
@@ -187,7 +196,7 @@ enumerationType : ENUM LCBR enumElement (COMMA enumElement)* RCBR (ORDERED | CIR
 
 enumTreeValueType : ALL OF domainRef;
 
-enumeration : LPAR enumElement (COMMA enumElement)* (COLON FINAL)? RPAR;
+enumeration : LPAR enumElement (COMMA enumElement)* (COLON FINAL)? RPAR (CIRCULAR)?;
 
 enumElement : Name (DOT Name)* (enumeration)?;
 
@@ -203,12 +212,17 @@ booleanType : BOOLEAN;
 
 // 3.8.5 Types de données numériques - Numerische Datentypen
 
-numeric : (Number DOTDOT Number | Number DOTDOT PosNumber | PosNumber DOTDOT PosNumber| Dec DOTDOT Dec);
+numeric : (Number DOTDOT Number 
+         | Number DOTDOT PosNumber 
+         | PosNumber DOTDOT PosNumber 
+         | Dec DOTDOT Dec)?
+         (LSBR unitRef RSBR)?;
 
 numericType : NUMERIC
             | NUMERIC numeric CIRCULAR?
-              (LSBR unitRef RSBR)?
-              (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
+            | NUMERIC (LSBR unitRef RSBR)
+            | NUMERIC numeric CIRCULAR? (LSBR unitRef RSBR)?
+            | NUMERIC numeric (CLOCKWISE | COUNTERCLOCKWISE | refSys)?;
 
 refSys : LCBR metaObjectRef (LSBR PosNumber RSBR)? RCBR
      | LT domainRef (LSBR PosNumber RSBR)? GT;
@@ -251,7 +265,7 @@ contextDef : CONTEXT? Name EQ
 
 // 3.8.9 Domaines de valeurs des identifications d’objet - Wertebereiche von Objektidentifikationen
 
-oIDType : OID ( ANY | numericType | textType );
+oIDType : OID ( ANY | numeric | textType );
 
 // 3.8.10 Boîtes noires - Gefässe
 
@@ -277,7 +291,7 @@ attributePathConst : GT GT (viewableRef DOT)? Name;
 // 3.8.12.2 Linienzug mit Strecken und Kreisbogen als vordefinierte Kurvenstücke
 
 lineType : ( DIRECTED? POLYLINE | SURFACE | AREA | DIRECTED? MULTIPOLYLINE | MULTISURFACE | MULTIAREA )
-        lineForm? controlPoints? intersectionDef?;
+        lineForm? controlPoints? intersectionDef? (LINE ATTRIBUTES Name)?;
 
 lineForm : WITH LPAR lineFormType (COMMA lineFormType)* RPAR;
 
@@ -324,8 +338,9 @@ metaObjectRef : (metaDataBasketRef DOT)? Name;
 // 3.10.2 Paramètres - Parameter
 // 3.10.2.2 Paramètres des signatures - Parameter von Signaturen
 
-parameterDef : PARAMETER Name (ABSTRACT | EXTENDED | FINAL)?
-         COLON (attrTypeDef | METAOBJECT (OF metaObjectRef)?) SEMI;
+parameterDef : PARAMETER Name
+               (LPAR (ABSTRACT | EXTENDED | FINAL) RPAR)?
+               COLON (attrTypeDef | METAOBJECT (OF metaObjectRef)?) SEMI;
 
 // 3.11 Paramètres d’exécution - Laufzeitparameter
 
@@ -420,7 +435,7 @@ argument : expression
 
 functionDef : FUNCTION Name?
          LPAR argumentDef (SEMI argumentDef)* RPAR
-         COLON argumentType Explanation? SEMI;
+         COLON argumentType Explanation* SEMI?;
 
 argumentDef : Name COLON argumentType;
 

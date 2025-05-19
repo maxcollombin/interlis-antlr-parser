@@ -242,7 +242,7 @@ STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDi
 
 // 3.2.6 Explications - Erläuterungen
 
-Explanation : '//' ~('\n'|'\r')* ('\r'? '\n' | EOF);
+Explanation : '//' ~[\r\n]*;
 
 // 3.2.8 Commentaires - Kommentare
 
