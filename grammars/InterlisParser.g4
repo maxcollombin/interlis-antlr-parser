@@ -199,7 +199,9 @@ enumTreeValueType : ALL OF domainRef;
 
 enumeration : LPAR enumElement (COMMA enumElement)* (COLON FINAL)? RPAR (CIRCULAR)?;
 
-enumElement : Name (DOT Name)* (enumeration)?;
+enumElement
+    : (Name | LOCAL | BASKET) (DOT Name)* (enumeration)?
+    ;
 
 enumerationConst : HASH (Name (DOT Name)* (DOT OTHERS)? | OTHERS);
 
@@ -366,31 +368,51 @@ constraintDef : mandatoryConstraint
         | setConstraint
         | expression SEMI;
 
-mandatoryConstraint : MANDATORY CONSTRAINT Name COLON expression SEMI;
+mandatoryConstraint : MANDATORY CONSTRAINT (Name COLON)? expression SEMI;
 
-plausibilityConstraint : CONSTRAINT
-             ( LTEQ | GTEQ ) Dec MOD
-             expression SEMI;
+plausibilityConstraint
+    : CONSTRAINT (Name COLON)?
+      (LTEQ | GTEQ) numericConst MOD
+      expression SEMI
+    ;
 
-existenceConstraint : EXISTENCE CONSTRAINT
-           attributePath REQUIRED IN
-           viewableRef COLON attributePath
-           ( OR viewableRef COLON attributePath )* SEMI;
+existenceConstraint
+    : EXISTENCE CONSTRAINT 
+      (Name COLON)?
+      attributePath
+      REQUIRED IN
+      viewableRef
+      COLON
+      attributePath
+      SEMI
+    ;
 
-uniquenessConstraint : UNIQUE ( WHERE expression COLON )?
-            ( globalUniqueness | localUniqueness ) SEMI;
+uniquenessConstraint
+    : UNIQUE (Name COLON)?
+      (LPAR (LOCAL | BASKET) RPAR)?
+      (Name COLON)?
+      (globalUniqueness | localUniqueness)+
+      SEMI
+    ;
 
 globalUniqueness : uniqueEl ( COMMA uniqueEl )*;
 
 uniqueEl : objectOrAttributePath;
 
-localUniqueness : LPAR LOCAL RPAR
-          Name
-          ( MINUS GT Name )* COLON
-          Name ( COMMA Name )*;
+localUniqueness
+    : UNIQUE (LPAR (LOCAL | BASKET) RPAR)?
+      (Name COLON)?
+      Name
+      (MINUS GT Name)* (COLON Name (COMMA Name)*)?
+      SEMI
+    ;
 
-setConstraint : SET CONSTRAINT ( WHERE expression COLON )?
-        expression SEMI;
+setConstraint
+    : SET CONSTRAINT (LPAR (LOCAL | BASKET) RPAR)?
+      (WHERE expression COLON)?
+      (Name COLON | INTERLIS COLON)?
+      expression SEMI
+    ;
 
 constraintsDef : CONSTRAINTS OF classOrAssociationRef EQ
         ( constraintDef )*
@@ -407,7 +429,9 @@ term2 : predicate ( relation predicate )?;
 
 predicate : ( factor
       | ( NOT )? LPAR expression RPAR
-      | DEFINED LPAR factor RPAR );
+      | DEFINED LPAR factor RPAR
+      | LPAR BASKET RPAR factor
+      );
 
 relation : ( EQ EQ | NOT_EQ | LT GT | LTEQ | GTEQ | LT | GT );
 
@@ -416,6 +440,7 @@ factor : objectOrAttributePath
         | functionCall
         | INTERLIS DOT Name LPAR (expression (COMMA expression)*)? RPAR
         | PARAMETER (Name DOT)? Name
+        | ALL
         | constant;
 
 objectOrAttributePath : pathEl (MINUS GT pathEl)*;
@@ -427,6 +452,7 @@ pathEl : THIS
         | THATAREA
         | PARENT
         | Name (LSBR Name RSBR)?
+        | Name COLON
         | associationPath
         | attributeRef
         | Name EQ EQ STRING;
