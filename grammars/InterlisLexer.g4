@@ -114,6 +114,7 @@ METAOBJECT : 'METAOBJECT';
 MOD: '%';
 MODEL : 'MODEL';
 MTEXT : 'MTEXT';
+POW: '**';
 MUL: '*';
 MULTIAREA : 'MULTIAREA';
 MULTICOORD : 'MULTICOORD';
@@ -242,7 +243,9 @@ STRING : '"' ( ~['\\"] | '\\"' | '\\\\' | '\\u' HexDigit HexDigit HexDigit HexDi
 
 // 3.2.6 Explications - Erläuterungen
 
-Explanation : '//' ~[\r\n]*;
+Explanation
+    : '//' (~[/] | '/' ~[/])* '//'
+    ;
 
 // 3.2.8 Commentaires - Kommentare
 

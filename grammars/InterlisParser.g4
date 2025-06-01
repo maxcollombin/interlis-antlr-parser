@@ -118,7 +118,7 @@ restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
 //3.7.1 Description des relations - Beschreibung von Beziehungen
 
 associationDef : ASSOCIATION Name
-                     (ABSTRACT | EXTENDED | FINAL | OID)?
+                     ( LPAR (ABSTRACT | EXTENDED | FINAL | OID) RPAR)?
                      (EXTENDS associationRef)?
                      (DERIVED FROM Name)? EQ
                      ((OID AS Name | NO OID) SEMI)?
@@ -133,7 +133,8 @@ associationRef : (Name DOT (Name DOT)?)? Name;
 roleDef : Name (LPAR (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL) RPAR)?
               (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT) cardinality?
               restrictedClassOrAssRef (OR restrictedClassOrAssRef)*
-              (ASSIGN STRING)? SEMI;
+              (ASSIGN STRING)? SEMI
+          | Name COLON MANDATORY? (attrTypeDef | enumeration | numeric | constraintDef) SEMI;
 
 cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
@@ -309,19 +310,28 @@ lineFormTypeDef : LINE FORM LCBR Name COLON Name SEMI RCBR;
 
 // 3.9.3 Unités composées - Zusammengesetzte Einheiten
 
-unitDef : UNIT? Name
-      (LPAR ABSTRACT RPAR)?
+unitDef
+    : UNIT? Name
       (LSBR Name RSBR)?
+      (LPAR ABSTRACT RPAR)?
       (EXTENDS unitRef)?
-      (EQ (derivedUnit | composedUnit))? SEMI;
+      (EQ (
+          expression LSBR unitRef RSBR
+          | composedUnit
+          | functionDef
+      ))?
+      SEMI
+    ;
 
-derivedUnit : (decConst ((MUL | DIV) decConst)*
-        | functionDef) LSBR unitRef RSBR;
+derivedUnit
+    : decConst ((MUL | DIV |POW) decConst)* LSBR unitRef RSBR
+    ;
 
-composedUnit : LPAR unitRef ((MUL | DIV) unitRef)* RPAR;
+composedUnit : LPAR (unitRef | Name | INTERLIS DOT Name) ((MUL | DIV |POW) (unitRef | INTERLIS DOT Name | Name))* RPAR;
 
-unitRef : (Name DOT (Name DOT)?)? Name
-        | (INTERLIS DOT  Name);
+        unitRef : LSBR (Name DOT (Name DOT)?)? Name RSBR
+        | INTERLIS DOT Name
+        | Name;
 
 // 3.10 Traitement des méta-objets - Umgang mit Metaobjekten
 
@@ -354,9 +364,9 @@ constraintDef : mandatoryConstraint
         | existenceConstraint
         | uniquenessConstraint
         | setConstraint
-        | expression;
+        | expression SEMI;
 
-mandatoryConstraint : MANDATORY CONSTRAINT expression SEMI;
+mandatoryConstraint : MANDATORY CONSTRAINT Name COLON expression SEMI;
 
 plausibilityConstraint : CONSTRAINT
              ( LTEQ | GTEQ ) Dec MOD
@@ -392,7 +402,7 @@ expression : term;
 
 term : term0 ( EQ GT term0 )?;
 term0 : term1 ( ( OR | PLUS | MINUS ) term1 )*;
-term1 : term2 ( ( AND | MUL | DIV ) term2 )*;
+term1 : term2 ( ( AND | MUL | DIV | POW) term2 )*;
 term2 : predicate ( relation predicate )?;
 
 predicate : ( factor
@@ -418,7 +428,8 @@ pathEl : THIS
         | PARENT
         | Name (LSBR Name RSBR)?
         | associationPath
-        | attributeRef;
+        | attributeRef
+        | Name EQ EQ STRING;
 
 associationPath : BACKSLASH? Name;
 
@@ -433,9 +444,14 @@ argument : expression
 
 // 3.14 Fonctions
 
-functionDef : FUNCTION Name?
-         LPAR argumentDef (SEMI argumentDef)* RPAR
-         COLON argumentType Explanation* SEMI?;
+functionDef
+    : UNIT? Name
+      (LSBR Name RSBR)?
+      EQ FUNCTION
+      Explanation
+      LSBR unitRef RSBR
+      SEMI
+    ;
 
 argumentDef : Name COLON argumentType;
 
