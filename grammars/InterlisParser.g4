@@ -67,7 +67,7 @@ classDef : CLASS Name
            END Name SEMI;
 
 structureDef : STRUCTURE Name
-                 (ABSTRACT | EXTENDED | FINAL)?
+                 (LPAR (ABSTRACT | EXTENDED | FINAL) RPAR)?
                  (EXTENDS structureRef)? EQ
                  classOrStructureDef?
                END Name SEMI;
@@ -104,15 +104,16 @@ attrType : type
 referenceAttr : REFERENCE TO (LPAR EXTERNAL RPAR)? restrictedClassOrAssRef;
 
 restrictedClassOrAssRef : (classOrAssociationRef | ANYCLASS)
-                        (RESTRICTION LPAR classOrAssociationRef (COMMA classOrAssociationRef)* RPAR)?;
+                        (RESTRICTION LPAR (classOrAssociationRef (SEMI classOrAssociationRef)*) RPAR)?;
 
 classOrAssociationRef : classRef | associationRef;
 
 restrictedStructureRef : (structureRef | type | ANYSTRUCTURE)
                        (RESTRICTION LPAR structureRef (COMMA structureRef)* RPAR)?;
 
-restrictedClassOrStructureRef : (classOrStructureRef | ANYSTRUCTURE)
-                              (RESTRICTION LPAR classOrStructureRef (COMMA classOrStructureRef)* RPAR)?;
+restrictedClassOrStructureRef
+    : (classOrStructureRef | ANYSTRUCTURE)
+      (RESTRICTION LPAR classOrStructureRef (SEMI classOrStructureRef)* RPAR)?;
 
 // 3.7 Relations vraies - Eigentliche Beziehungen
 //3.7.1 Description des relations - Beschreibung von Beziehungen
@@ -130,11 +131,14 @@ associationDef : ASSOCIATION Name
 
 associationRef : (Name DOT (Name DOT)?)? Name;
 
-roleDef : Name (LPAR (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL) RPAR)?
-              (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT) cardinality?
-              restrictedClassOrAssRef (OR restrictedClassOrAssRef)*
-              (ASSIGN STRING)? SEMI
-          | Name COLON MANDATORY? (attrTypeDef | enumeration | numeric | constraintDef) SEMI;
+roleDef : Name 
+          (LPAR ( (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL) 
+                 (COMMA (ABSTRACT | EXTENDED | FINAL | HIDING | ORDERED | EXTERNAL))*
+               )? RPAR)?
+          (MINUS MINUS | MINUS LT GT | MINUS LT HASH GT)? cardinality?
+          restrictedClassOrAssRef (OR restrictedClassOrAssRef)*
+          (ASSIGN STRING)? SEMI
+        | Name COLON MANDATORY? (attrTypeDef | enumeration | numeric | constraintDef) SEMI;
 
 cardinality : LCBR (MUL | PosNumber (DOTDOT (PosNumber | MUL))?) RCBR;
 
@@ -197,13 +201,14 @@ enumerationType : ENUM LCBR enumElement (COMMA enumElement)* RCBR (ORDERED | CIR
 
 enumTreeValueType : ALL OF domainRef;
 
-enumeration : LPAR enumElement (COMMA enumElement)* (COLON FINAL)? RPAR (CIRCULAR)?;
+enumeration : LPAR enumElement (COMMA enumElement)* (COLON FINAL)? RPAR (ORDERED | CIRCULAR)?;
 
 enumElement
     : (Name | LOCAL | BASKET) (DOT Name)* (enumeration)?
     ;
 
 enumerationConst : HASH (Name (DOT Name)* (DOT OTHERS)? | OTHERS);
+
 
 // 3.8.3 Alignement du texte - Textausrichtungen
 
