@@ -1,5 +1,5 @@
-antlr4-tools
-input/
-errors.log
-corr.md
-grammar/.antlr4
+# Python virtual environment
+interlis-antlr4/
+
+# ANTLR generated files
+interlis_antlr_parser/grammar/
