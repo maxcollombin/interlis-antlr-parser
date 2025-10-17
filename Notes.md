@@ -451,7 +451,7 @@ Les règles suivantes ne sont jamais définies dans la grammaire:
 
 Toutes les occurences de `'<'`, `'>'`, `'='`, `'('`, `')'`, `','`, `';'` doivent être rempacées par les tokens liés.
 
-- Ajouter `DOT: '.';` dans les tokens de base et remplacer partout où cela intervient.
+- Ajouter DOT: '.'; dans les tokens de base et remplacer partout où cela intervient.
 - Ajouter MINUS: '-'; dans les tokens de base et remplacer partout où cela intervient.
 - Ajouter PLUS: '+'; dans les tokens de base et remplacer partout où cela intervient.
 - Ajouter COLON: ':'; dans les tokens de base et remplacer partout où cela intervient.
@@ -994,3 +994,26 @@ baseType : textType
            | classType
            | attributeType;
 ```
+
+## (Lexer) Tokens non définis dans le Parser
+
+Les tokens suivants ne semblement pas être définis dans le parser: 
+
+BLANK
+CODE
+CONTINUE
+CONTOUR
+DEFAULT
+DERIVATIVES
+FIX
+FONT
+FREE
+GRADS
+IDENT
+OPTIONAL
+PERIPHERY
+RADIANS
+TABLE
+TID
+TIDSIZE
+VERTEXINFO
