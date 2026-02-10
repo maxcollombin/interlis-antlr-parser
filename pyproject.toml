@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "interlis-antlr-parser"
+version = "0.1.0"
+description = "Convert INTERLIS 2.4 models to Python, JSON Schema, and CartoSym (CSS/JSON) formats"
+readme = "README.md"
+requires-python = ">=3.9"
+license-files = ["LICENSE"]
+authors = [{name = "Maxime Collombin"}]
+keywords = ["INTERLIS", "GIS", "geodata", "parsing", "conversion", "JSON Schema", "CartoSym"]
+
+dependencies = [
+    "antlr4-python3-runtime==4.13.2",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "antlr4-tools>=4.13.0",
+]
+
+[project.scripts]
+interlis-cli = "cli:main"
+
+[project.urls]
+Repository = "https://github.com/maxcollombin/interlis-antlr-parser"
+
+[tool.setuptools]
+packages = ["interlis_antlr_parser", "model"]

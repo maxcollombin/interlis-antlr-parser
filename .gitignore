@@ -1,5 +1,21 @@
-# Python virtual environment
-interlis-antlr4/
+# Python virtual environments
+venv/
 
-# ANTLR generated files
-interlis_antlr_parser/grammar/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+dist/
+build/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Project-specific
+*.log
+input/
