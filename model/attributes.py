@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-from .types import Type
+from .types import DomainType
 
 
 class Attribute(BaseModel):
     name: str
-    type_: Type
+    type_: DomainType
     mandatory: bool = False
 
 

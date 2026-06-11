@@ -21,6 +21,12 @@ from model.expressions import (
     Expression, Factor, PathFactor, ConstantFactor, UnitRefFactor, 
     EnumMappingFactor, Literal
 )
+from model.constraints import (
+    Constraint, MandatoryConstraint, PlausibilityConstraint,
+    ExistenceConstraint, UniqueConstraint, SetConstraint,
+    CardinalityConstraint, AreaConnectedConstraint, LineTopologyConstraint,
+    GeometryConstraint, ConstraintSeverity, ConstraintScope
+)
 
 
 class IliVisitor(InterlisParserVisitor):
@@ -150,28 +156,53 @@ class IliVisitor(InterlisParserVisitor):
         # Extraire les attributs
         self._extract_class_attributes(ctx, cls)
         
-        self._log(f"  ✓ Class '{class_name}' (abstract={abstract}): {len(cls.attributes)} attributes")
+        # Extraire les contraintes au niveau de la classe
+        self._extract_class_constraints(ctx, cls)
+        
+        self._log(f"  ✓ Class '{class_name}' (abstract={abstract}): {len(cls.attributes)} attributes, {len(cls.constraints)} constraints")
         return cls
     
     def visitAttributeDef(self, ctx):
-        """Visite un attribut dans une classe."""
+        """Visite un attribut dans une classe (supporte types géométriques)."""
         attr_name = self._extract_first_identifier(ctx)
-        
-        # Déterminer le type et les propriétés
-        type_ = IliType.TEXT  # Défaut
         mandatory = self._has_keyword(ctx, "MANDATORY")
-        
-        # Détecter les domaines référencés (ex: Kind: MANDATORY (...))
         domain_ref = self._extract_domain_reference(ctx, attr_name)
-        
+
+        # Résoudre le type du domaine référencé (si connu)
+        from model.types import CoordType, LineType, AreaType, SurfaceType, VertexType, LengthType, AngleType, TextType, NumericType, EnumerationType, DomainType
+        type_lower = domain_ref.lower() if domain_ref else ""
+        if "coord" in type_lower:
+            type_ = CoordType(ili_name=domain_ref)
+        elif "polyline" in type_lower or "line" in type_lower:
+            type_ = LineType(ili_name=domain_ref)
+        elif "area" in type_lower:
+            type_ = AreaType(ili_name=domain_ref)
+        elif "surface" in type_lower:
+            type_ = SurfaceType(ili_name=domain_ref)
+        elif "vertex" in type_lower:
+            type_ = VertexType(ili_name=domain_ref)
+        elif "length" in type_lower:
+            type_ = LengthType(ili_name=domain_ref)
+        elif "angle" in type_lower:
+            type_ = AngleType(ili_name=domain_ref)
+        elif "text" in type_lower:
+            type_ = TextType(ili_name=domain_ref)
+        elif "numeric" in type_lower or "number" in type_lower:
+            type_ = NumericType(ili_name=domain_ref)
+        elif "enum" in type_lower:
+            type_ = EnumerationType(ili_name=domain_ref)
+        elif domain_ref:
+            type_ = DomainType(ili_name=domain_ref)
+        else:
+            type_ = DomainType(ili_name="TEXT")
+
         attr = IliAttribute(
             name=attr_name,
             ili_name=attr_name,
             type_=type_,
             mandatory=mandatory,
         )
-        
-        self._log(f"  Attr: {attr_name} (mandatory={mandatory})", "ATTR")
+        self._log(f"  Attr: {attr_name} (mandatory={mandatory}, type={type_})", "ATTR")
         return attr
     
     def _extract_domain_reference(self, ctx, attr_name: str) -> str:
@@ -190,17 +221,314 @@ class IliVisitor(InterlisParserVisitor):
         return ""
     
     def visitDomainDef(self, ctx):
-        """Visite DOMAIN ... ="""
+        """Visite DOMAIN ... = (supporte types géométriques)"""
         domain_name = self._extract_identifier_after_keyword(ctx, "DOMAIN")
         self._log(f"visitDomainDef: {domain_name}")
-        
+
+        # Extraire le type INTERLIS (ex: COORD, POLYLINE, AREA, SURFACE, etc.)
+        type_text = self._getText(ctx)
+        type_lower = type_text.lower()
+        from model.types import CoordType, LineType, AreaType, SurfaceType, VertexType, LengthType, AngleType, TextType, NumericType, EnumerationType, DomainType
+
+        # Heuristique simple pour détecter le type
+        if "coord" in type_lower:
+            domain_type = CoordType(ili_name=domain_name)
+        elif "polyline" in type_lower or "line" in type_lower:
+            domain_type = LineType(ili_name=domain_name)
+        elif "area" in type_lower:
+            domain_type = AreaType(ili_name=domain_name)
+        elif "surface" in type_lower:
+            domain_type = SurfaceType(ili_name=domain_name)
+        elif "vertex" in type_lower:
+            domain_type = VertexType(ili_name=domain_name)
+        elif "length" in type_lower:
+            domain_type = LengthType(ili_name=domain_name)
+        elif "angle" in type_lower:
+            domain_type = AngleType(ili_name=domain_name)
+        elif "text" in type_lower:
+            domain_type = TextType(ili_name=domain_name)
+        elif "numeric" in type_lower or "number" in type_lower:
+            domain_type = NumericType(ili_name=domain_name)
+        elif "enum" in type_lower:
+            domain_type = EnumerationType(ili_name=domain_name)
+        else:
+            domain_type = DomainType(ili_name=domain_name)
+
         domain = IliDomain(
             name=domain_name,
             ili_name=domain_name,
-            type_=IliType.TEXT,
+            type_=domain_type,
+        )
+        return domain
+    
+    # ===== CONTRAINTES INTERLIS =====
+    
+    def visitConstraintsDef(self, ctx):
+        """Visite CONSTRAINTS OF ... = ... END;"""
+        self._log("visitConstraintsDef")
+        
+        # Extraire la référence à la classe (classOrAssociationRef)
+        applies_to = ""
+        if hasattr(ctx, 'classOrAssociationRef') and ctx.classOrAssociationRef():
+            applies_to = self._getText(ctx.classOrAssociationRef())
+        
+        self._log(f"  Constraints for: {applies_to}", "CONSTRAINT")
+        
+        # Extraire tous les constraintDef
+        constraints = []
+        if hasattr(ctx, 'constraintDef'):
+            constraint_defs = ctx.constraintDef()
+            if constraint_defs:
+                if not isinstance(constraint_defs, list):
+                    constraint_defs = [constraint_defs]
+                
+                for constraint_def in constraint_defs:
+                    constraint = self.visitConstraintDef(constraint_def)
+                    if constraint:
+                        constraint.applies_to = applies_to
+                        constraints.append(constraint)
+        
+        self._log(f"  ✓ Extracted {len(constraints)} constraints", "SUCCESS")
+        return constraints
+    
+    def visitConstraintDef(self, ctx):
+        """Visite une définition de contrainte (dispatcher)."""
+        self._log("visitConstraintDef")
+        
+        # Déterminer le type de contrainte et dispatcher
+        if hasattr(ctx, 'mandatoryConstraint') and ctx.mandatoryConstraint():
+            return self.visitMandatoryConstraint(ctx.mandatoryConstraint())
+        
+        elif hasattr(ctx, 'plausibilityConstraint') and ctx.plausibilityConstraint():
+            return self.visitPlausibilityConstraint(ctx.plausibilityConstraint())
+        
+        elif hasattr(ctx, 'existenceConstraint') and ctx.existenceConstraint():
+            return self.visitExistenceConstraint(ctx.existenceConstraint())
+        
+        elif hasattr(ctx, 'uniquenessConstraint') and ctx.uniquenessConstraint():
+            return self.visitUniquenessConstraint(ctx.uniquenessConstraint())
+        
+        elif hasattr(ctx, 'setConstraint') and ctx.setConstraint():
+            return self.visitSetConstraint(ctx.setConstraint())
+        
+        self._log("  ⚠ Unknown constraint type", "WARNING")
+        return None
+    
+    def visitMandatoryConstraint(self, ctx):
+        """Visite MANDATORY CONSTRAINT"""
+        self._log("  visitMandatoryConstraint", "CONSTRAINT")
+        
+        # Extraire le nom (optionnel: Name COLON avant l'expression)
+        constraint_name = self._extract_optional_constraint_name(ctx)
+        
+        # L'expression est le premier expression() du contexte
+        expression = None
+        if hasattr(ctx, 'expression') and ctx.expression():
+            expression = self.visitExpression(ctx.expression())
+        
+        constraint = MandatoryConstraint(
+            name=constraint_name if constraint_name else "MandatoryConstraint",
+            ili_name=constraint_name if constraint_name else "MandatoryConstraint",
+            logical_expression=expression,
+            scope=ConstraintScope.ATTRIBUTE,
         )
         
-        return domain
+        self._log(f"    ✓ MandatoryConstraint: {constraint.ili_name}", "CONSTRAINT_OK")
+        return constraint
+    
+    def visitPlausibilityConstraint(self, ctx):
+        """Visite PLAUSIBILITY CONSTRAINT (CHECK ...)"""
+        self._log("  visitPlausibilityConstraint", "CONSTRAINT")
+        
+        # Extraire le nom (optionnel)
+        constraint_name = self._extract_optional_constraint_name(ctx)
+        
+        # Extraire le pourcentage et direction
+        percentage = None
+        direction = None
+        
+        if hasattr(ctx, 'numericConst') and ctx.numericConst():
+            try:
+                percentage = float(self._getText(ctx.numericConst()))
+            except:
+                pass
+        
+        # Vérifier les tokens pour direction (LTEQ, GTEQ)
+        if hasattr(ctx, 'LTEQ') and ctx.LTEQ():
+            direction = "<="
+        elif hasattr(ctx, 'GTEQ') and ctx.GTEQ():
+            direction = ">="
+        
+        # Extraire l'expression
+        expression = None
+        if hasattr(ctx, 'expression') and ctx.expression():
+            expr_ctx = ctx.expression()
+            if not isinstance(expr_ctx, list):
+                expr_ctx = [expr_ctx]
+            if expr_ctx:
+                expression = self.visitExpression(expr_ctx[0])
+        
+        constraint = PlausibilityConstraint(
+            name=constraint_name if constraint_name else "PlausibilityConstraint",
+            ili_name=constraint_name if constraint_name else "PlausibilityConstraint",
+            percentage=percentage,
+            direction=direction,
+            logical_expression=expression,
+            scope=ConstraintScope.CLASS,
+        )
+        
+        self._log(f"    ✓ PlausibilityConstraint: {constraint.ili_name} ({percentage}% {direction})", "CONSTRAINT_OK")
+        return constraint
+    
+    def visitExistenceConstraint(self, ctx):
+        """Visite EXISTENCE CONSTRAINT"""
+        self._log("  visitExistenceConstraint", "CONSTRAINT")
+        
+        # Extraire le nom (optionnel)
+        constraint_name = self._extract_optional_constraint_name(ctx)
+        
+        # Extraire les attributPaths (attribute1 REQUIRED IN class.attribute2)
+        attribute = None
+        required_in = None
+        
+        if hasattr(ctx, 'attributePath'):
+            attr_paths = ctx.attributePath()
+            if attr_paths:
+                if not isinstance(attr_paths, list):
+                    attr_paths = [attr_paths]
+                
+                if len(attr_paths) >= 1:
+                    attribute = self._getText(attr_paths[0])
+                if len(attr_paths) >= 2:
+                    required_in = self._getText(attr_paths[1])
+        
+        constraint = ExistenceConstraint(
+            name=constraint_name if constraint_name else "ExistenceConstraint",
+            ili_name=constraint_name if constraint_name else "ExistenceConstraint",
+            attribute=attribute,
+            required_in=required_in,
+            scope=ConstraintScope.ATTRIBUTE,
+        )
+        
+        self._log(f"    ✓ ExistenceConstraint: {constraint.ili_name} ({attribute} in {required_in})", "CONSTRAINT_OK")
+        return constraint
+    
+    def visitUniquenessConstraint(self, ctx):
+        """Visite UNIQUE ..."""
+        self._log("  visitUniquenessConstraint", "CONSTRAINT")
+        
+        # Extraire le nom (optionnel)
+        constraint_name = self._extract_optional_constraint_name(ctx)
+        
+        # Déterminer si LOCAL ou BASKET
+        local = False
+        if hasattr(ctx, 'LOCAL') and ctx.LOCAL():
+            local = True
+        elif hasattr(ctx, 'BASKET') and ctx.BASKET():
+            local = True
+        
+        # Extraire les attributs uniques
+        attributes = []
+        
+        # Les attributs sont dans globalUniqueness/localUniqueness qui contiennent uniqueEl
+        if hasattr(ctx, 'globalUniqueness'):
+            global_uniq = ctx.globalUniqueness()
+            if global_uniq:
+                if not isinstance(global_uniq, list):
+                    global_uniq = [global_uniq]
+                for gu in global_uniq:
+                    if hasattr(gu, 'uniqueEl'):
+                        unique_els = gu.uniqueEl()
+                        if unique_els:
+                            if not isinstance(unique_els, list):
+                                unique_els = [unique_els]
+                            for ue in unique_els:
+                                attr_text = self._getText(ue)
+                                if attr_text:
+                                    attributes.append(attr_text)
+        
+        if hasattr(ctx, 'localUniqueness'):
+            local_uniq = ctx.localUniqueness()
+            if local_uniq:
+                if not isinstance(local_uniq, list):
+                    local_uniq = [local_uniq]
+                for lu in local_uniq:
+                    if hasattr(lu, 'uniqueEl'):
+                        unique_els = lu.uniqueEl()
+                        if unique_els:
+                            if not isinstance(unique_els, list):
+                                unique_els = [unique_els]
+                            for ue in unique_els:
+                                attr_text = self._getText(ue)
+                                if attr_text:
+                                    attributes.append(attr_text)
+        
+        constraint = UniqueConstraint(
+            name=constraint_name if constraint_name else "UniqueConstraint",
+            ili_name=constraint_name if constraint_name else "UniqueConstraint",
+            local=local,
+            attributes=attributes,
+            scope=ConstraintScope.CLASS,
+        )
+        
+        self._log(f"    ✓ UniqueConstraint: {constraint.ili_name} ({len(attributes)} attributes, local={local})", "CONSTRAINT_OK")
+        return constraint
+    
+    def visitSetConstraint(self, ctx):
+        """Visite SET CONSTRAINT"""
+        self._log("  visitSetConstraint", "CONSTRAINT")
+        
+        # Déterminer la sévérité (GLOBAL / LOCAL / BASKET)
+        severity = ConstraintSeverity.ERROR
+        if hasattr(ctx, 'LPAR') and ctx.LPAR():
+            # Avoir des parenthèses indique une sévérité optionnelle
+            pass
+        
+        # Extraire le nom (optionnel)
+        constraint_name = self._extract_optional_constraint_name(ctx)
+        
+        # Extraire les expressions WHERE et constraint
+        where_expr = None
+        constraint_expr = None
+        
+        if hasattr(ctx, 'expression'):
+            expressions = ctx.expression()
+            if expressions:
+                if not isinstance(expressions, list):
+                    expressions = [expressions]
+                
+                # Le premier expression est WHERE (s'il y a WHERE), sinon c'est la contrainte
+                if hasattr(ctx, 'WHERE') and ctx.WHERE():
+                    if len(expressions) >= 1:
+                        where_expr = self.visitExpression(expressions[0])
+                    if len(expressions) >= 2:
+                        constraint_expr = self.visitExpression(expressions[1])
+                else:
+                    if len(expressions) >= 1:
+                        constraint_expr = self.visitExpression(expressions[0])
+        
+        constraint = SetConstraint(
+            name=constraint_name if constraint_name else "SetConstraint",
+            ili_name=constraint_name if constraint_name else "SetConstraint",
+            where=where_expr,
+            constraint_expression=constraint_expr,
+            severity=severity,
+            scope=ConstraintScope.GLOBAL,
+        )
+        
+        self._log(f"    ✓ SetConstraint: {constraint.ili_name}", "CONSTRAINT_OK")
+        return constraint
+    
+    def _extract_optional_constraint_name(self, ctx) -> str:
+        """Extrait le nom optionnel d'une contrainte (Name COLON)."""
+        # Chercher si le premier élément est un Name suivi de COLON
+        for i, child in enumerate(ctx.children):
+            text = self._getText(child)
+            if text and text.isidentifier() and i + 1 < len(ctx.children):
+                next_text = self._getText(ctx.children[i + 1])
+                if next_text == ":":
+                    return text
+        return ""
     
     # ===== MÉTHODES UTILITAIRES D'EXTRACTION =====
     
@@ -243,7 +571,7 @@ class IliVisitor(InterlisParserVisitor):
         return topics
     
     def _extract_topic_contents(self, ctx, topic: IliTopic):
-        """Extrait les éléments d'un TOPIC (classes, domaines, etc.)."""
+        """Extrait les éléments d'un TOPIC (classes, domaines, contraintes, etc.)."""
         for child in ctx.children:
             child_type = type(child).__name__
             
@@ -257,6 +585,12 @@ class IliVisitor(InterlisParserVisitor):
                 if cls:
                     topic.classes[cls.name] = cls
             
+            elif child_type == "ConstraintsDefContext":
+                constraints = self.visit(child)
+                if constraints:
+                    for constraint in constraints:
+                        topic.constraints[constraint.ili_name] = constraint
+            
             # Visiter les conteneurs imbriqués
             elif hasattr(child, 'children'):
                 for sub in child.children:
@@ -269,6 +603,11 @@ class IliVisitor(InterlisParserVisitor):
                         cls = self.visit(sub)
                         if cls:
                             topic.classes[cls.name] = cls
+                    elif sub_type == "ConstraintsDefContext":
+                        constraints = self.visit(sub)
+                        if constraints:
+                            for constraint in constraints:
+                                topic.constraints[constraint.ili_name] = constraint
     
     def _extract_class_attributes(self, ctx, cls: IliClass):
         """Extrait tous les attributs d'une classe."""
@@ -285,6 +624,22 @@ class IliVisitor(InterlisParserVisitor):
                         attr = self.visit(sub)
                         if attr:
                             cls.attributes[attr.name] = attr
+    
+    def _extract_class_constraints(self, ctx, cls: IliClass):
+        """Extrait toutes les contraintes d'une classe."""
+        for child in ctx.children:
+            if type(child).__name__ == "ConstraintDefContext":
+                constraint = self.visit(child)
+                if constraint:
+                    cls.constraints[constraint.name] = constraint
+            
+            # Rechercher dans les conteneurs imbriqués
+            elif hasattr(child, 'children'):
+                for sub in child.children:
+                    if type(sub).__name__ == "ConstraintDefContext":
+                        constraint = self.visit(sub)
+                        if constraint:
+                            cls.constraints[constraint.name] = constraint
     
     def _extract_identifier_after_keyword(self, ctx, keyword: str) -> str:
         """Extrait l'identifiant suivant un mot-clé (ex: TOPIC nom)."""

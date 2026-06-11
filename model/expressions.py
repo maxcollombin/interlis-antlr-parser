@@ -6,52 +6,41 @@ Ce module ne conserve que les nœuds conceptuels nécessaires pour porter
 des références au modèle (attributs, constantes, unités, mappings d'énum).
 """
 
-from dataclasses import dataclass
+from pydantic import BaseModel
 from typing import Optional
 
 
 # ==========================================
-# Base conceptuelle
+
+# ==========================================
+# Conceptual Expression Base (Pydantic)
 # ==========================================
 
-@dataclass
-class Expression:
-    """Expression INTERLIS conceptuelle (sans syntaxe ANTLR)."""
+class Expression(BaseModel):
+    """INTERLIS conceptual expression (no ANTLR syntax)."""
     pass
 
-
-@dataclass
 class Factor(Expression):
-    """Base des facteurs (lien conceptuel vers le modèle)."""
+    """Base for factors (conceptual link to model)."""
     pass
 
-
-@dataclass
 class Literal(Expression):
-    """Valeur littérale typée."""
+    """Typed literal value."""
     value: str
     literal_type: str = "TEXT"
 
-
-@dataclass
 class PathFactor(Factor):
-    """Référence à un attribut/chemin (ex: THIS.Name, Base.Id)."""
+    """Reference to an attribute/path (e.g., THIS.Name, Base.Id)."""
     path: str
 
-
-@dataclass
 class ConstantFactor(Factor):
-    """Facteur constant (texte, nombre, booléen)."""
+    """Constant factor (text, number, boolean)."""
     literal: Literal
 
-
-@dataclass
 class UnitRefFactor(Factor):
-    """Référence d'unité (uniquement pour unités dérivées/composées)."""
+    """Unit reference (for derived/composite units only)."""
     unit_ref: str
 
-
-@dataclass
 class EnumMappingFactor(Factor):
-    """Projection de valeurs d'énumération (notamment pour le graphique)."""
+    """Enumeration value mapping (notably for graphics)."""
     mapping: str

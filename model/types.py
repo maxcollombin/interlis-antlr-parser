@@ -25,9 +25,18 @@ class DomainType(MetaElement):
     Domaine INTERLIS (type de données réutilisable).
     
     Base pour tous les types de domaines : TextType, NumericType, EnumerationType, etc.
+    Supporte l'héritage de domaines via le champ 'extends'.
+    
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - ili_name: Nom complet du domaine (e.g., "MyModel.MyDomain")
+    - mandatory: Indique si une valeur est obligatoire
+    - extends: Domaine parent (pour TYPE ... EXTENDS ...)
     """
     ili_name: str = ""
     mandatory: bool = False
+    extends: Optional['DomainType'] = None
 
 
 # ==========================================
@@ -201,3 +210,106 @@ class FormattedType(DomainType):
     """
     format_string: Optional[str] = None
     base_type: Optional[DomainType] = None
+
+
+# ==========================================
+# Additional specialized types (Section 2.3)
+# ==========================================
+
+@dataclass
+class DateType(DomainType):
+    """
+    Type DATE INTERLIS (date without time).
+    
+    Distinct from DateTimeType which includes time component.
+    References: IlisMeta16 section 2.3
+    """
+    kind: str = "DATE"
+
+
+@dataclass
+class TimeType(DomainType):
+    """
+    Type TIMEOFDAY INTERLIS (time without date).
+    
+    Represents a time of day (hours, minutes, seconds).
+    References: IlisMeta16 section 2.3
+    """
+    kind: str = "TIMEOFDAY"
+
+
+@dataclass
+class AreaType(DomainType):
+    """
+    Type AREA INTERLIS (surface area measurement domain).
+    
+    Represents area with units (m², km², ha, etc.).
+    Circular: False (areas are not circular by definition)
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - unit: Unité de surface (m2, km2, ha, etc.)
+    """
+    unit: Optional[str] = None  # e.g., "m2", "km2", "ha"
+
+
+@dataclass
+class LengthType(DomainType):
+    """
+    Type LENGTH INTERLIS (distance/length measurement domain).
+    
+    Represents linear measurement with units (m, km, cm, etc.).
+    Circular: False (lengths are not circular)
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - unit: Unité de longueur (m, km, cm, etc.)
+    """
+    unit: Optional[str] = None  # e.g., "m", "km", "cm"
+
+
+@dataclass
+class AngleType(DomainType):
+    """
+    Type ANGLE INTERLIS (angular measurement domain).
+    
+    Represents angular values with circular properties (0-360°).
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - unit: DEGREES (défaut) ou RADIANS
+    - min_value: Minimum angle (usually 0)
+    - max_value: Maximum angle (usually 360 for degrees, 2π for radians)
+    """
+    unit: Optional[str] = "DEGREES"  # DEGREES or RADIANS
+    min_value: Optional[float] = 0.0
+    max_value: Optional[float] = 360.0
+
+
+@dataclass
+class VertexType(DomainType):
+    """
+    Type VERTEX INTERLIS (for polyline vertices).
+    
+    Represents a single vertex in a polyline or surface geometry.
+    Each vertex has coordinate and may have properties.
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - coord_type: Type de coordonnées pour ce vertex
+    """
+    coord_type: Optional['CoordType'] = None
+
+
+@dataclass
+class SurfaceType(DomainType):
+    """
+    Type SURFACE INTERLIS (surface geometry domain).
+    
+    Represents a closed surface with optional holes.
+    References: IlisMeta16 section 2.3
+    
+    Propriétés:
+    - with_holes: Indique si la surface peut avoir des trous
+    """
+    with_holes: bool = True

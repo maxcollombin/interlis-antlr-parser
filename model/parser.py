@@ -1,7 +1,7 @@
 from interlis_antlr_parser.grammar.generated.InterlisParserVisitor import InterlisParserVisitor
 from model.core import Model, Topic, Class, DocText
 from model.attributes import Attribute
-from model.types import TextType, NumericType, EnumType, Type
+from model.types import TextType, NumericType, EnumerationType, DomainType
 
 class Parser(InterlisParserVisitor):
     def __init__(self):
@@ -9,8 +9,7 @@ class Parser(InterlisParserVisitor):
         self.model = None
 
     def visitInterlis2def(self, ctx):
-        print("[DEBUG] visitInterlis2def called")
-        models = []
+        self.models = []
         modeldefs = []
         if hasattr(ctx, 'modeldef'):
             md = ctx.modeldef()
@@ -21,13 +20,12 @@ class Parser(InterlisParserVisitor):
         for model_ctx in modeldefs:
             model = self.visit(model_ctx)
             if model:
-                models.append(model)
-        if models:
-            self.model = models[0]
+                self.models.append(model)
+        if self.models:
+            self.model = self.models[0]
         return self.model
 
     def visitModeldef(self, ctx):
-        print("[DEBUG] visitModeldef called")
         name = "Unknown"
         contracted = False
         kind = ""
@@ -92,11 +90,9 @@ class Parser(InterlisParserVisitor):
             submodels=submodels,
         )
         model.topics = topics
-        print(f"[DEBUG] Model: {name}, contracted: {contracted}, kind: {kind}, language: {language}, at: {at_value}, version: {version}, topics: {len(topics)}")
         return model
 
     def visitTopicDef(self, ctx):
-        print("[DEBUG] visitTopicDef called")
         name = "UnknownTopic"
         if len(ctx.children) > 1:
             child1 = ctx.children[1]
@@ -117,11 +113,9 @@ class Parser(InterlisParserVisitor):
                     if cls:
                         classes.append(cls)
         topic = Topic(name=name, classes=classes)
-        print(f"[DEBUG] Topic: {name}, classes: {len(classes)}")
         return topic
 
     def visitClassDef(self, ctx):
-        print("[DEBUG] visitClassDef called")
         name = "UnknownClass"
         if hasattr(ctx, 'IDENTIFIER') and ctx.IDENTIFIER():
             name = ctx.IDENTIFIER().getText()
@@ -142,11 +136,9 @@ class Parser(InterlisParserVisitor):
                         if attr:
                             attributes.append(attr)
         cls = Class(name=name, kind=kind, attributes=attributes)
-        print(f"[DEBUG] Class: {name}, attributes: {len(attributes)}")
         return cls
 
     def visitDomainDef(self, ctx):
-        print("[DEBUG] visitDomainDef called")
         name = "UnknownDomain"
         if len(ctx.children) > 1:
             child1 = ctx.children[1]
@@ -158,19 +150,15 @@ class Parser(InterlisParserVisitor):
                 type_ctx = child.type()
                 if type_ctx:
                     type_ = self.visit(type_ctx)
-        from model.types import Type
-        domain = Type() if type_ is None else type_
-        print(f"[DEBUG] Domain: {name}, type: {type_}")
+        domain = DomainType(name=name) if type_ is None else type_
         return domain
 
     def visitAttributeDef(self, ctx):
-        print("[DEBUG] visitAttributeDef called (typed)")
-        print("[DEBUG]   Children of AttributeDefContext:")
-        for i, child in enumerate(ctx.children):
-            t = getattr(child, 'getText', lambda: None)()
-            print(f"    [{i}] {type(child).__name__}: '{t}'")
         name = "UnknownAttr"
         value = None
+        mandatory = False
+        
+        # Extract attribute name
         if hasattr(ctx, 'IDENTIFIER') and ctx.IDENTIFIER():
             name = ctx.IDENTIFIER().getText()
         else:
@@ -180,11 +168,18 @@ class Parser(InterlisParserVisitor):
                     if text.isidentifier() and text.isascii():
                         name = text
                         break
+        
+        # Check for MANDATORY keyword and extract type
         type_ = None
         if hasattr(ctx, 'attrTypeDef') and ctx.attrTypeDef():
-            type_ = self.visit(ctx.attrTypeDef())
+            type_ctx = ctx.attrTypeDef()
+            # Check if MANDATORY appears before the type
+            for child in type_ctx.children:
+                if hasattr(child, 'getText') and child.getText() == 'MANDATORY':
+                    mandatory = True
+            type_ = self.visit(type_ctx)
         else:
-            type_ = TextType(kind="TEXT")
+            type_ = TextType(name="TEXT", kind="TEXT")
         if name == "At":
             idx_name = None
             for i, child in enumerate(ctx.children):
@@ -202,8 +197,7 @@ class Parser(InterlisParserVisitor):
                                 value = val.strip('"')
                                 break
                         break
-        print(f"[DEBUG]   Attribut extrait: {name}, type: {type(type_).__name__ if type_ else 'None'}, value: {value}")
-        attr = Attribute(name=name, type_=type_)
+        attr = Attribute(name=name, type_=type_, mandatory=mandatory)
         if value is not None:
             try:
                 from model.attributes import MetaAttribute
@@ -213,6 +207,18 @@ class Parser(InterlisParserVisitor):
         return attr
 
     def visitAttrTypeDef(self, ctx):
+        # Check children directly for numeric context
+        for child in ctx.children:
+            child_type = type(child).__name__
+            if 'Numeric' in child_type:
+                return self.visitNumericType(child)
+            if 'Text' in child_type or child_type == 'AttrTypeContext':
+                if hasattr(child, 'getText') and child.getText() == 'TEXT':
+                    return self.visitTextType(child)
+            if 'Enumeration' in child_type:
+                return self.visitEnumerationType(child)
+        
+        # Fallback to attribute methods
         if hasattr(ctx, 'textType') and ctx.textType():
             return self.visit(ctx.textType())
         if hasattr(ctx, 'numericType') and ctx.numericType():
@@ -221,28 +227,88 @@ class Parser(InterlisParserVisitor):
             return self.visit(ctx.enumerationType())
         if hasattr(ctx, 'domainRef') and ctx.domainRef():
             return self.visit(ctx.domainRef())
-        return TextType(kind="TEXT")
+        return TextType(name="TEXT", kind="TEXT")
 
     def visitTextType(self, ctx):
-        print("[DEBUG] visitTextType called")
-        return TextType(kind="TEXT")
+        return TextType(name="TEXT", kind="TEXT")
 
     def visitNumericType(self, ctx):
-        print("[DEBUG] visitNumericType called")
-        return NumericType()
+        min_val = None
+        max_val = None
+        
+        # Parse numeric range: 0 .. 9999
+        tokens = []
+        for child in ctx.children:
+            if hasattr(child, 'getText'):
+                text = child.getText()
+                if text not in ('MANDATORY',):
+                    tokens.append(text)
+        
+        # Look for range pattern: min .. max
+        for i, token in enumerate(tokens):
+            if token == '..' and i > 0 and i < len(tokens) - 1:
+                try:
+                    min_val = tokens[i-1]
+                    max_val = tokens[i+1]
+                except (IndexError, ValueError):
+                    pass
+                break
+        
+        return NumericType(name="NUMERIC", min_value=min_val, max_value=max_val)
 
     def visitEnumerationType(self, ctx):
-        print("[DEBUG] visitEnumerationType called")
         values = []
         for child in ctx.children:
             if hasattr(child, 'getText'):
                 val = child.getText()
                 if val not in ("ENUMERATION", "END", ","):
                     values.append(val)
-        return EnumType(values=values)
+        return EnumerationType(name="ENUMERATION", values=values)
 
     def visitDomainRef(self, ctx):
-        print("[DEBUG] visitDomainRef called")
         if hasattr(ctx, 'IDENTIFIER') and ctx.IDENTIFIER():
             return ctx.IDENTIFIER().getText()
         return "UnknownDomainRef"
+
+
+def parse_ili_model(ili_file_path: str):
+    """
+    Parse an INTERLIS model file and return the Model object.
+    
+    Args:
+        ili_file_path: Path to the .ili file
+        
+    Returns:
+        Model object representing the parsed INTERLIS model
+    """
+    from pathlib import Path
+    path = Path(ili_file_path)
+    if not path.exists():
+        raise FileNotFoundError(f"ILI file not found: {ili_file_path}")
+    ili_text = path.read_text(encoding="utf-8", errors="replace")
+    return _parse_ili_text(ili_text)
+
+
+def _parse_ili_text(ili_text: str):
+    """Parse INTERLIS model text and return the Model object."""
+    from antlr4 import InputStream, CommonTokenStream
+    from interlis_antlr_parser.grammar.generated.InterlisLexer import InterlisLexer
+    from interlis_antlr_parser.grammar.generated.InterlisParser import InterlisParser
+
+    input_stream = InputStream(ili_text)
+    lexer = InterlisLexer(input_stream)
+    stream = CommonTokenStream(lexer)
+    parser = InterlisParser(stream)
+    tree = parser.interlis2def()
+
+    visitor = Parser()
+    result = visitor.visit(tree)
+    # If multiple models are found, return them all
+    if hasattr(visitor, 'models') and visitor.models:
+        return visitor.models
+    return result
+
+
+def parse_ili_model_text(ili_text: str):
+    """Parse INTERLIS model text from a string."""
+    return _parse_ili_text(ili_text)

@@ -10,10 +10,13 @@ Extensions futures ajoutées quand la grammaire ANTLR les supporte.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional
+from typing import Dict, Optional, TYPE_CHECKING
 
 from model.dump import DumpMixin
 from enum import Enum
+
+if TYPE_CHECKING:
+    from .constraints import Constraint
 
 # ==========================================
 # Imports depuis les modules de base
@@ -133,6 +136,7 @@ class IliTopic(Topic, DumpMixin):
     classes: Dict[str, Class] = field(default_factory=dict)
     domains: Dict[str, 'IliDomain'] = field(default_factory=dict)
     associations: Dict[str, Association] = field(default_factory=dict)
+    constraints: Dict[str, 'Constraint'] = field(default_factory=dict)
 
 
 # ==========================================
@@ -198,7 +202,7 @@ class IliClass(Class):
     
     Alias pour compatibilité avec le code existant.
     """
-    geometry: Optional[IliGeometry] = None
+    constraints: Dict[str, 'Constraint'] = field(default_factory=dict)
 
 
 # ==========================================

@@ -15,11 +15,13 @@ keywords = ["INTERLIS", "GIS", "geodata", "parsing", "conversion", "JSON Schema"
 dependencies = [
     "antlr4-python3-runtime==4.13.2",
     "pydantic>=2.0",
+    "shapely>=2.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "antlr4-tools>=4.13.0",
+    "pytest",
 ]
 
 [project.scripts]

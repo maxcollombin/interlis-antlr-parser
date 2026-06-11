@@ -69,6 +69,13 @@ from model.types import (
     EnumElement,
     BooleanType,
     DateTimeType,
+    DateType,
+    TimeType,
+    AreaType,
+    LengthType,
+    AngleType,
+    VertexType,
+    SurfaceType,
     CoordType,
     LineType,
     BlackboxType,
@@ -80,20 +87,32 @@ from model.types import (
 # Contraintes
 from model.constraints import (
     Constraint,
+    ConstraintSeverity,
+    ConstraintScope,
     MandatoryConstraint,
     PlausibilityConstraint,
     ExistenceConstraint,
     UniqueConstraint,
     SetConstraint,
     CardinalityConstraint,
+    AreaConnectedConstraint,
+    LineTopologyConstraint,
+    GeometryConstraint,
 )
 
 # Fonctions
 from model.functions import (
+    ArgumentKind,
+    ReturnType,
     Argument,
     FunctionDeclaration,
     FunctionDefinition,
     FunctionCall,
+    MethodCall,
+    ProcedureDeclaration,
+    ProcedureDefinition,
+    BUILTIN_FUNCTIONS,
+    lookup_builtin_function,
 )
 
 # Expressions (syntaxe et facteurs conceptuels)
@@ -110,15 +129,71 @@ from model.expressions import (
 # Dump (sérialisation lisible)
 from model.dump import dump, DumpMixin
 
-# Views (préparé pour extension future)
+# Graphics (cartographie et symbologie)
+from model.graphics import (
+    ParameterType,
+    LineStyle,
+    FillPattern,
+    Alignment,
+    CartographicParameter,
+    SymbologyReference,
+    LineProperties,
+    FillProperties,
+    DrawingElement,
+    SignParameterAssignment,
+    TextProperties,
+    GraphicElement,
+    create_rgb_color,
+)
+
+# Views and Formations (section 2.5 et 2.6)
 from model.views import (
     RenamedBaseView,
     ViewDefinition,
+    Projection,
+    JoinCondition,
+    Join,
+    Union,
+    Formation,
     Graphic,
     SignParameter,
     ConditionalSignAssignment,
     DrawingRule,
     GraphicRule,
+)
+
+# Transfer formats and XTF (section 2.8)
+from model.transfer import (
+    TransferFormatType,
+    OIDStrategy,
+    CharacterSet,
+    BasketTypeValue,
+    TransferFormat,
+    BasketDefinition,
+    TransferEncoding,
+    OIDGenerationStrategy,
+    InterleaveRule,
+    TransferConfiguration,
+    DEFAULT_XTF_2_1,
+    DEFAULT_XML_EXTENDED,
+    DEFAULT_XML_RESTRICTED,
+)
+
+# XTF Parsing and Validation
+from model.xtf_parser import (
+    XTFHeader,
+    XTFObject,
+    XTFBasket,
+    XTFDocument,
+    XTFParser,
+    parse_xtf,
+)
+
+from model.xtf_validator import (
+    ValidationError,
+    ValidationResult,
+    XTFValidator,
+    validate_xtf,
 )
 
 __all__ = [
@@ -175,6 +250,13 @@ __all__ = [
     "EnumElement",
     "BooleanType",
     "DateTimeType",
+    "DateType",
+    "TimeType",
+    "AreaType",
+    "LengthType",
+    "AngleType",
+    "VertexType",
+    "SurfaceType",
     "CoordType",
     "LineType",
     "BlackboxType",
@@ -184,18 +266,30 @@ __all__ = [
     
     # Contraintes
     "Constraint",
+    "ConstraintSeverity",
+    "ConstraintScope",
     "MandatoryConstraint",
     "PlausibilityConstraint",
     "ExistenceConstraint",
     "UniqueConstraint",
     "SetConstraint",
     "CardinalityConstraint",
+    "AreaConnectedConstraint",
+    "LineTopologyConstraint",
+    "GeometryConstraint",
     
     # Fonctions
+    "ArgumentKind",
+    "ReturnType",
     "Argument",
     "FunctionDeclaration",
     "FunctionDefinition",
     "FunctionCall",
+    "MethodCall",
+    "ProcedureDeclaration",
+    "ProcedureDefinition",
+    "BUILTIN_FUNCTIONS",
+    "lookup_builtin_function",
     
     # Expressions (syntaxe et facteurs conceptuels)
     "Expression",
@@ -210,12 +304,59 @@ __all__ = [
     "dump",
     "DumpMixin",
     
-    # Views (préparé pour extension future)
+    # Graphics (cartographie et symbologie)
+    "ParameterType",
+    "LineStyle",
+    "FillPattern",
+    "Alignment",
+    "CartographicParameter",
+    "SymbologyReference",
+    "LineProperties",
+    "FillProperties",
+    "DrawingElement",
+    "SignParameterAssignment",
+    "TextProperties",
+    "GraphicElement",
+    "create_rgb_color",
+    
+    # Views and Formations
     "RenamedBaseView",
     "ViewDefinition",
+    "Projection",
+    "JoinCondition",
+    "Join",
+    "Union",
+    "Formation",
     "Graphic",
     "SignParameter",
     "ConditionalSignAssignment",
     "DrawingRule",
     "GraphicRule",
+    
+    # Transfer formats
+    "TransferFormatType",
+    "OIDStrategy",
+    "CharacterSet",
+    "BasketTypeValue",
+    "TransferFormat",
+    "BasketDefinition",
+    "TransferEncoding",
+    "OIDGenerationStrategy",
+    "InterleaveRule",
+    "TransferConfiguration",
+    "DEFAULT_XTF_2_1",
+    "DEFAULT_XML_EXTENDED",
+    "DEFAULT_XML_RESTRICTED",
+    
+    # XTF Parsing and Validation
+    "XTFHeader",
+    "XTFObject",
+    "XTFBasket",
+    "XTFDocument",
+    "XTFParser",
+    "parse_xtf",
+    "ValidationError",
+    "ValidationResult",
+    "XTFValidator",
+    "validate_xtf",
 ]
